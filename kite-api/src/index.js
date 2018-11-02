@@ -38,8 +38,12 @@ async function getContainer(userid){
 
 async function deleteContainer(userid){
     let container = docker.getContainer(userid);
-    let containerInfo = await container.inspect();
-    return containerInfo;
+    let stopped = await container.stop();
+    let removed;
+    if(stopped){
+        removed = await container.remove();
+    }
+    return removed;
 }
 
 module.exports = { createContainer, deleteContainer, getContainer }

@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const { createContainer, deleteContainer, getContainer } = require('../index');
 
-router.get('/:studentID', (req, res) => {
+router.get('/:studentID', async (req, res) => {
     let data = await getContainer(req.params.studentID+'php');
     res.send(data);
 });
