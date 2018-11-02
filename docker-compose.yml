@@ -5,7 +5,7 @@ services:
     ports:
      - "3000:3000"
     volumes:
-       - /c/public-html/:/app/public/
+       - "C:/public-html/:/app/public/"
     networks:
         - kite
   kite-nginx:
