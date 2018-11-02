@@ -1,12 +1,14 @@
 const express = require('express')
 const app = express()
 const port = 3000;
+const docker = require('./routes/docker');
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
 var router = express.Router();
 
 app.use('/api', router)
+app.use('/api/docker', docker)
 
 router.get('/test', (req,res)=>{
     res.send("Test")
