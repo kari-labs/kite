@@ -1,0 +1,19 @@
+version: '3'
+services:
+  kite-api:
+    build: ./kite-api
+    ports:
+     - "3000:3000"
+    volumes:
+       - /c/public-html/:/app/public/
+    networks:
+        - kite
+  kite-nginx:
+    build: ./kite-nginx
+    ports:
+     - "8080:80"
+    networks:
+        - kite
+networks:
+  kite:
+    driver: bridge
