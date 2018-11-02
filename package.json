@@ -1,13 +1,18 @@
 {
-  "name": "neit-ict-api",
+  "name": "kite-api",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
   "keywords": [],
-  "author": "",
+  "contributors": [
+    "Kyle Gray",
+    "Ian Fabricatore",
+    "Matthew Conway",
+    "Joseph Zurowski"
+  ],
   "license": "ISC",
   "dependencies": {
     "dockerode": "^2.5.7",
