@@ -5,6 +5,8 @@ const config = require('../config/config');
 
 const docker = new Docker(config.dockerConfig)
 
+const containers = {};
+
 async function createContainer(userid) {
     if(!fs.existsSync(config.userFolderPath))
         fs.mkdirSync(config.userFolderPath);
@@ -27,6 +29,8 @@ async function createContainer(userid) {
 
     container.start();
 
+    containers[`${userid}php`] = container;
+
     return container;
 }
 
@@ -45,5 +49,11 @@ async function stopContainer(userid){
     } */
     return stopped;
 }
+
+process.on('SIGTERM', () => {
+    for(let container of Object.keys(containers)) {
+        stopContainer(key);
+    }
+});
 
 module.exports = { createContainer, stopContainer, getContainer }
