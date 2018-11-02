@@ -11,6 +11,8 @@ async function createContainer(userid) {
     if(!fs.existsSync(`${config.userFolderPath}${userid}`))
         fs.mkdirSync(`${config.userFolderPath}${userid}`);
 
+    await docker.pull(config.phpServerImage);
+
     let container = await docker.createContainer({
         name: `${userid}php`,
         image: config.phpServerImage,
