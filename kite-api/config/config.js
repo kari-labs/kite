@@ -3,7 +3,8 @@ module.exports = {
         host: 'host.docker.internal',
         port: 2375
     },
+    userHostFolderPath: '/c/public-html/',
     userFolderPath: '/app/public/',
     phpServerImage: 'sseemayer/mini-php',
-    networkName: 'kite'
+    networkName: 'kite-api_kite'
 }

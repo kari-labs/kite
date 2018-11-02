@@ -20,12 +20,14 @@ async function createContainer(userid) {
             AutoRemove: true,
             NetworkMode: config.networkName,
             Binds: [
-                `${config.userFolderPath}${userid}:/app/htdocs/`
+                `${config.userHostFolderPath}${userid}:/app/htdocs/`
             ],
         }
     })
 
     container.start();
+
+    return container;
 }
 
 module.exports = { createContainer }
