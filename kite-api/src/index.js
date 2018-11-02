@@ -36,14 +36,14 @@ async function getContainer(userid){
     return containerInfo;
 }
 
-async function deleteContainer(userid){
+async function stopContainer(userid){
     let container = docker.getContainer(userid);
     let stopped = await container.stop();
-    let removed;
+    /* let removed;
     if(stopped){
         removed = await container.remove();
-    }
-    return removed;
+    } */
+    return stopped;
 }
 
-module.exports = { createContainer, deleteContainer, getContainer }
+module.exports = { createContainer, stopContainer, getContainer }

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { createContainer, deleteContainer, getContainer } = require('../index');
+const { createContainer, stopContainer, getContainer } = require('../index');
 
 router.get('/:studentID', async (req, res) => {
     let data = await getContainer(req.params.studentID+'php');
@@ -22,7 +22,7 @@ router.post('/:studentID', async (req, res) => {
 });
 
 router.delete('/:studentID', async (req, res)=>{
-    let data = await deleteContainer(req.params.studentID+'php');
+    let data = await stopContainer(req.params.studentID+'php');
     res.send(data);
 });
 
