@@ -1,9 +1,10 @@
 const router = require('express').Router();
 
-const { createContainer } = require('../index');
+const { createContainer, deleteContainer, getContainer } = require('../index');
 
-router.get('/', (req, res) => {
-  res.send("This will return all the docker containers active");
+router.get('/:studentID', (req, res) => {
+    let data = await getContainer(req.params.studentID+'php');
+    res.send(data);
 });
 
 router.post('/:studentID', async (req, res) => {
@@ -14,10 +15,15 @@ router.post('/:studentID', async (req, res) => {
         console.error('ERROR:',error);
     }
     if(container){
-        res.send("Spinning up a Docker container for "+req.params.studentID);
+        res.send("Spinning up a Docker container for " + req.params.studentID);
     }else{
         res.send("Failed to create container");
     }
+});
+
+router.delete('/:studentID', async (req, res)=>{
+    let data = await deleteContainer(req.params.studentID+'php');
+    res.send(data);
 });
 
 module.exports = router;

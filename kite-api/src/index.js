@@ -30,4 +30,16 @@ async function createContainer(userid) {
     return container;
 }
 
-module.exports = { createContainer }
+async function getContainer(userid){
+    let container = docker.getContainer(userid);
+    let containerInfo = await container.inspect();
+    return containerInfo;
+}
+
+async function deleteContainer(userid){
+    let container = docker.getContainer(userid);
+    let containerInfo = await container.inspect();
+    return containerInfo;
+}
+
+module.exports = { createContainer, deleteContainer, getContainer }
