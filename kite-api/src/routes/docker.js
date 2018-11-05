@@ -1,6 +1,11 @@
 const router = require('express').Router();
 
-const { createContainer, stopContainer, getContainer } = require('../index');
+const { createContainer, stopContainer, getContainer, getAllContainers } = require('../index');
+
+router.get('/', async (req, res) => {
+    let data = await getAllContainers();
+    res.send(data);
+});
 
 router.get('/:studentID', async (req, res) => {
     let data = await getContainer(req.params.studentID+'php');
