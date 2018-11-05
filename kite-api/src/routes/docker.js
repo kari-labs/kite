@@ -10,6 +10,14 @@ const _404 = {
     error: 'Resource not found.',
     message: 'The requested container instance no longer exists on our server'
 }
+const _405 = {
+    error: 'Not Allowed',
+    message: 'You are not allowed to preform that action'
+}
+const _500 = {
+    error: 'Server Error',
+    message: 'Server failed to spin up docker container'
+}
 
 router.get('/', async (req, res) => {
     let data;
@@ -43,7 +51,7 @@ router.post('/:studentID', async (req, res) => {
     if(container){
         res.send("Spinning up a Docker container for " + req.params.studentID);
     }else{
-        res.send("Failed to create container");
+        res.status(500).json(_500);
     }
 });
 
