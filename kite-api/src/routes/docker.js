@@ -2,14 +2,35 @@ const router = require('express').Router();
 
 const { createContainer, stopContainer, getContainer, getAllContainers } = require('../index');
 
+//HTTP 410 Gone -- The requested resource is no longer available at the server and no forwarding address is known. This condition is expected to be considered permanent.
+//HTTP 503 Service Unavailable
+//HTTP 204 No Content
+
+const _404 = {
+    error: 'Resource not found.',
+    message: 'The requested container instance no longer exists on our server'
+}
+
 router.get('/', async (req, res) => {
-    let data = await getAllContainers();
-    res.send(data);
+    let data;
+    try {
+        data = await getContainer(req.params.studentID+'php');
+        res.send(data);
+    } catch (error) {
+        res.status(404).json(_404);
+        console.error(error);
+    }
 });
 
 router.get('/:studentID', async (req, res) => {
-    let data = await getContainer(req.params.studentID+'php');
-    res.send(data);
+    let data;
+    try {
+        data = await getContainer(req.params.studentID+'php');
+        res.send(data);
+    } catch (error) {
+        res.status(404).json(_404);
+        console.error(error);
+    }
 });
 
 router.post('/:studentID', async (req, res) => {
