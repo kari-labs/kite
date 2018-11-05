@@ -24,7 +24,7 @@ async function createContainer(userid) {
             Binds: [
                 `${config.userHostFolderPath}${userid}:/app/htdocs/`
             ],
-        }
+        },
     })
 
     container.start();
@@ -40,6 +40,13 @@ async function getContainer(userid){
     return containerInfo;
 }
 
+async function getAllContainers(){
+    let containerList = await Promise.all(Object.values(containers).map(cont => {
+        return cont.inspect();
+    }))
+    return containerList;
+}
+
 async function stopContainer(userid){
     let container = docker.getContainer(userid);
     let stopped = await container.stop();
@@ -52,8 +59,8 @@ async function stopContainer(userid){
 
 process.on('SIGTERM', () => {
     for(let container of Object.keys(containers)) {
-        stopContainer(key);
+        stopContainer(container);
     }
 });
 
-module.exports = { createContainer, stopContainer, getContainer }
+module.exports = { createContainer, stopContainer, getContainer, getAllContainers }
