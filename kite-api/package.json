@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "canvas-api-wrapper": "^3.3.4",
+    "cors": "^2.8.5",
     "dockerode": "^2.5.7",
     "express": "^4.16.4",
     "mongoose": "^5.3.8",
