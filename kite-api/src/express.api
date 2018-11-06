@@ -1,22 +1,17 @@
 const express = require('express')
 const app = express()
-const port = process.env.PORT || 443;
-const https = require('https');
-const fs = require('fs');
+const port = 3000;
 const docker = require('./routes/docker');
 
-app.get('/', (req, res) => res.send('please auth'));
-app.use('/api/docker', docker);
+app.get('/', (req, res) => res.send('Hello World!'));
 
-const options = {
-    key: fs.readFileSync( './localhost.key' ),
-    cert: fs.readFileSync( './localhost.cert' ),
-    requestCert: false,
-    rejectUnauthorized: false
-};
+var router = express.Router();
 
-const server = https.createServer( options, app );
+app.use('/api', router)
+app.use('/api/docker', docker)
 
-server.listen( port, function () {
-    console.log( 'Express server listening on port ' + server.address().port );
-} );
+router.get('/test', (req,res)=>{
+    res.send("Test")
+});
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`))
