@@ -1,17 +1,14 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const app = express();
+var cors = require('cors');
 const port = 3000;
 const docker = require('./routes/docker');
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.use('/api/docker', cors(), docker);
+//app.use('/api/docker', docker);
 
-var router = express.Router();
-
-app.use('/api', router)
-app.use('/api/docker', docker)
-
-router.get('/test', (req,res)=>{
-    res.send("Test")
+app.get('/eggsalad', (req,res)=>{
+    res.send("Test successful!")
 });
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
