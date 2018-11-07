@@ -45,12 +45,9 @@ router.post('/:studentID', async (req, res) => {
     let container;
     try {
         container = await createContainer(req.params.studentID);
+        res.status(200).send({messsage: 'Container spun-up successfully'})
     } catch (error) {
         console.error('ERROR:',error);
-    }
-    if(container){
-        res.send("Spinning up a Docker container for " + req.params.studentID);
-    }else{
         res.status(500).json(_500);
     }
 });
