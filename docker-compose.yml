@@ -2,8 +2,6 @@ version: '3'
 services:
   kite-api:
     build: ./kite-api
-    ports:
-     - "3000:3000"
     volumes:
        - "/var/run/docker.sock:/var/run/docker.sock"
        - "/app/kite/public-html/:/app/public/"
