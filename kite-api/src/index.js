@@ -50,10 +50,6 @@ async function getAllContainers(){
 async function stopContainer(userid){
     let container = docker.getContainer(userid);
     let stopped = await container.stop();
-    /* let removed;
-    if(stopped){
-        removed = await container.remove();
-    } */
     return stopped;
 }
 
