@@ -22,7 +22,7 @@ const _500 = {
 router.get('/', async (req, res) => {
     let data;
     try {
-        data = await getContainer(req.params.studentID+'php');
+        data = await getAllContainers();
         res.send(data);
     } catch (error) {
         res.status(404).json(_404);
