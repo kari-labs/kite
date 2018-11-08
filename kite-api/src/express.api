@@ -6,4 +6,4 @@ const docker = require('./routes/docker');
 
 app.use('/api/docker', cors(), docker);
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+app.listen(port, () => console.log(`KITE-API listening on port ${port}!`));
