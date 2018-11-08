@@ -2,8 +2,6 @@ version: '3'
 services:
   kite-api:
     build: ./kite-api
-    ports:
-     - "3000:3000"
     volumes:
        - "C:/public-html/:/app/public/"
     networks:
