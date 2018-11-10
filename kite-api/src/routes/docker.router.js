@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { createContainer, stopContainer, getContainer, getAllContainers } = require('../index');
+const { createContainer, stopContainer, getContainer, getAllContainers } = require('..');
 
 //HTTP 410 Gone -- The requested resource is no longer available at the server and no forwarding address is known. This condition is expected to be considered permanent.
 //HTTP 503 Service Unavailable

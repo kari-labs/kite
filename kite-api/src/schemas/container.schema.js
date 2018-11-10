@@ -1,17 +1,18 @@
-class Container {
-    constructor(container) {
-        this.container = container;
-    }
-}
-
 const containerType = `
+    type ContainerState {
+        Status: String
+    }
+
+    type ContainerConfig {
+        Image: String
+    }
+
     type Container {
         Name: String
         Created: String
-        Image: String
-        ----------------------------- Working Here - Status doesn't work because it is nested within "State"
-        Status: String
+        Config: ContainerConfig
+        State: ContainerState
     }
 `;
 
-module.exports = { Container, containerType };
+module.exports = { containerType };
