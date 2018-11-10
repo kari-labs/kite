@@ -6,10 +6,11 @@ class Container {
 
 const containerType = `
     type Container {
-        name: String
-        status: String
-        created: String
-        image: String
+        Name: String
+        Created: String
+        Image: String
+        ----------------------------- Working Here - Status doesn't work because it is nested within "State"
+        Status: String
     }
 `;
 

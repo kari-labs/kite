@@ -25,12 +25,7 @@ const root = {
     getContainer: async ({userid}) => {
         try {
             let container = await getContainer(`${userid}php`);
-            let result = {};
-            result.name = container.Name.slice(0, -3);
-            result.status = container.State.Status;
-            result.created = container.Created;
-            result.image = container.Config.Image;
-            return result;
+            return container;
         } catch (err) {
             return `Error retrieving your container - ${err}`;
         }
