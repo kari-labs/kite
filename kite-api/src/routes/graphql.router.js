@@ -13,9 +13,11 @@ const schema = buildSchema(`
 `);
 
 const { ContainerResolvers } = require('../resolvers/container.resolver');
+const { FilesystemResolvers } = require('../resolvers/filesystem.resolver');
 
 const root = {};
 Object.assign(root, ContainerResolvers);
+Object.assign(root, FilesystemResolvers);
 
 router.use('/', graphqlHTTP({
     schema: schema,
