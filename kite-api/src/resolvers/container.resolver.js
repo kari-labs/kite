@@ -32,9 +32,6 @@ const ContainerResolvers = {
     } catch (err) {
       return `Error deleting container for student - ${err}`;
     }
-  },
-  hello: () => {
-      return 'Hello World!';
   }
 };
 

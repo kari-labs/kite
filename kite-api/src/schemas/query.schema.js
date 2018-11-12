@@ -3,7 +3,7 @@ const queryType = `
         getContainer(userid: String!): Container!
         getAllContainers: [Container!]!
         getFileSize(path: String!): String!
-        hello: String
+        getDirSize(path: String!): String!
     }
 `;
 
