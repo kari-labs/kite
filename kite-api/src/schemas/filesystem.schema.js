@@ -1,10 +1,14 @@
 const filesystemType = `
     type File {
-      Size: String
+      name: String,
+      size: String,
+      isdirectory: Boolean,
+      modified: String,
+      created: String
     }
 
     type Directory {
-      Files: [File]
+      files: [File]
     }
 `;
 

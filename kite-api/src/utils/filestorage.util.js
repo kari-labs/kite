@@ -1,9 +1,71 @@
 const fs = require('fs').promises;
 const path = require('path');
-const defaultPath = "/app/public/";
+const config = require('../../config/config');
+
+const getFileInfo = async (userid, filepath) => {
+  const file = path.join(config.userFolderPath, userid, filepath);
+  const userDir = path.join(config.userFolderPath, userid);
+  if(!file.startsWith(userDir)) {
+    //res.status(403).json({error: 'Access denied'});
+    throw new Error('Access denied');
+  }
+  try {
+    const fileStats = await fs.stat(file)
+    return {
+      name: path.basename(file),
+      created: fileStats.birthtime,
+      isdirectory: fileStats.isDirectory(),
+      modified: fileStats.mtime,
+      size: fileStats.size
+    }
+  } catch(e) {
+    if (e.code == 'ENOENT') {
+      throw new Error('File not found');
+      //res.status(404).json({error:'File not found'})
+    } else {
+      throw e;
+    }
+  }
+}
+
+const getDirContents = async (userid, filepath) => {
+  const file = path.join(config.userFolderPath, userid, filepath);
+  const userDir = path.join(config.userFolderPath, userid);
+  if(!file.startsWith(userDir)) {
+    //res.status(403).json({error: 'Access denied'});
+    throw new Error('Access denied');
+  }
+  try {
+    try {
+      const files = await fs.readdir(file)
+      return {
+          files: await Promise.all(files.map(async filename => {
+          const filepath = path.join(file, filename);
+          const fileStats =  await fs.stat(filepath);
+          return {
+            name: filename,
+            created: fileStats.birthtime,
+            isdirectory: fileStats.isDirectory(),
+            modified: fileStats.mtime,
+            size: fileStats.size
+          }
+        }))
+      }
+    } catch(e) {
+      throw new Error('File is not a directory');
+    }
+  } catch(e) {
+    if (e.code == 'ENOENT') {
+      throw new Error('File not found');
+      //res.status(404).json({error:'File not found'})
+    } else {
+      throw e;
+    }
+  }
+}
 
 const getFileSizeInBytes = async userPath => {
-  let absPath = path.join(defaultPath, userPath);
+  let absPath = path.join(config.userFolderPath, userPath);
   try {
     const stats = await fs.stat(absPath);
     return stats['size'];
@@ -37,9 +99,9 @@ const getDirSizeInBytes = async (dirPath, memo) => {
 
 const getDirSizeInBytesHandler = async (userPath) => {
   const memo = [0];
-  const dirPath = path.join(defaultPath, userPath); 
+  const dirPath = path.join(config.userFolderPath, userPath); 
   const size = await getDirSizeInBytes(dirPath, memo);
   return size;
 }
 
-module.exports = { getFileSizeInBytes, getDirSizeInBytesHandler };
+module.exports = { getFileInfo, getDirContents, getFileSizeInBytes, getDirSizeInBytesHandler };

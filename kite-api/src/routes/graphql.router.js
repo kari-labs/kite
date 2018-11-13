@@ -5,8 +5,10 @@ const { buildSchema } = require('graphql');
 const { queryType } = require('../schemas/query.schema');
 const { mutationType } = require('../schemas/mutation.schema');
 const { containerType } = require('../schemas/container.schema');
+const { filesystemType } = require('../schemas/filesystem.schema');
 
 const schema = buildSchema(`
+    ${filesystemType}
     ${containerType}
     ${mutationType}
     ${queryType}
