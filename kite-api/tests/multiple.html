@@ -19,18 +19,22 @@
             let data = new FormData();
             data.append("operations", `
             {
-                "query": "mutation($file: Upload!){ singleUpload(userid: \\\"001416358\\\", file: $file){ name size isdirectory modified created} }", 
+                "query": "mutation($files: [Upload!]!){ multipleUpload(userid: \\\"001416358\\\", files: $files){ name size isdirectory modified created} }", 
                 "variables": {
-                    "file": ${JSON.stringify(Array(file.files.length).fill(null))}
+                    "files": ${JSON.stringify(Array(file.files.length).fill(null))}
                 }
             }
             `);
-            let map = new Object();
-            for(const f of file.files){
-                console.log(f);
+            let map = {};
+            for(let i=0;i<file.files.length;i++){
+                map[i] = [`variables.files.${i}`];
             }
-            // /data.append("map", `${map.apply()}`);
-            data.append("0", file.files[0]);
+            //console.log(JSON.stringify(map));
+            data.append("map", JSON.stringify(map));
+            for(let i=0;i<file.files.length;i++){
+                data.append(`${i}`, file.files[i]);
+            }
+            
             console.dir(file);
             fetch("https://localhost/api/graphql", {
                 method: "POST",

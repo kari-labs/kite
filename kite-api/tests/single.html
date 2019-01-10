@@ -17,14 +17,17 @@
         document.querySelector("#upload").addEventListener("click", event => {
             event.preventDefault();
             let data = new FormData();
-            data.append("operations", `
-            {
-                "query": "mutation($files: [Upload!]!){ singleUpload(userid: \\\"001416358\\\", files: $files){ name size isdirectory modified created} }", 
-                "variables": {
-                    "files": ${JSON.stringify(Array(file.files.length).fill(null))}
+            const query = JSON.stringify({
+                query: `mutation($file: Upload!){ 
+                    singleUpload(userid: "001416358", file: $file){ 
+                        name size isdirectory modified created
+                    } 
+                }`,
+                variables: {
+                    file: JSON.stringify(Array(file.files.length).fill(null))
                 }
-            }
-            `);
+            });
+            data.append("operations", query);
             data.append("map", `{ "nfile":  ["variables.file"] }`);
             data.append("nfile", file.files[0]);
             console.dir(file);
