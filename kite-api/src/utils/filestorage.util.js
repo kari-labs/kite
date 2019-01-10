@@ -5,11 +5,8 @@ const config = require('../../config/config');
 
 const isDir = async filepath => (await fsp.stat(filepath)).isDirectory();
 
-const getFileInfo = async (userid, filepath) => {
-  const file = path.join(config.userFolderPath, userid, filepath);
-  const userDir = path.join(config.userFolderPath, userid);
+const getFileInfo = async (userDir, file) => {
   if(!file.startsWith(userDir)) {
-    //res.status(403).json({error: 'Access denied'});
     throw new Error('Access denied');
   }
   try {
@@ -24,12 +21,13 @@ const getFileInfo = async (userid, filepath) => {
   } catch(e) {
     if (e.code == 'ENOENT') {
       throw new Error('File not found');
-      //res.status(404).json({error:'File not found'})
     } else {
       throw e;
     }
   }
 }
+
+const getFileInfoHandler = async (userid, filepath) => getFileInfo(path.join(config.userFolderPath, userid), path.join(config.userFolderPath, userid, filepath));
 
 const getDirContents = async (userid, filepath) => {
   const file = path.join(config.userFolderPath, userid, filepath);
@@ -75,6 +73,19 @@ const getFileSizeInBytes = async userPath => {
   } catch (err) {
     if (err.code === 'ENOENT') {
       return `No file could be found at path: ${absPath}`;
+    } else {
+      return `${err}`;
+    }
+  }
+};
+
+const getFileSize = async path => {
+  try {
+    const stats = await fsp.stat(path);
+    return stats['size'];
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return `No file could be found at path: ${path}`;
     } else {
       return `${err}`;
     }
@@ -128,13 +139,17 @@ const processUpload = async (userid, upload) => {
   const { createReadStream, filename, mimetype } = await upload
   const stream = createReadStream()
   const { fullpath } = await storeFS(userid, { stream, filename })
-  console.log(fullpath)
-  return {
-    name: filename,
-    size: await getDirSizeInBytesHandler(fullpath),
-    isdirectory: await isDir(fullpath)
-  };
+  const userPath = path.join(config.userFolderPath, userid);
+  const info = await getFileInfo(userPath, fullpath);
+  return info
 }
 
 
-module.exports = { getFileInfo, getDirContents, getFileSizeInBytes, getDirSizeInBytesHandler, processUpload };
+module.exports = { 
+  getFileInfo,
+  getFileInfoHandler,
+  getDirContents, 
+  getFileSizeInBytes, 
+  getDirSizeInBytesHandler, 
+  processUpload 
+};

@@ -1,10 +1,8 @@
-const { getFileInfo, getDirContents, getFileSizeInBytes, getDirSizeInBytesHandler, processUpload } = require('../utils/filestorage.util');
+const { getFileInfoHandler, getDirContents, getFileSizeInBytes, getDirSizeInBytesHandler, processUpload } = require('../utils/filestorage.util');
 const { GraphQLUpload } = require('graphql-upload');
 
 const FilesystemResolvers = {
-  getFileInfo: async ({userid, path}) => {
-    return await getFileInfo(userid, path);
-  },
+  getFileInfo: async ({userid, path}) => getFileInfoHandler(userid, path),
   getDirContents: async ({userid, path}) => {
     return await getDirContents(userid, path);
   },
