@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Single File Upload</title>
+</head>
+<body>
+    <h1>Single file upload test</h1>
+    <form enctype="multipart/form-data">
+        <input type="file" id="file"/>
+        <input type="submit" value="Upload" id="upload"/>
+    </form>
+    <script defer>
+        const file = document.querySelector("#file");
+        document.querySelector("#upload").addEventListener("click", event => {
+            event.preventDefault();
+            let data = new FormData();
+            data.append("operations", `
+            {
+                "query": "mutation($files: [Upload!]!){ singleUpload(userid: \\\"001416358\\\", files: $files){ name size isdirectory modified created} }", 
+                "variables": {
+                    "files": ${JSON.stringify(Array(file.files.length).fill(null))}
+                }
+            }
+            `);
+            data.append("map", `{ "nfile":  ["variables.file"] }`);
+            data.append("nfile", file.files[0]);
+            console.dir(file);
+            fetch("https://localhost/api/graphql", {
+                method: "POST",
+                body: data,
+            }).then(res => res.text())
+            .then(res => {
+                console.log(res);
+            })
+        })
+    </script>
+</body>
+</html>

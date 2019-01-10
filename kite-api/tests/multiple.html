@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Multiple File Upload</title>
+</head>
+<body>
+    <h1>Multiple file upload test</h1>
+    <form enctype="multipart/form-data">
+        <input type="file" id="file" multiple/>
+        <input type="submit" value="Upload" id="upload"/>
+    </form>
+    <script defer>
+        const file = document.querySelector("#file");
+        document.querySelector("#upload").addEventListener("click", event => {
+            event.preventDefault();
+            let data = new FormData();
+            data.append("operations", `
+            {
+                "query": "mutation($file: Upload!){ singleUpload(userid: \\\"001416358\\\", file: $file){ name size isdirectory modified created} }", 
+                "variables": {
+                    "file": ${JSON.stringify(Array(file.files.length).fill(null))}
+                }
+            }
+            `);
+            let map = new Object();
+            for(const f of file.files){
+                console.log(f);
+            }
+            // /data.append("map", `${map.apply()}`);
+            data.append("0", file.files[0]);
+            console.dir(file);
+            fetch("https://localhost/api/graphql", {
+                method: "POST",
+                body: data,
+            }).then(res => res.text())
+            .then(res => {
+                console.log(res);
+            })
+        })
+    </script>
+</body>
+</html>

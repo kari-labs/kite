@@ -25,17 +25,12 @@ const FilesystemResolvers = {
   Upload: GraphQLUpload,
   singleUpload: async ({ userid, file }) => processUpload(userid, file),
   multipleUpload: async ({userid, files }) => {
-    const { resolve, reject } = await promisesAll.all(
+    console.log(files);
+    const result = await Promise.all(
       files.map(file => processUpload(userid, file))
     )
-
-    if (reject.length)
-      reject.forEach(({ name, message }) =>
-        // eslint-disable-next-line no-console
-        console.error(`${name}: ${message}`)
-      )
-
-    return resolve
+    console.log(result);
+    return result
   }
 }
 
