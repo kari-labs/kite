@@ -79,19 +79,6 @@ const getFileSizeInBytes = async userPath => {
   }
 };
 
-const getFileSize = async path => {
-  try {
-    const stats = await fsp.stat(path);
-    return stats['size'];
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      return `No file could be found at path: ${path}`;
-    } else {
-      return `${err}`;
-    }
-  }
-};
-
 const getDirSizeInBytes = async (dirPath, memo) => {
   const fileStats = await fsp.stat(dirPath);
   if(fileStats.isDirectory()) {
@@ -140,8 +127,7 @@ const processUpload = async (userid, upload) => {
   const stream = createReadStream()
   const { fullpath } = await storeFS(userid, { stream, filename })
   const userPath = path.join(config.userFolderPath, userid);
-  const info = await getFileInfo(userPath, fullpath);
-  return info
+  return getFileInfo(userPath, fullpath)
 }
 
 
