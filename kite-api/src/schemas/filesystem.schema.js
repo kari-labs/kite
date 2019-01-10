@@ -1,4 +1,6 @@
 const filesystemType = `
+    scalar Upload
+
     type File {
       name: String,
       size: String,
