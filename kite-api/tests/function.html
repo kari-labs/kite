@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Function</title>
+</head>
+<body>
+        <h1>Multiple file upload test</h1>
+        <form enctype="multipart/form-data">
+            <input type="file" id="file" multiple/>
+            <input type="submit" value="Upload" id="upload"/>
+        </form>
+    <script defer>
+        const gql = (args, ...values) => {
+            let query = "";
+            args.forEach( (string, i) => {
+                query += string + (values[i] || '');
+            });
+            return query.replace(/([\\][n])?([\s])+/g, " ");
+        }
+        function kraph(obj){
+            // `obj` should contain a definition for `files`, `query`
+            let data = new FormData();
+            if(obj.query == undefined) return void 0;
+            this.operations = {
+                query: obj.query,
+                variables: {files: Array(obj.files.length).fill(null)}
+            };
+            data.append("operations", JSON.stringify(this.operations));
+            let map = {};
+            for(let i=0;i<obj.files.length;i++) map[i] = [`variables.files.${i}`]; 
+            data.append("map", JSON.stringify(map));
+            for(let i=0;i<obj.files.length;i++) data.append(`${i}`, obj.files[i]); 
+            return fetch("https://localhost/api/graphql", {
+                method: "POST",
+                body: data,
+            }).then(res => res.text())
+        }
+        const file = document.querySelector("#file");
+        document.querySelector("#upload").addEventListener("click", e => {
+            e.preventDefault();
+            kraph({
+                query: gql`
+                    mutation($files: [Upload!]!){
+                        multipleUpload(userid: "001416358", files: $files){
+                            name
+                            size
+                        }
+                    }
+                `,
+                files: file.files
+            })
+        })
+        
+    </script>
+</body>
+</html>
