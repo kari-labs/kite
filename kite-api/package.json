@@ -2,12 +2,10 @@
   "name": "kite-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "backend": "node src/express.api"
+    "start": "node src/express.api",
+    "backend": "npm start"
   },
-  "keywords": [],
   "contributors": [
     "Kyle Gray",
     "Ian Fabricatore",
@@ -16,12 +14,16 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "canvas-api-wrapper": "^3.3.4",
     "cors": "^2.8.5",
     "dockerode": "^2.5.7",
     "express": "^4.16.4",
     "express-graphql": "^0.7.1",
     "graphql": "^14.0.2",
-    "graphql-upload": "^8.0.3",
-    "mongoose": "^5.3.8"
+    "mongoose": "^5.3.8",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^5.0.1",
+    "simple-oauth2": "^2.2.1"
   }
 }
