@@ -1,23 +1,21 @@
 <template>
-  <div id="app">
-    <SignIn></SignIn>
-  </div>
+  <div id="app"><SignIn></SignIn></div>
 </template>
 
 <script>
-import SignIn from './components/auth/SignIn.vue'
+import SignIn from "./components/auth/SignIn.vue";
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
     SignIn
   }
-}
+};
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

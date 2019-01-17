@@ -19,7 +19,12 @@
     "babel-plugin-component": "^1.1.1",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.8.0",
+    "eslint-config-prettier": "^3.5.0",
+    "eslint-plugin-prettier": "^3.0.1",
     "eslint-plugin-vue": "^5.0.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.0",
+    "prettier": "1.15.3",
     "vue-template-compiler": "^2.5.21"
   },
   "eslintConfig": {
@@ -29,6 +34,7 @@
     },
     "extends": [
       "plugin:vue/essential",
+      "plugin:prettier/recommended",
       "eslint:recommended"
     ],
     "rules": {},
@@ -45,5 +51,16 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,json,css,md}": [
+      "prettier --write",
+      "git add"
+    ]
+  }
 }
