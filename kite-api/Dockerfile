@@ -8,7 +8,8 @@ RUN npm install
 
 COPY src/ /usr/src/app/src/
 COPY config/ /usr/src/app/config/
+COPY dist/ /usr/src/app/dist/
 
 EXPOSE 3000
 
-CMD ["npm", "run", "backend"]
+CMD ["npm", "start"]
