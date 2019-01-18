@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/neit-kite/kite.svg?branch=dev)](https://travis-ci.com/neit-kite/kite)
 # Why do this?
 
 With one repo, we can have one centralized source of code. No more cloning two repositories and git pulling twice, git adding twice, git committing twice, git pushing twice. Now everything is in one repo. You make changes across the API, NGINX config, and the Front-End? No problem, just make sure you are at the root of the repo (./kite/) and you can commit all those changes at once.
