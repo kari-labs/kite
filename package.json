@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "install": "cd kite-web-element && npm i && cd ../kite-api && npm i",
-    "setupAll": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose build --no-cache && docker-compose up -d && cd ../kite-web-element && npm run serve"
+    "setupDev": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose build --no-cache && docker-compose up -d && cd ../kite-web-element && npm run serve",
+    "setupProd": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose build --no-cache && docker-compose up -d"
   },
   "repository": {
     "type": "git",
