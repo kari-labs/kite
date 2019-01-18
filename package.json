@@ -1,0 +1,20 @@
+{
+  "name": "kite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "install": "cd kite-web-element && npm i && cd ../kite-api && npm i",
+    "setupAll": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose build --no-cache && docker-compose up -d && cd ../kite-web-element && npm run serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neit-kite/kite.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neit-kite/kite/issues"
+  },
+  "homepage": "https://github.com/neit-kite/kite#readme"
+}
