@@ -42,7 +42,7 @@ There are a myriad of reasons why you should use a style guide. The reason that 
 
 ### How?
 
-We are going to be using Prettier simply becuase it is the best fully-automatic code styler. The Prettier style guide aims to follow a lot of industry best practices, is easy to adopt, and tries to use the least controversial styles. Currently, Prettier runs everytime you commit your code so you really don't have to do anything if you don't want to.
+We are going to be using Prettier simply becuase it is the best fully-automatic code styler. The Prettier style guide aims to follow a lot of industry best practices, is easy to adopt, and tries to use the least controversial styles. Currently, Prettier runs everytime you commit your code so you really don't have to do anything if you don't want to. If you would like to manually format your files in addition to the automatic styling you can install the Prettier extension for VS Code and run it from there.
 
 # Building for Production
 
@@ -60,4 +60,4 @@ Currently the plan is to use the NGINX server to serve our static app. Because m
 
 ### The API + NGINX Containers
 
-Right now the API and NGINX are in there own containers. The Vue build will go into the NGINX container and be hosted there. The only change from running the API + NGINX containers normally is that you have to use the right docker-compose file. To specify which docker-compose file to use, use the -f parameter. Currently our GCP server is Ubuntu linux and would require the use of the docker-compose.linux.yml file.
+Right now the API and NGINX are in their own containers. The Vue build will go into the NGINX container and be hosted there. The only change from running the API + NGINX containers normally is that you have to use the right docker-compose file. To specify which docker-compose file to use, use the -f parameter. Currently our GCP server is Ubuntu linux and would require the use of the docker-compose.linux.yml file.
