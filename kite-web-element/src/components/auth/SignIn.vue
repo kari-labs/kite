@@ -3,7 +3,7 @@
     <el-main>
       <el-card>
         <el-form :model="signInForm" :rules="signInRules" ref="signInForm">
-          <el-form-item label="User ID" prop="userID"> </el-form-item>
+          <el-form-item label="User ID" prop="userID" />
         </el-form>
       </el-card>
     </el-main>

@@ -1,12 +1,12 @@
 <template>
-  <div id="app"><SignIn></SignIn></div>
+  <div id="app"><SignIn /></div>
 </template>
 
 <script>
 import SignIn from "./components/auth/SignIn.vue";
 
 export default {
-  name: "app",
+  name: "App",
   components: {
     SignIn
   }
