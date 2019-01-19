@@ -1,15 +1,14 @@
 <template>
-  <div id="app"><SignIn /></div>
+  <div id="app">
+    <!-- eslint-disable -->
+    <router-view />
+  </div>
 </template>
 
 <script>
-import SignIn from "./components/auth/SignIn.vue";
-
 export default {
   name: "App",
-  components: {
-    SignIn
-  }
+  components: {}
 };
 </script>
 
