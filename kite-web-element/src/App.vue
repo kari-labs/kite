@@ -1,5 +1,7 @@
 <template>
-  <div id="app"><SignIn /></div>
+  <div id="app">
+    <SignIn />
+  </div>
 </template>
 
 <script>
