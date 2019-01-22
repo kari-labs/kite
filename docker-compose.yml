@@ -5,7 +5,9 @@ services:
     volumes:
        - "C:/public-html/:/app/public/"
     networks:
-        - kite
+        kite:
+          aliases:
+            - kiteapi
   kite-nginx:
     build: ./kite-nginx
 #    volumes:
@@ -15,7 +17,9 @@ services:
      - "443:443"
      - "8080:80"
     networks:
-        - kite
+        kite:
+          aliases:
+            - kitenginx
 networks:
   kite:
     driver: bridge
