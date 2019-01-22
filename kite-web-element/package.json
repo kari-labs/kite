@@ -35,8 +35,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
-      "plugin:prettier/recommended",
+      "plugin:vue/strongly-recommended",
       "eslint:recommended"
     ],
     "rules": {},
