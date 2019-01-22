@@ -6,8 +6,9 @@
   "scripts": {
     "install": "cd kite-web-element && npm i && cd ../kite-api && npm i",
     "test": "cd kite-web-element && npm run build && cd ../kite-api && docker-compose -f ../docker-compose.linux.yml build --no-cache && docker-compose -f ../docker-compose.linux.yml up -d",
-    "setupDev": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose build --no-cache && docker-compose up -d && cd ../kite-web-element && npm run serve --copy",
-    "setupProd": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose -f ../docker-compose.linux.yml build --no-cache && docker-compose -f ../docker-compose.linux.yml up -d"
+    "dev:setup": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose build --no-cache && docker-compose up -d && cd ../kite-web-element && npm run serve --copy",
+    "prod:setup": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose -f ../docker-compose.prod.yml build --no-cache && docker-compose -f ../docker-compose.prod.yml up -d",
+    "web:serve": "cd kite-web-element && npm i && npm run serve"
   },
   "repository": {
     "type": "git",
