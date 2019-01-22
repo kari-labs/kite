@@ -2,7 +2,7 @@
 
 ### Dev setup full (runs front-end and back-end) - This is usually all you need
 ```
-npm run setupDev
+npm run setup:dev
 ```
 
 ### Install all dependencies
@@ -12,7 +12,7 @@ npm install
 
 ### Production setup (builds front-end and runs back-end)
 ```
-npm run setupProd
+npm run setup:prod
 ```
 
 ### Run testing (for Travis CI)
@@ -48,7 +48,7 @@ We are going to be using Prettier simply becuase it is the best fully-automatic 
 
 ### The Automated Script
 
-To handle all this automatically you can simply run ``` npm run setupProd ```.
+To handle all this automatically you can simply run ``` npm run setup:prod ```.
 
 ### Vue Build
 
