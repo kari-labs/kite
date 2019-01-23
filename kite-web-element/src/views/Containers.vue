@@ -1,9 +1,22 @@
 <template>
-  <div>Scaffold</div>
+  <div>
+    <k-grid>
+      <el-card></el-card>
+      <el-card></el-card>
+      <el-card></el-card>
+      <el-card></el-card>
+    </k-grid>
+  </div>
 </template>
 
 <script>
-export default {};
+import KGrid from "@/components/containers/Grid.vue";
+
+export default {
+  components: {
+    KGrid
+  }
+};
 </script>
 
 <style></style>
