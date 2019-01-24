@@ -10,6 +10,7 @@ const _404 = {
     error: 'Resource not found.',
     message: 'The requested container instance no longer exists on our server'
 }
+
 const _500 = {
     error: 'Server Error',
     message: 'Server failed to spin up docker container'
