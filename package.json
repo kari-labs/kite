@@ -44,14 +44,14 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged --no-verify"
     }
   },
   "lint-staged": {
-    "*.js,vue": [
-      "eslint --fix",
-      "git add"
-    ]
+    "linters": {
+      "**.{js,vue}": ["eslint --fix", "git add"]
+    },
+    "ignore": ["**/dist"]
   },
   "dependencies": {}
 }
