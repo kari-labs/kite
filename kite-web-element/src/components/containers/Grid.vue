@@ -1,12 +1,12 @@
 <template>
-    <div class="container-grid">
-        <slot></slot>
-    </div>
+  <div class="container-grid">
+    <slot />
+  </div>
 </template>
 
 <script>
 export default {
-    name: "k-grid",
+    name: "KGrid",
     props: {
         cardWidth: {
             type: String,
