@@ -9,7 +9,7 @@
         target="_blank"
         rel="noopener"
       >
-        vue-cli documentation
+        vue-cli documentation is cool
       </a>.
     </p>
     <h3>Installed CLI Plugins</h3>

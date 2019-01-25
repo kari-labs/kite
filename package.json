@@ -9,7 +9,8 @@
     "setup:dev": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose build --no-cache && docker-compose up -d && cd ../kite-web-element && npm run serve --copy",
     "setup:prod": "cd kite-web-element && npm i && npm run build && cd ../kite-api && npm i && docker-compose -f ../docker-compose.prod.yml build --no-cache && docker-compose -f ../docker-compose.prod.yml up -d",
     "serve:web": "cd kite-web-element && npm i && npm run serve",
-    "build:web": "cd kite-web-element && npm i && npm run build"
+    "build:web": "cd kite-web-element && npm i && npm run build",
+    "lint": "eslint . --ext .js --ext .vue --ignore-pattern node_modules/ --ignore-pattern dist/ --fix"
   },
   "repository": {
     "type": "git",
@@ -20,5 +21,42 @@
   "bugs": {
     "url": "https://github.com/neit-kite/kite/issues"
   },
-  "homepage": "https://github.com/neit-kite/kite#readme"
+  "homepage": "https://github.com/neit-kite/kite#readme",
+  "devDependencies": {
+    "eslint": "^5.12.1",
+    "eslint-plugin-vue": "^5.1.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.0"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "extends": [
+      "plugin:vue/strongly-recommended",
+      "eslint:recommended"
+    ],
+    "rules": {
+      "no-console": 1
+    }
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "**.{js,vue}": [
+        "eslint --fix",
+        "git add"
+      ]
+    },
+    "ignore": [
+      "**/dist"
+    ]
+  },
+  "dependencies": {}
 }

@@ -10,6 +10,11 @@ npm run setup:dev
 npm install
 ```
 
+### Run Linter
+```
+npm run lint
+```
+
 ### Production setup (builds front-end and runs back-end)
 ```
 npm run setup:prod
@@ -42,7 +47,7 @@ There are a myriad of reasons why you should use a style guide. The reason that 
 
 ### How?
 
-We are going to be using Prettier simply becuase it is the best fully-automatic code styler. The Prettier style guide aims to follow a lot of industry best practices, is easy to adopt, and tries to use the least controversial styles. Currently, Prettier runs everytime you commit your code so you really don't have to do anything if you don't want to. If you would like to manually format your files in addition to the automatic styling you can install the Prettier extension for VS Code and run it from there.
+We have a script setup which will run ESLint on all of our JavaScript and Vue files and output any errors or warnings to your console in a neat format. The command to run the linting script is ``` npm run lint ```. There is also a linter that runs automatically every time you commit code. It will check all of your JS and Vue changes to make sure they follow a consistent style and enforce best practices. If you get any ESLint errors, your commit will be blocked and you will be asked to fix the errors. If you believe that the error is wrong or otherwise not needed you can skip this step by using the --no-verify arguement at the end of your git commit command.
 
 # Building for Production
 
