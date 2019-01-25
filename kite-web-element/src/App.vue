@@ -2,7 +2,9 @@
   <!-- eslint-disable -->
   <el-container>
     <el-header>
-      <el-button icon="el-icon-more" type="text" @click="isCollapse = !isCollapse"></el-button>
+      <el-button type="text" @click="isCollapse = !isCollapse">
+        <fa-icon icon="bars" size="lg"></fa-icon>
+      </el-button>
       <span class="h1 display ml-2">
         <router-link to="/" class="el-link">
           Kite
