@@ -49,9 +49,14 @@
   },
   "lint-staged": {
     "linters": {
-      "**.{js,vue}": ["eslint --fix", "git add"]
+      "**.{js,vue}": [
+        "eslint --fix",
+        "git add"
+      ]
     },
-    "ignore": ["**/dist"]
+    "ignore": [
+      "**/dist"
+    ]
   },
   "dependencies": {}
 }
