@@ -31,7 +31,6 @@ export default {
   data() {
     return {
       isCollapse: true,
-      activeIndex: 0,
       dark: false
     };
   },
@@ -42,8 +41,9 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
 *{
-  font-family:"Avenir", Arial, Helvetica, sans-serif;
+  font-family:"Roboto", Arial, Helvetica, sans-serif;
 }
 .el-header{
   line-height: 60px;
@@ -79,5 +79,19 @@ body > .el-container {
 }
 .display{
   font-size: 1.5em;
+}
+.el-link{
+    color: #303133;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.el-link:active{
+    color: #303133;
+}
+.el-link:visited{
+    color: #303133;
+}
+.el-link:hover{
+    color: #409EFF;
 }
 </style>
