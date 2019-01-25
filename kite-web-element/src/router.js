@@ -12,7 +12,8 @@ export default new Router({
     {
       path: "/",
       name: "login",
-      component: Login
+      component: Login,
+      meta: { hideHeader: true }
     },
     {
       path: "/containers",
@@ -21,7 +22,8 @@ export default new Router({
       // this generates a separate chunk (containers.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
       //component: () => import(/* webpackChunkName: "containers" */ "./views/Containers.vue")
-      component: Containers
+      component: Containers,
+      meta: { hideHeader: false }
     }
   ]
 });
