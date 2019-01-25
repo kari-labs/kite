@@ -8,7 +8,8 @@ import {
   faFolder,
   faExternalLinkAlt,
   faTrash,
-  faCircle
+  faCircle,
+  faBars
 } from "@fortawesome/free-solid-svg-icons";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
@@ -21,7 +22,8 @@ library.add(
   faFolder,
   faExternalLinkAlt,
   faTrash,
-  faCircle
+  faCircle,
+  faBars
 );
 
 Vue.component("fa-icon", FontAwesomeIcon);
