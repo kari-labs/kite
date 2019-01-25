@@ -1,7 +1,7 @@
 <template>
   <!-- eslint-disable -->
   <el-container>
-    <el-header>
+    <el-header v-show="!$route.meta.hideHeader">
       <el-button type="text" @click="isCollapse = !isCollapse">
         <fa-icon icon="bars" size="lg"></fa-icon>
       </el-button>
@@ -12,7 +12,7 @@
       </span>
     </el-header>
     <el-container>
-      <side-nav :toggle="isCollapse" class=""/>
+      <side-nav :toggle="isCollapse" v-if="!$route.meta.hideHeader"/>
       <el-container>
         <el-main>
           <router-view></router-view>
