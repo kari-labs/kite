@@ -1,38 +1,23 @@
 <template>
-  <div class="container-grid">
+  <div class="deck container-grid">
     <slot />
   </div>
 </template>
 
 <script>
 export default {
-    name: "KGrid",
-    props: {
-        cardWidth: {
-            type: String,
-            default: "300px"
-        },
-        justifyContent: {
-            type: String,
-            default: "space-around"
-        },
-        rowGap: {
-            type: String,
-            default: "2rem"
-        },
-        columnGap: {
-            type: String,
-            default: "1rem"
-        }
-    },
-    mounted(){
-        let s = this.$el.style;
-        s["display"] = "grid";
-        s["grid-template-columns"] = "repeat(auto-fill, "+this.cardWidth+")";
-        s["grid-row-gap"] = this.rowGap;
-        s["grid-column-gap"] = this.columnGap;
-        s["justify-content"] = this.justifyContent;
-        s["width"] = "100%";
-    }
+    name: "KGrid"
 }
 </script>
+
+<style scoped>
+.deck {
+    display: grid;
+    /* THIS IS WHERE YOU CHANGE THE CARD_WIDTH */
+    grid-template-columns: repeat(auto-fill, 400px);
+    grid-row-gap: 2em;
+    grid-column-gap: 2em;
+    justify-content: "space-around";
+    width: 100%;
+}
+</style>
