@@ -3,7 +3,7 @@ const fsp = fs.promises;
 const path = require('path');
 const config = require('../../config/config');
 
-const isDir = async filepath => (await fsp.stat(filepath)).isDirectory();
+//const isDir = async filepath => (await fsp.stat(filepath)).isDirectory();
 
 const getFileInfo = async (userDir, file) => {
   if(!file.startsWith(userDir)) {
@@ -93,7 +93,7 @@ const getDirSizeInBytes = async (dirPath, memo) => {
       }
     }
   } else {
-    memo[0] = `The provided path is not a directory - ${userDir}`;
+    memo[0] = `The provided path is not a directory - `;
   }
   return memo;
 }
@@ -123,7 +123,7 @@ const storeFS = (userid, { stream, filename }) => {
 }
 
 const processUpload = async (userid, upload) => {
-  const { createReadStream, filename, mimetype } = await upload
+  const { createReadStream, filename } = await upload
   const stream = createReadStream()
   const { fullpath } = await storeFS(userid, { stream, filename })
   const userPath = path.join(config.userFolderPath, userid);
