@@ -1,4 +1,4 @@
-const { createContainer, stopContainer, getContainer, getAllContainers } = require('../index.js');
+const { createContainer, stopContainer, getContainer, getAllContainers } = require('../utils/container.util');
 
 const ContainerResolvers = {
   createContainer: async ({userid}) => {
