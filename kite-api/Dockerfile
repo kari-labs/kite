@@ -5,6 +5,10 @@ WORKDIR /usr/src/app
 COPY package*.json /usr/src/app/
 COPY .env /usr/src/app/
 
+RUN apk add --update \
+    python \
+    make \
+    build-base
 RUN npm install
 
 COPY src/ /usr/src/app/src/
