@@ -2,10 +2,16 @@
   <el-row
     type="flex"
     justify="center"
+    align="middle"
+    class="fullscreen"
   >
     <el-card class="login-card">
-      <h1>Kite</h1>
-      <AuthForm />
+      <p 
+        class="title"
+      >
+        Kite
+      </p>
+      <auth-form />
     </el-card>
   </el-row>
 </template>
@@ -23,5 +29,12 @@ export default {
 <style>
 .login-card {
   width: 500px;
+}
+.fullscreen {
+  width: 100%;
+  height: 90%;
+}
+.title {
+  font-size: 24px;
 }
 </style>

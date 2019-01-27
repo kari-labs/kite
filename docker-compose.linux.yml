@@ -11,9 +11,9 @@ services:
             - kiteapi
   kite-nginx:
     build: ./kite-nginx
-#    volumes:
-#       - "${KITE_SSLCERT}:/etc/nginx/cert.crt"
-#       - "${KITE_SSLKEY}:/etc/nginx/key.key"
+    volumes:
+       - "${KITE_SSLCERT}:/etc/nginx/cert.crt"
+       - "${KITE_SSLKEY}:/etc/nginx/key.key"
     ports:
      - "443:443"
      - "80:80"
@@ -21,6 +21,14 @@ services:
         kite:
           aliases:
             - kitenginx
+  kite-redis:
+    build: ./kite-redis
+    ports:
+      - "6379:6379"
+    networks:
+      kite:
+        aliases:
+          - kiteredis
 networks:
   kite:
     driver: bridge
