@@ -14,12 +14,6 @@
         Containers
       </span>
     </el-menu-item>
-    <el-menu-item index="2">
-      <i class="el-icon-menu" />
-      <span slot="title">
-        Navigator Two
-      </span>
-    </el-menu-item>
     <el-menu-item
       index="3"
       disabled
