@@ -6,7 +6,6 @@
     "serve": "vue-cli-service serve --copy",
     "build": "vue-cli-service build",
     "build:nginx": "vue-cli-service build --dest ../kite-nginx/app"
-
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.12",

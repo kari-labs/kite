@@ -25,6 +25,13 @@ npm run setup:prod
 npm run test
 ```
 
+### Run build (for NGINX server)
+```
+npm run build:nginx
+```
+<small>This script builds `kite-web-element` into `kite-nginx/app` </small>
+
+
 # Git Workflow
 
 ### Working with Prod (Production)
