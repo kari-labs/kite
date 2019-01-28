@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: "KOntainer",
+  name: "KCard",
   props: {
     container: {
       type: Object,
