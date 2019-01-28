@@ -84,4 +84,4 @@ typings/
 # End of https://www.gitignore.io/api/node
 
 # Kite-specific ignores
-kite-nginx/app
+kite-nginx/dist
