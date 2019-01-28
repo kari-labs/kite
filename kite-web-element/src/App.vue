@@ -29,10 +29,7 @@ import SideNav from "@/components/SideNav.vue";
 export default {
   name: "App",
   data() {
-    return {
-      isCollapse: true,
-      dark: false
-    };
+    return {};
   },
   components: {
     SideNav
