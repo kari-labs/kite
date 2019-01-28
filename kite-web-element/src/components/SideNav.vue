@@ -40,7 +40,10 @@
 export default {
   name: "KNav",
   props: {
-    toggle: Boolean
+    toggle: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {

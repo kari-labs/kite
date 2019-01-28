@@ -1,26 +1,44 @@
 <template>
-  <!-- eslint-disable -->
-  <el-container>
+  <div class="tall">
     <el-header v-show="!$route.meta.hideHeader">
-      <el-button type="text" @click="isCollapse = !isCollapse">
-        <fa-icon icon="bars" size="lg"></fa-icon>
+      <el-button
+        type="text"
+        @click="isCollapse = !isCollapse"
+      >
+        <fa-icon
+          icon="bars"
+          size="lg"
+        />
       </el-button>
       <span class="h1 display ml-2">
-        <router-link to="/" class="el-link">
+        <router-link
+          to="/"
+          class="el-link"
+        >
           Kite
         </router-link>
       </span>
     </el-header>
     <el-container>
-      <side-nav :toggle="isCollapse" v-if="!$route.meta.hideHeader"/>
+      <side-nav
+        :toggle="isCollapse"
+        v-if="!$route.meta.hideHeader"
+      />
       <el-container>
         <el-main>
-          <router-view></router-view>
+          <router-view />
         </el-main>
-        <el-footer>Footer</el-footer>
+        <el-footer>
+          <b class="title">
+            Kite
+          </b>
+          <span class="subtitle">
+            &copy; GLB Group 2019
+          </span>
+        </el-footer>
       </el-container>
     </el-container>
-  </el-container>
+  </div>
 </template>
 
 <script>
@@ -29,7 +47,9 @@ import SideNav from "@/components/SideNav.vue";
 export default {
   name: "App",
   data() {
-    return {};
+    return {
+      isCollapse: false
+    };
   },
   components: {
     SideNav
@@ -44,19 +64,25 @@ export default {
 }
 .el-header{
   line-height: 60px;
+  width: 100%;
 }
 .el-footer {
   background-color: #b3c0d1;
   color: #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .el-main {
   background-color: #e9eef3;
   color: #333;
   text-align: center;
   height: 100%;
+  overflow-y: scroll;
 }
-body > .el-container {
-  height: 98vh;
+body {
+  margin: 0;
 }
 .el-container:nth-child(5) .el-aside,
 .el-container:nth-child(6) .el-aside {
@@ -85,5 +111,11 @@ body > .el-container {
 }
 .el-link:hover{
     color: #409EFF;
+}
+.tall {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
