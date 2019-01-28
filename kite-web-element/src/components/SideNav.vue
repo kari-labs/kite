@@ -6,7 +6,10 @@
     @close="handleClose"
     :collapse="toggle"
   >
-    <el-menu-item index="1">
+    <el-menu-item
+      index="1"
+      v-to="'containers'"
+    >
       <i class="el-icon">
         <fa-icon icon="cube" />
       </i>
@@ -25,7 +28,21 @@
         Editor
       </span>
     </el-menu-item>
-    <el-menu-item index="4">
+    <el-menu-item
+      index="4"
+      v-to="'help'"
+    >
+      <i class="el-icon">
+        <fa-icon icon="question" />
+      </i>
+      <span slot="title">
+        Help
+      </span>
+    </el-menu-item>
+    <el-menu-item
+      index="5"
+      v-to="'/'"
+    >
       <i class="el-icon">
         <fa-icon icon="sign-out-alt" />
       </i>

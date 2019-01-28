@@ -18,5 +18,9 @@
     {
         "name": "faBars",
         "reason": "Menu Icon"
+    },
+    {
+        "name": "faQuestion",
+        "reason": "Help Page Navigation Icon"
     }
 ]
