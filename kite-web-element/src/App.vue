@@ -64,7 +64,7 @@ export default {
   height: 100%;
 }
 body > .el-container {
-  height: 98vh;
+  height: 100vh;
 }
 .el-container:nth-child(5) .el-aside,
 .el-container:nth-child(6) .el-aside {

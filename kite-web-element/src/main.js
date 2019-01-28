@@ -5,6 +5,7 @@ import store from "./store";
 import "./plugins/element.js";
 import "./plugins/font-awesome";
 import "./assets/helper.css";
+import "normalize.css";
 
 Vue.config.productionTip = false;
 
