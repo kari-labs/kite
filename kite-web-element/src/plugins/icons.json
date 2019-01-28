@@ -1,0 +1,26 @@
+[
+    {
+        "name": "faCube",
+        "reason": "Container Navigation Icon"
+    },
+    {
+        "name": "faFile",
+        "reason": "Editor Navigation Icon"
+    },
+    {
+        "name": "faCog",
+        "reason": "Settings Navigation Icon"
+    },
+    {
+        "name": "faSignOutAlt",
+        "reason": "Log Out Navigation Icon"
+    },
+    {
+        "name": "faBars",
+        "reason": "Menu Icon"
+    },
+    {
+        "name": "faQuestion",
+        "reason": "Help Page Navigation Icon"
+    }
+]

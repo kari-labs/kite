@@ -17,13 +17,43 @@
       <slot>
         We still haven't designed the cards body.
       </slot>
+      <el-upload
+        class="upload-demo"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :before-remove="beforeRemove"
+        multiple
+        :limit="3"
+        :on-exceed="handleExceed"
+        :file-list="fileList"
+        :http-request="handleUpload"
+      >
+        <el-button
+          size="small"
+          type="primary"
+        >
+          Click to upload
+        </el-button>
+        <div
+          slot="tip"
+          class="el-upload__tip"
+        >
+          jpg/png files with a size less than 500kb
+        </div>
+      </el-upload>
     </section>
   </el-card>
 </template>
 
 <script>
 export default {
-  name: "KOntainer",
+  name: "KCard",
+  data(){
+    return {
+      /* eslint-disable */
+      fileList: []
+    };
+  },
   props: {
     container: {
       type: Object,
@@ -36,7 +66,26 @@ export default {
       })
     }
   },
-
+  methods: {
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+      handlePreview(file) {
+        console.log(file);
+      },
+      handleExceed(files, fileList) {
+        this.$message.warning(`The limit is 3, you selected ${files.length} files this time, add up to ${files.length + fileList.length} totally`);
+      },
+      beforeRemove(file, fileList) {
+        return this.$confirm(`delete ${ file.name }?`);
+      },
+      handleUpload(args) {
+        console.log(args);
+        this.$uploadFiles({
+          
+        });
+      }
+  }
 };
 </script>
 
