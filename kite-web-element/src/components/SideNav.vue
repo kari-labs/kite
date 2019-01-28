@@ -43,7 +43,7 @@
       index="5"
       v-to="'/'"
     >
-      <i class="el-icon">
+      <i class="el-icon rotate-180">
         <fa-icon icon="sign-out-alt" />
       </i>
       <span slot="title">
@@ -113,5 +113,8 @@ export default {
   font-size: 18px;
   line-height: 1;
   display: inline-block;
+}
+.rotate-180{
+  transform: rotate(180deg);
 }
 </style>

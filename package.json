@@ -8,9 +8,8 @@
     "test": "cd kite-web-element && npm run build && cd ../kite-api && docker-compose -f ../docker-compose.linux.yml build --no-cache && docker-compose -f ../docker-compose.linux.yml up -d",
     "setup:dev": "npm i && cd kite-api && docker-compose build --no-cache && docker-compose up -d && cd ../kite-web-element && npm run serve --copy",
     "setup:prod": "npm i && cd kite-web-element && npm run build && cd ../kite-api && docker-compose -f ../docker-compose.prod.yml build --no-cache && docker-compose -f ../docker-compose.prod.yml up -d",
-    "serve:web": "npm i && cd kite-web-element && npm run serve",
-    "build:web": "npm i && cd kite-web-element && npm run build",
-    "build:nginx": "cd kite-web-element && npm run build:nginx",
+    "serve:web": "cd kite-web-element && npm run serve",
+    "build:web": "cd kite-web-element && npm run build:nginx",
     "lint": "eslint . --ext .js --ext .vue --ignore-pattern node_modules/ --ignore-pattern dist/ --fix"
   },
   "repository": {

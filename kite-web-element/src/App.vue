@@ -12,7 +12,7 @@
           />
         </i>
       </el-button>
-      <span class="h1 display ml-2">
+      <span class="h1 display ml-1">
         <router-link
           to="/"
           class="el-link"
