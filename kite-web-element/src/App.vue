@@ -52,11 +52,6 @@ export default {
   background-color: #b3c0d1;
   color: #333;
 }
-.el-aside {
-  background-color: #d3dce6;
-  color: #333;
-  width: 20vw;
-}
 .el-main {
   background-color: #e9eef3;
   color: #333;
