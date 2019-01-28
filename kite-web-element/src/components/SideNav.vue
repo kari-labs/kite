@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    default-active="2"
+    default-active="1"
     class="el-menu-vertical-demo"
     @open="handleOpen"
     @close="handleClose"
@@ -8,7 +8,7 @@
   >
     <el-menu-item index="1">
       <i class="el-icon">
-        <fa-icon icon="dot-circle" />
+        <fa-icon icon="cube" />
       </i>
       <span slot="title">
         Containers
@@ -31,10 +31,6 @@
         Editor
       </span>
     </el-menu-item>
-    <!-- <el-menu-item index="4">
-      <i class="el-icon"><fa-icon icon="cog"/></i>
-      <span slot="title">Settings</span>
-    </el-menu-item> -->
     <el-menu-item index="4">
       <i class="el-icon">
         <fa-icon icon="sign-out-alt" />
