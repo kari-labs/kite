@@ -1,29 +1,12 @@
 import Vue from "vue";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import {
-  faSignOutAlt,
-  faFile,
-  faCog,
-  faFolder,
-  faExternalLinkAlt,
-  faTrash,
-  faCircle,
-  faBars,
-  faDotCircle
-} from "@fortawesome/free-solid-svg-icons";
+import * as icons from "@fortawesome/free-solid-svg-icons";
+import kiteIcons from "./icons.json";
 
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(
-  faSignOutAlt,
-  faFile,
-  faCog,
-  faFolder,
-  faExternalLinkAlt,
-  faTrash,
-  faCircle,
-  faBars,
-  faDotCircle
-);
+for( let i of kiteIcons){
+  library.add( icons[i.name] );
+}
 
 Vue.component("fa-icon", FontAwesomeIcon);
