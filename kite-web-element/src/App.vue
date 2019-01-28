@@ -5,10 +5,12 @@
         type="text"
         @click="isCollapse = !isCollapse"
       >
-        <fa-icon
-          icon="bars"
-          size="lg"
-        />
+        <i id="menuToggle">
+          <fa-icon
+            icon="bars"
+            size="lg"
+          />
+        </i>
       </el-button>
       <span class="h1 display ml-2">
         <router-link
@@ -117,5 +119,10 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
+}
+#menuToggle {
+  vertical-align: baseline;
+  width: 23px;
+  display: inline-block;
 }
 </style>

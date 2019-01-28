@@ -91,7 +91,7 @@ export default {
 .el-icon {
   margin-right: 5px;
   vertical-align: baseline;
-  width: 24px !important;
+  width: 24px;
   text-align: center;
   font-size: 18px;
   line-height: 1;
