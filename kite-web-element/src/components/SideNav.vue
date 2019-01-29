@@ -6,50 +6,46 @@
     @close="handleClose"
     :collapse="toggle"
   >
-    <el-menu-item
-      index="1"
-      v-to="'containers'"
-    >
-      <i class="el-icon">
-        <fa-icon icon="cube" />
-      </i>
-      <span slot="title">
-        Containers
-      </span>
-    </el-menu-item>
-    <el-menu-item
-      index="3"
-      disabled
-    >
-      <i class="el-icon">
-        <fa-icon icon="file" />
-      </i>
-      <span slot="title">
-        Editor
-      </span>
-    </el-menu-item>
-    <el-menu-item
-      index="4"
-      v-to="'help'"
-    >
-      <i class="el-icon">
-        <fa-icon icon="question" />
-      </i>
-      <span slot="title">
-        Help
-      </span>
-    </el-menu-item>
-    <el-menu-item
-      index="5"
-      v-to="'/'"
-    >
-      <i class="el-icon rotate-180">
-        <fa-icon icon="sign-out-alt" />
-      </i>
-      <span slot="title">
-        Sign Out
-      </span>
-    </el-menu-item>
+    <router-link to="containers">
+      <el-menu-item index="1">
+        <i class="el-icon">
+          <fa-icon icon="cube" />
+        </i>
+        <span slot="title">
+          Containers
+        </span>
+      </el-menu-item>
+    </router-link>
+    <router-link to="files">
+      <el-menu-item index="3">
+        <i class="el-icon">
+          <fa-icon icon="file" />
+        </i>
+        <span slot="title">
+          File Manager
+        </span>
+      </el-menu-item>
+    </router-link>
+    <router-link to="help">
+      <el-menu-item index="4">
+        <i class="el-icon">
+          <fa-icon icon="question" />
+        </i>
+        <span slot="title">
+          Help
+        </span>
+      </el-menu-item>
+    </router-link>
+    <router-link to="/">
+      <el-menu-item index="5">
+        <i class="el-icon rotate-180">
+          <fa-icon icon="sign-out-alt" />
+        </i>
+        <span slot="title">
+          Sign Out
+        </span>
+      </el-menu-item>
+    </router-link>
   </el-menu>
 </template>
 
@@ -74,28 +70,6 @@ export default {
     handleClose() {
       //code for nav closing
     }
-  },
-  directives: {
-    to: {
-      inserted: (el, bin, vnode) => {
-        el.tabindex = "1";
-        el.attributes[0].value = "button";
-        const handleButton = () => {
-          try {
-            vnode.componentInstance.$router.push(bin.value);
-          } catch (error) {
-            // eslint-disable-next-line
-            console.group("v-to");
-            // eslint-disable-next-line
-            console.log(error);
-            // eslint-disable-next-line
-            console.groupEnd("v-to");
-          }
-        };
-        el.addEventListener("click", handleButton);
-        el.addEventListener("keypress", handleButton);
-      }
-    }
   }
 };
 </script>
@@ -116,5 +90,8 @@ export default {
 }
 .rotate-180{
   transform: rotate(180deg);
+}
+a {
+  text-decoration: none;
 }
 </style>
