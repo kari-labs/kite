@@ -5,7 +5,13 @@ export const loginUser = async (userid, password) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: `{ loginUser(userid:"${userid}",password:"${password}") }`
+      query: `{
+        user: loginUser(userid:"${userid}",password:"${password}") {
+          userid
+          name
+          scope
+        }
+      }`
     }),
   });
   response = await response.json();

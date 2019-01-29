@@ -1,18 +1,18 @@
 const { loginUser, createUser } = require('../utils/user.util');
 
 const UserResolvers = {
-  // This doesn't currently return anything - TODO
   createUser: async ({ ...userData }) => {
     try {
-      createUser(userData);
+      let user = createUser(userData);
+      return user;
     } catch(err) {
       return `${err}`;
     }
   },
   loginUser: async ({ ...userData }, req) => {
     try {
-      const result = await loginUser(userData, req);
-      return result;
+      const user = await loginUser(userData, req);
+      return user;
     } catch (err) {
       return `${err}`;
     }

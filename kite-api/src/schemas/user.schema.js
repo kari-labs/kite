@@ -6,7 +6,6 @@ const userType = `
   type User {
     _id: String,
     userid: String,
-    password: String,
     forceReset: Boolean,
     logins: Int,
     name: String,

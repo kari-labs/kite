@@ -78,10 +78,10 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          const status = loginUser(this.authForm.userid, this.authForm.pass)
-          status.then(data => {
-            if(data.loginUser === 'Success') {
-              this.$router.push('/containers')
+          const data = loginUser(this.authForm.userid, this.authForm.pass)
+          data.then(data => {
+            if(data.user.scope !== null) {
+              this.$router.push('/containers');
             } else {
               alert('Incorrect user id or password.');
             }

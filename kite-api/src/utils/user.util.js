@@ -6,30 +6,30 @@ const saltRounds = 10;
 dbConnect(process.env.DB_AUTH_USER, process.env.DB_AUTH_PASS);
 
 const createUser = async (userData) => {
-  bcrypt.hash(userData.password, saltRounds, (err, hash) => {
-    if (err) throw new Error(`Error hashing password: ${err}`);
-    new User({
-      _id: mongoose.Types.ObjectId(),
-      userid: userData.userid,
-      password: hash,
-      forceReset: true,
-      logins: 0,
-      name: userData.name,
-      containers: [],
-      preferences: {
-        theme: "Light"
-      },
-      scope: userData.scope
-    }).save();
-  });
+  const hash = await bcrypt.hash(userData.password, saltRounds);
+  const user = new User({
+    _id: mongoose.Types.ObjectId(),
+    userid: userData.userid,
+    password: hash,
+    forceReset: true,
+    logins: 0,
+    name: userData.name,
+    containers: [],
+    preferences: {
+      theme: "Light",
+    },
+    scope: userData.scope,
+  }).save();
+
+  return user;
 }
 
 const loginUser = async (userData, req) => {
   const userDB = await User.findOne({ userid: userData.userid });
   const match = await bcrypt.compare(userData.password, userDB.password);
   if(match) {
-    req.session.userStore = {...userDB._doc};
-    return `Success`;
+    req.session.userStore = userDB;
+    return req.session.userStore;
   }
   return "Incorrect user name or password";
 }
