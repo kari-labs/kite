@@ -1,5 +1,23 @@
+env:
+  - CXX=g++-5
 language: node_js
 node_js:
   - "8"
 services:
   - docker
+sudo: required
+before_install:
+  - npm i -g node-gyp
+  - touch ./kite-api/.env
+  - echo $REDIS_HOST_PORT > ./kite-api/.env
+  - echo $REDIS_HOST_NAME > ./kite-api/.env
+  - echo $REDIS_SECRET_KEY > ./kite-api/.env
+  - echo $DB_HOST > ./kite-api/.env
+  - echo $DB_AUTH_USER > ./kite-api/.env
+  - echo $DB_AUTH_PASS > ./kite-api/.env
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-5

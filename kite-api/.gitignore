@@ -40,7 +40,7 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-#.vscode/
+.vscode/
 
 # TypeScript v1 declaration files
 typings/
@@ -82,4 +82,3 @@ typings/
 .fusebox/
 
 # End of https://www.gitignore.io/api/node
-/dist

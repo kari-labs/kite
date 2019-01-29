@@ -6,6 +6,7 @@ const queryType = `
         getDirContents(userid: String!, path: String!): Directory!
         getFileSize(path: String!): String!
         getDirSize(path: String!): String!
+        loginUser(userid: String!, password: String!): String!
     }
 `;
 

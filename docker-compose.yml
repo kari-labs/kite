@@ -20,6 +20,14 @@ services:
         kite:
           aliases:
             - kitenginx
+  kite-redis:
+    build: ./kite-redis
+    ports:
+      - "6379:6379"
+    networks:
+      kite:
+        aliases:
+          - kiteredis
 networks:
   kite:
     driver: bridge

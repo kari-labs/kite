@@ -1,11 +1,32 @@
+require('dotenv').config();
 const express = require('express');
-const app = express();
+const session = require('express-session');
+const redis = require('redis').createClient(process.env.REDIS_HOST_PORT, process.env.REDIS_HOST_NAME);
+const RedisStore = require('connect-redis')(session);
 const cors = require('cors');
-const port = 3000;
 
+const app = express();
+const port = 3000;
 
 const docker = require('./routes/docker.router');
 const graphql = require('./routes/graphql.router');
+
+const sessionConfig = {
+  store: new RedisStore({
+    client: redis
+  }),
+  secret: process.env.REDIS_SECRET_KEY,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {}
+}
+
+if(app.get('env') === 'production') {
+  app.set('trust proxy', 1);
+  sessionConfig.cookie.secure = true;
+}
+
+app.use(session(sessionConfig));
 
 app.use('/api/docker', cors(), docker);
 app.use('/api/graphql', cors(), graphql);

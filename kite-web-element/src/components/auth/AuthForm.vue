@@ -9,6 +9,7 @@
       prop="userid"
     >
       <el-input
+        autofocus
         v-model="authForm.userid"
         placeholder="001233455"
         auto-complete="off"
@@ -36,16 +37,14 @@
 </template>
 
 <script>
-const _MinUserIDLength = 4;
-const _MinUserPWLength = 4;
+import { loginUser } from '../../utils/auth.util';
+
 export default {
   data() {
     // User ID Validation
     const validateUserID = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please input a User ID'));
-      } else if (value.length < _MinUserIDLength) {
-        callback(new Error(`Invalid ID - Minimum ID Length: ${_MinUserIDLength}`));
       } else {
         callback();
       }
@@ -55,8 +54,6 @@ export default {
     const validateUserPW = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('Please input a password'));
-      } else if (value.length < _MinUserPWLength) {
-        callback(new Error(`Invalid Password - Minimum Password Length: ${_MinUserPWLength}`));
       } else {
         callback();
       }
@@ -81,7 +78,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          alert('Logged In!');
+          const status = loginUser(this.authForm.userid, this.authForm.pass)
+          status.then(data => {
+            if(data.loginUser === 'Success') {
+              this.$router.push('/containers')
+            } else {
+              alert('Incorrect user id or password.');
+            }
+          })
         } else {
           return false;
         }

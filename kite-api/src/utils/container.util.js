@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Docker = require('dockerode');
 
-const config = require('../config/config');
+const config = require('../../config/config');
 
 const docker = new Docker(config.dockerConfig)
 
