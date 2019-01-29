@@ -11,9 +11,9 @@ services:
             - kiteapi
   kite-nginx:
     build: ./kite-nginx
-    volumes:
-       - "${KITE_SSLCERT}:/etc/nginx/cert.crt"
-       - "${KITE_SSLKEY}:/etc/nginx/key.key"
+#    volumes:
+#      - "${KITE_SSLCERT}:/etc/nginx/cert.crt"
+#      - "${KITE_SSLKEY}:/etc/nginx/key.key"
     ports:
      - "443:443"
      - "80:80"
