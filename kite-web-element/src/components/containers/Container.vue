@@ -12,11 +12,15 @@
           {{ container.name || "Card title" }}
         </span>
       </el-badge>
+      <span class="el-card-header-subtitle">
+        <small>{{ container.image }}</small>
+      </span>
     </div>
     <section class="el-card-body">
-      <k-quick-upload />
-      <br>
       <slot>We still haven't designed the cards body.</slot>
+      <br>
+      <br>
+      <k-quick-upload />
     </section>
   </el-card>
 </template>

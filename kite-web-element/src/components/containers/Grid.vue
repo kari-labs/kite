@@ -10,7 +10,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .deck {
     display: grid;
     /* THIS IS WHERE YOU CHANGE THE CARD_WIDTH */
@@ -19,5 +19,9 @@ export default {
     grid-column-gap: 2em;
     justify-content: "space-around";
     width: 100%;
+}
+.deck > *{
+  width: 400px;
+  height: 15vh;
 }
 </style>

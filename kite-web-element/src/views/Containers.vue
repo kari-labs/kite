@@ -6,6 +6,7 @@
         :key="c.name"
         :container="c"
       />
+      <k-create-container />
     </k-grid>
   </div>
 </template>
@@ -13,6 +14,7 @@
 <script>
 import KGrid from "@/components/containers/Grid.vue";
 import KCard from "@/components/containers/Container.vue";
+import KCreateContainer from "@/components/containers/CreateContainer.vue";
 
 export default {
   data(){
@@ -30,14 +32,16 @@ export default {
         }
       }
     `).data.containers.map(c => ({
-      name: c.Name,
-      status: c.State.Status,
-      image: c.Config.Image
-    }) );
+        name: c.Name,
+        status: c.State.Status,
+        image: c.Config.Image
+      }) 
+    );
   },
   components: {
     KGrid,
-    KCard
+    KCard,
+    KCreateContainer,
   }
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <el-upload
-    action
+    action=""
     :on-preview="handlePreview"
     :on-remove="handleRemove"
     :before-remove="beforeRemove"
