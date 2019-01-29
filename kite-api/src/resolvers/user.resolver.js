@@ -3,10 +3,10 @@ const { loginUser, createUser } = require('../utils/user.util');
 const UserResolvers = {
   createUser: async ({ ...userData }) => {
     try {
-      const user = createUser(userData);
+      const userDB = createUser(userData);
       return {
-        ...user,
-        _id: user._id.toString(),
+        ...userDB.toObject(),
+        _id: userDB._id.toString(),
       }
     } catch(err) {
       return `${err}`;
