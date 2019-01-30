@@ -25,18 +25,13 @@ export default {
   async mounted() {
     this.containers = ( await this.$jraph`
       query{
-        containers: getAllContainers{
-          Name
-          State{ Status }
-          Config{ Image }
+        containers: getContainers{
+          nickname
+          image
+          status
         }
       }
-    `).data.containers.map(c => ({
-        name: c.Name,
-        status: c.State.Status,
-        image: c.Config.Image
-      }) 
-    );
+    `).data.containers;
   },
   components: {
     KGrid,
