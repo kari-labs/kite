@@ -33,6 +33,9 @@ const loginUser = async (userData, req) => {
   }
   return "Incorrect user name or password";
 }
+const getUsers = async () => {
+  const users = await User.find();
+  return users;
+}
 
-
-module.exports = { createUser, loginUser };
+module.exports = { createUser, loginUser, getUsers };

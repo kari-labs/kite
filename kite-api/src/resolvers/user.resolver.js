@@ -1,4 +1,4 @@
-const { loginUser, createUser } = require('../utils/user.util');
+const { loginUser, createUser, getUsers } = require('../utils/user.util');
 
 const UserResolvers = {
   createUser: async ({ ...userData }) => {
@@ -17,6 +17,14 @@ const UserResolvers = {
       return `${err}`;
     }
   },
+  getUsers: async () => {
+    try {
+      const users = await getUsers();
+      return users;
+    } catch (err) {
+      return `${err}`;
+    }
+  }
 }
 
 module.exports = { UserResolvers };

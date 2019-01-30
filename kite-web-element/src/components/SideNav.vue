@@ -41,6 +41,17 @@
     </el-menu-item>
     <el-menu-item
       index="5"
+      v-to="'admin'"
+    >
+      <i class="el-icon">
+        <fa-icon icon="user-shield" />
+      </i>
+      <span slot="title">
+        Admin
+      </span>
+    </el-menu-item>
+    <el-menu-item
+      index="6"
       v-to="'/'"
     >
       <i class="el-icon rotate-180">
