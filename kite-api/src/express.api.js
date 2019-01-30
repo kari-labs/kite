@@ -8,6 +8,11 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
+const corsOptions = {
+  origin: 'http://localhost:8081',
+  credentials: true,
+}
+
 const docker = require('./routes/docker.router');
 const graphql = require('./routes/graphql.router');
 
@@ -28,7 +33,7 @@ if(app.get('env') === 'production') {
 
 app.use(session(sessionConfig));
 
-app.use('/api/docker', cors(), docker);
-app.use('/api/graphql', cors(), graphql);
+app.use('/api/docker', cors(corsOptions), docker);
+app.use('/api/graphql', cors(corsOptions), graphql);
 
 app.listen(port, () => console.log(`KITE-API listening on port ${port}!`));
