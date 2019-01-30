@@ -1,4 +1,4 @@
-const { createContainer, stopContainer, getContainer, getAllContainers } = require('../utils/container.util');
+const { createContainer, stopContainer, getContainer, getContainers } = require('../utils/container.util');
 
 const ContainerResolvers = {
   createContainer: async ({ owner, userid, nickname }) => {
@@ -17,9 +17,9 @@ const ContainerResolvers = {
           return `Error retrieving your container - ${err}`;
       }
   },
-  getAllContainers: async () => {
+  getContainers: async ({userid}) => {
       try {
-          let containers = await getAllContainers();
+          let containers = await getContainers();
           return containers;
       } catch (err) {
           return `Error retriving the containers - ${err}`;
