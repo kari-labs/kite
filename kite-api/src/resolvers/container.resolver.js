@@ -1,12 +1,14 @@
 const { createContainer, stopContainer, getContainer, getAllContainers } = require('../utils/container.util');
 
 const ContainerResolvers = {
-  createContainer: async ({ owner, userid, nickname }) => {
+  createContainer: async ({ owner, userid, nickname }, state) => {
+      //Still trying to figure this out
+      console.log("ARGS", {...(state.res.req.sessionStore)});
       try {
-          await createContainer({owner, userid, nickname});
-          return `Successfully created container for student ${userid}`;
+          const c = await createContainer({owner, userid, nickname});
+          return c;
       } catch (err) {
-          return `Error creating container for student - ${err}`;
+          throw new Error("There was an error creating that container: ", err);
       }
   },
   getContainer: async ({container_id}) => {
