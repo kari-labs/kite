@@ -7,10 +7,11 @@
 
 <script>
 import KAdminTable from "@/components/admin/ATable.vue";
-import KACreate from "@/components/admin/AUserCreate.vue";
+//import KACreate from "@/components/admin/AUserCreate.vue";
 export default {
   components: {
-    KAdminTable
+    KAdminTable,
+    //KACreate
   }
 }
 </script>
