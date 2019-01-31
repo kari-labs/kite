@@ -6,50 +6,60 @@
     @close="handleClose"
     :collapse="toggle"
   >
-    <router-link to="containers">
-      <el-menu-item index="1">
-        <i class="el-icon">
-          <fa-icon icon="cube" />
-        </i>
-        <span slot="title">
-          Containers
-        </span>
-      </el-menu-item>
-    </router-link>
-    <router-link to="files">
-      <el-menu-item index="3">
-        <i class="el-icon">
-          <fa-icon icon="file" />
-        </i>
-        <span slot="title">
-          File Manager
-        </span>
-      </el-menu-item>
-    </router-link>
-    <router-link to="help">
-      <el-menu-item index="4">
-        <i class="el-icon">
-          <fa-icon icon="question" />
-        </i>
-        <span slot="title">
-          Help
-        </span>
-      </el-menu-item>
-    </router-link>
-    <router-link to="/">
-      <el-menu-item index="5">
-        <i class="el-icon rotate-180">
-          <fa-icon icon="sign-out-alt" />
-        </i>
-        <span slot="title">
-          Sign Out
-        </span>
-      </el-menu-item>
-    </router-link>
+    <k-nav-item
+      to="containers"
+      index="1"
+      title="Containers"
+    >
+      <i
+        class="el-icon"
+        slot="icon"
+      >
+        <fa-icon icon="cube" />
+      </i>
+    </k-nav-item>
+    <k-nav-item
+      to="files"
+      index="2"
+      title="File Manager"
+    >
+      <i
+        class="el-icon"
+        slot="icon"
+      >
+        <fa-icon icon="file" />
+      </i>
+    </k-nav-item>
+    <k-nav-item
+      to="help"
+      index="3"
+      title="Help"
+    >
+      <i
+        class="el-icon"
+        slot="icon"
+      >
+        <fa-icon icon="question" />
+      </i>
+    </k-nav-item>
+    <k-nav-item
+      to="/"
+      index="4"
+      title="Sign Out"
+    >
+      <i
+        class="el-icon rotate-180"
+        slot="icon"
+      >
+        <fa-icon icon="sign-out-alt" />
+      </i>
+    </k-nav-item>
   </el-menu>
 </template>
 
 <script>
+import KNavItem from "@/components/NavItem.vue";
+
 export default {
   name: "KNav",
   props: {
@@ -70,6 +80,9 @@ export default {
     handleClose() {
       //code for nav closing
     }
+  },
+  components: {
+    KNavItem
   }
 };
 </script>
@@ -90,8 +103,5 @@ export default {
 }
 .rotate-180{
   transform: rotate(180deg);
-}
-a {
-  text-decoration: none;
 }
 </style>
