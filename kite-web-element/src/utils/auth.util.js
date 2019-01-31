@@ -2,7 +2,7 @@ export const loginUser = async (userid, password) => {
   let response = await fetch('https://localhost/api/graphql', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       query: `{
@@ -30,7 +30,8 @@ export const getUserScope = async () => {
         scope: getUserScope
       }`
     }),
+    credentials: 'include',
   });
   response = await response.json();
-  return response.data;
+  return response.data.scope;
 }

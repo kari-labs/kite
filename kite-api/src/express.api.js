@@ -22,8 +22,10 @@ const sessionConfig = {
   }),
   secret: process.env.REDIS_SECRET_KEY,
   resave: false,
-  saveUninitialized: true,
-  cookie: {}
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 648000 // 3 hours in ms
+  }
 }
 
 if(app.get('env') === 'production') {

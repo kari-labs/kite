@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Login from "@/views/Login.vue";
 import Containers from "@/views/Containers.vue";
 import Help from "@/views/Help.vue";
+import { getUserScope } from "@/utils/auth.util.js";
 
 Vue.use(Router);
 
@@ -39,6 +40,31 @@ const router = new Router({
       meta: { hideHeader: false }
     }
   ]
+});
+
+const openRoutes = [
+  "login",
+  "resetPassword",
+  "contactAdmin",
+];
+
+// Runs auth on all routes by default
+// (to) - page the user is requesting to go to
+// (from) - page the user is coming from
+// (next) - lets user proceed to page
+router.beforeEach((to, from, next) => {
+  if(openRoutes.includes(to.name)) {
+    next()
+  } else {
+    const data = getUserScope();
+    data.then(scope => {
+      if(scope.length > 0) {
+        next();
+      } else {
+        router.push('/');
+      }
+    });
+  }
 });
 
 export default router;
