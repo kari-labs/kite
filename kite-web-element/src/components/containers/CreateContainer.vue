@@ -94,9 +94,9 @@ export default {
   color: rgba(0,0,0,0.3);
   border-radius: 6px;
   width: 400px;
-  height: 15vh;
+  height: 203.85px;
   text-align: center;
-  line-height: 15vh;
+  line-height: 203.85px;
   cursor: pointer;
   font-family: "Roboto";
   font-weight: 400;

@@ -1,7 +1,7 @@
 const queryType = `
     type Query {
-        getContainer(userid: String!): Container!
-        getAllContainers: [Container!]!
+        getContainer(container_id: String!): Container!
+        getContainers: [Container!]!
         getFileInfo(userid: String!, path: String!): File!
         getDirContents(userid: String!, path: String!): Directory!
         getFileSize(path: String!): String!
