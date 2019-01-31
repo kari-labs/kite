@@ -22,6 +22,6 @@ export default {
 }
 .deck > *{
   width: 400px;
-  height: 15vh;
+  height: 203.85px;
 }
 </style>

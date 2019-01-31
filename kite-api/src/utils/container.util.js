@@ -62,7 +62,7 @@ async function getContainer(container_id) {
   return container;
 }
 
-async function getAllContainers() {
+async function getContainers() {
   const containers = await Container.find({}).populate('owner').exec();
   return containers;
 }
@@ -79,4 +79,4 @@ process.on('SIGTERM', () => {
   }
 });
 
-module.exports = { createContainer, stopContainer, getContainer, getAllContainers }
+module.exports = { createContainer, stopContainer, getContainer, getContainers }
