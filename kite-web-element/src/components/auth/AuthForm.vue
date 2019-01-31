@@ -75,17 +75,28 @@ export default {
     };
   },
   methods: {
+    // This function can be improved.
+    // REFACTOR
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           const data = loginUser(this.authForm.userid, this.authForm.pass)
           data.then(data => {
-            if(data.user.scope !== null) {
-              this.$router.push('/containers');
-            } else {
-              alert('Incorrect user id or password.');
-            }
-          })
+            // If scope is !== null then the user is valid and has scope
+            data.user.scope !== null ? (
+              // Check if the user was trying to access a certain page
+              this.$route.query.redirect !== undefined ? (
+                // If they were, route them there
+                this.$router.push(this.$route.query.redirect)
+              ) : (
+                // If they weren't, push them to the containers page
+                this.$router.push('/containers')
+              )
+            ) : (
+              // If the User can't be logged in return an error message
+              alert('Incorrect User ID or Password')
+            )
+          });
         } else {
           return false;
         }

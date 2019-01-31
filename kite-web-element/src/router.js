@@ -17,7 +17,10 @@ const router = new Router({
       path: "/",
       name: "login",
       component: Login,
-      meta: { hideHeader: true }
+      meta: { 
+        hideHeader: true,
+        requiresAuth: false,
+      }
     },
     {
       path: "/containers",
@@ -27,7 +30,10 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       //component: () => import(/* webpackChunkName: "containers" */ "./views/Containers.vue")
       component: Containers,
-      meta: { hideHeader: false }
+      meta: { 
+        hideHeader: false,
+        requiresAuth: true,
+      }
     },
     {
       path: "/help",
@@ -37,33 +43,40 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       //component: () => import(/* webpackChunkName: "containers" */ "./views/Containers.vue")
       component: Help,
-      meta: { hideHeader: false }
+      meta: { 
+        hideHeader: false,
+        requiresAuth: true,
+      }
     }
   ]
 });
-
-const openRoutes = [
-  "login",
-  "resetPassword",
-  "contactAdmin",
-];
 
 // Runs auth on all routes by default
 // (to) - page the user is requesting to go to
 // (from) - page the user is coming from
 // (next) - lets user proceed to page
 router.beforeEach((to, from, next) => {
-  if(openRoutes.includes(to.name)) {
-    next()
-  } else {
+  if(to.matched.some(record => record.meta.requiresAuth)) {
     const data = getUserScope();
     data.then(scope => {
+      // This currently just checks if the user has any scope.
+      // At some point we should check if the user has the required scope to visit the requested page.
+      // Ex. - User with scope of ["adminpanel", "containers"] requests to visit the "editor" page. They should be denied because they don't have the required scope.
+      // The current system works like this - User with scope ["containers", "help"] requests page "adminpanel", he/she is allowed to go there because
+      //     this function only checks if the user has any scope at all.
       if(scope.length > 0) {
         next();
       } else {
-        router.push('/');
+        next({
+          path: '/',
+          query: {
+            redirect: to.fullPath
+          }
+        });
       }
     });
+  } else {
+    next();
   }
 });
 
