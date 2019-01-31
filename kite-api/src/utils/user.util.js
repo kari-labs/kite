@@ -25,11 +25,11 @@ const createUser = async (userData) => {
 }
 
 const loginUser = async (userData, req) => {
-  const userDB = await User.findOne({ userid: userData.userid });
+  const userDB = await User.findOne({ userid: userData.userid }).exec();
   const match = await bcrypt.compare(userData.password, userDB.password);
   if(match) {
     req.session.userStore = userDB;
-    return req.session.userStore;
+    return userDB;
   }
   return "Incorrect user name or password";
 }
