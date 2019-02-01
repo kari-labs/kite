@@ -17,7 +17,7 @@ const ContainerResolvers = {
           return `Error retrieving your container - ${err}`;
       }
   },
-  getContainers: async ({userid}) => {
+  getContainers: async () => {
       try {
           let containers = await getContainers();
           return containers;
