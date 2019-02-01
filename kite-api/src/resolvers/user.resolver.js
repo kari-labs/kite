@@ -1,4 +1,4 @@
-const { loginUser, createUser } = require('../utils/user.util');
+const { loginUser, createUser, getUserScope } = require('../utils/user.util');
 
 const UserResolvers = {
   createUser: async ({ ...userData }) => {
@@ -23,6 +23,14 @@ const UserResolvers = {
       return `${err}`;
     }
   },
+  getUserScope: async (_, req) => {
+    try {
+      const scope = await getUserScope(req);
+      return scope;
+    } catch (err) {
+      return `${err}`;
+    }
+  }
 }
 
 module.exports = { UserResolvers };
