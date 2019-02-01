@@ -1,9 +1,7 @@
 const { createContainer, stopContainer, getContainer, getContainers } = require('../utils/container.util');
 
 const ContainerResolvers = {
-  createContainer: async ({ owner, userid, nickname }, state) => {
-      //Still trying to figure this out
-      console.log("ARGS", {...(state.res.req.sessionStore)});
+  createContainer: async ({ owner, userid, nickname }) => {
       try {
           const c = await createContainer({owner, userid, nickname});
           return c;
