@@ -6,7 +6,7 @@
         :key="c.name"
         :container="c"
       />
-      <k-create-container />
+      <k-create-container @created="fetchContainers" />
     </k-grid>
   </div>
 </template>
@@ -19,9 +19,10 @@ import KCreateContainer from "@/components/containers/CreateContainer.vue";
 export default {
   data(){
     return {
-      containers: []
+      containers: [],
     };
   },
+
   async mounted() {
     this.containers = ( await this.$jraph`
       query{

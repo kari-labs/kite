@@ -75,17 +75,23 @@ export default {
     };
   },
   methods: {
+    // This function can be improved.
+    // REFACTOR
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
           const data = loginUser(this.authForm.userid, this.authForm.pass)
           data.then(data => {
-            if(data.user.scope !== null) {
-              this.$router.push('/containers');
+            if(data.user.scope) {
+              if(this.$route.query.redirect) {
+                this.$router.push(this.$route.query.redirect);
+              } else {
+                this.$router.push('/containers')
+              }
             } else {
-              alert('Incorrect user id or password.');
+              alert('Incorrect User ID or Password');
             }
-          })
+          });
         } else {
           return false;
         }

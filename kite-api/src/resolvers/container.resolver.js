@@ -3,10 +3,10 @@ const { createContainer, stopContainer, getContainer, getContainers } = require(
 const ContainerResolvers = {
   createContainer: async ({ owner, userid, nickname }) => {
       try {
-          await createContainer({owner, userid, nickname});
-          return `Successfully created container for student ${userid}`;
+          const c = await createContainer({owner, userid, nickname});
+          return c;
       } catch (err) {
-          return `Error creating container for student - ${err}`;
+          throw new Error("There was an error creating that container: ", err);
       }
   },
   getContainer: async ({container_id}) => {
@@ -17,7 +17,7 @@ const ContainerResolvers = {
           return `Error retrieving your container - ${err}`;
       }
   },
-  getContainers: async ({userid}) => {
+  getContainers: async () => {
       try {
           let containers = await getContainers();
           return containers;
