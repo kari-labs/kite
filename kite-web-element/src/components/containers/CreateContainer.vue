@@ -18,16 +18,24 @@
           :label-width="formLabelWidth"
         >
           <el-form-item label="Container name">
-            <el-input v-model="form.name" />
+            <el-input v-model="form.nickname" />
           </el-form-item>
           <el-form-item label="Container image">
             <el-select
               v-model="form.image"
-              placeholder="select container image"
+              placeholder="Select container image"
+              
+              :filterable="true"
             >
               <el-option
                 label="PHP"
                 value="sseemayer/mini-php"
+                selected
+              />
+              <el-option
+                label="Node.js"
+                value="node/node"
+                selected
               />
             </el-select>
           </el-form-item>
@@ -52,16 +60,21 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
       dialogVisible: false,
       form: {
-        name: "",
-        image: ""
+        nickname: "",
+        image: "PHP",
       },
-      formLabelWidth: "120px"
+      formLabelWidth: "120px",
     };
+  },
+  computed: {
+    ...mapState(['user'])
   },
   methods: {
     handleClose(done) {
@@ -74,16 +87,18 @@ export default {
     },
     async handleCreateContainer() {
       const req = await this.$jraph`
-      mutation{
-        msg: createContainer( userid: "${Math.floor(
-          Math.random() * 1000000000
-        )}-${this.form.name}" )
-      }
+        mutation{
+          container: createContainer(
+            owner: "${this.user._id}",
+            userid: "${this.user.userid}",
+            nickname: "${this.form.nickname}"
+          )
+        }
       `;
-
+      this.$emit("created", null);
       console.log(req);
       this.dialogVisible = false;
-    }
+    },
   }
 };
 </script>

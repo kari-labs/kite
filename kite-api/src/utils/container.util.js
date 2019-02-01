@@ -50,7 +50,15 @@ async function createContainer(obj) {
 }
 
 async function getContainer(container_id) {
-  let container = await Container.findOne({container_id: container_id}).populate("owner");
+  let container = await Container.findOne(
+    {
+      container_id: {
+        $regex: `^(${container_id}\\w*)$`
+      }
+    }
+  )
+  .populate("owner")
+  .exec();
   return container;
 }
 
