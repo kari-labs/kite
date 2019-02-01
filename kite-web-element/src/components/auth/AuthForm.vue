@@ -82,20 +82,15 @@ export default {
         if (valid) {
           const data = loginUser(this.authForm.userid, this.authForm.pass)
           data.then(data => {
-            // If scope is !== null then the user is valid and has scope
-            data.user.scope !== null ? (
-              // Check if the user was trying to access a certain page
-              this.$route.query.redirect !== undefined ? (
-                // If they were, route them there
-                this.$router.push(this.$route.query.redirect)
-              ) : (
-                // If they weren't, push them to the containers page
+            if(data.user.scope) {
+              if(this.$route.query.redirect) {
+                this.$router.push(this.$route.query.redirect);
+              } else {
                 this.$router.push('/containers')
-              )
-            ) : (
-              // If the User can't be logged in return an error message
-              alert('Incorrect User ID or Password')
-            )
+              }
+            } else {
+              alert('Incorrect User ID or Password');
+            }
           });
         } else {
           return false;
