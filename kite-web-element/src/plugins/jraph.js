@@ -16,6 +16,7 @@ Jraph.install = function (Vue, options) {
             method: "POST",
             body: null,
             headers: { 'Content-Type': 'application/json' },
+            credentials: "include",
         };
         let queryString = "";
         args.forEach( (string, i) => {

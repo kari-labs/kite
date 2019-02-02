@@ -7,38 +7,41 @@ const { dbConnect } = require('./mongo.util');
 const Container = require("../models/container.model");
 
 const docker = new Docker(config.dockerConfig);
-const containers = {};
-
 dbConnect(process.env.DB_CONTAINER_USER, process.env.DB_CONTAINER_PASS);
 
-async function createContainer(obj) {
+const containers = {};
+
+const deleteUserContainer = async _id => await Container.deleteOne({_id});
+
+
+async function createContainer(options) {
   if (!fs.existsSync(config.userFolderPath))
     fs.mkdirSync(config.userFolderPath);
-  if (!fs.existsSync(`${config.userFolderPath}${obj.userid}`))
-    fs.mkdirSync(`${config.userFolderPath}${obj.userid}`);
+  if (!fs.existsSync(`${config.userFolderPath}${options.userid}`))
+    fs.mkdirSync(`${config.userFolderPath}${options.userid}`);
 
   await docker.pull(config.phpServerImage);
 
   let container = await docker.createContainer({
-    name: `${obj.userid}php`,
+    name: options.nickname,
     image: config.phpServerImage,
     HostConfig: {
-      AutoRemove: true,
+      AutoRemove: false,
       NetworkMode: config.networkName,
       Binds: [
-        `${config.userHostFolderPath}${obj.userid}:/app/htdocs/`
+        `${config.userHostFolderPath}${options.userid}:/app/htdocs/`
       ],
     },
   });
   await container.start();
-  containers[`${obj.userid}php`] = container;
+  containers[`${options.userid}php`] = container;
 
   let info = await container.inspect();
 
   let c = new Container(
     {
-      nickname: obj.nickname,
-      owner: ObjectId(obj.owner),
+      nickname: options.nickname,
+      owner: ObjectId(options.owner),
       container_id: info.Id,
       status: info.State.Status,
       image: info.Config.Image
@@ -49,23 +52,9 @@ async function createContainer(obj) {
   return savedContainer;
 }
 
-async function getContainer(container_id) {
-  let container = await Container.findOne(
-    {
-      container_id: {
-        $regex: `^(${container_id}\\w*)$`
-      }
-    }
-  )
-  .populate("owner")
-  .exec();
-  return container;
-}
+const getContainer  = async container_id => Container.findOne({container_id:{$regex:`^(${container_id}\\w*)$`}}).populate("owner").exec();
 
-async function getContainers() {
-  const containers = await Container.find({}).populate('owner').exec();
-  return containers;
-}
+const getContainers = async _id => Container.find({owner: { _id }}).populate('owner').exec();
 
 async function stopContainer(userid) {
   let container = docker.getContainer(userid);
@@ -75,6 +64,7 @@ async function stopContainer(userid) {
 
 process.on('SIGTERM', () => {
   for (let container of Object.keys(containers)) {
+    //We dont want to delete the container from the DB because that defeats the purpose of the containers
     stopContainer(container);
   }
 });
