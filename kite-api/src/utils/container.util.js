@@ -52,7 +52,22 @@ async function createContainer(options) {
   return savedContainer;
 }
 
-const getContainer  = async container_id => Container.findOne({container_id:{$regex:`^(${container_id}\\w*)$`}}).populate("owner").exec();
+async function getContainer(container_id) {
+  let actual_status = (await docker.getContainer(container_id).inspect()).State.Status;
+  let container = await Container.findOne(
+    {
+      container_id: {
+        $regex: `^(${container_id}\\w*)$`
+      }
+    }
+  )
+  .populate("owner")
+  .exec();
+  /* 
+  * If container is stopped, then update that container in the database, or delete it
+  */
+  return container;
+}
 
 const getContainers = async _id => Container.find({owner: { _id }}).populate('owner').exec();
 
