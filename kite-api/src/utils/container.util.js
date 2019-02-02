@@ -11,7 +11,7 @@ dbConnect(process.env.DB_CONTAINER_USER, process.env.DB_CONTAINER_PASS);
 
 const containers = {};
 
-const deleteUserContainer = async _id => await Container.deleteOne({_id});
+const deleteContainer = async container_id => await Container.deleteOne({container_id});
 
 
 async function createContainer(options) {
@@ -66,10 +66,15 @@ async function getContainer(container_id) {
   /* 
   * If container is stopped, then update that container in the database, or delete it
   */
+  if( actual_status != container.status && container.status == "running" ) deleteContainer(container_id);
   return container;
 }
 
-const getContainers = async _id => Container.find({owner: { _id }}).populate('owner').exec();
+const getContainers = async _id => {
+  let containers = await Container.find({owner: { _id }}).populate('owner').exec();
+  //Error here
+  return containers.filter(async c => c.status == ( await docker.getContainer(c.container_id).inspect() ).State.Status );
+};
 
 async function stopContainer(userid) {
   let container = docker.getContainer(userid);
