@@ -12,7 +12,7 @@ services:
         kite:
           aliases:
             - kiteapi
-        kiteprivate:
+        kite-private:
   kite-nginx:
     depends_on:
       - kite-api
@@ -32,7 +32,7 @@ services:
     sysctls:
       net.core.somaxconn: 1024
     networks:
-      kiteprivate:
+      kite-private:
         aliases:
           - kiteredis
   kite-mongo:
@@ -46,5 +46,5 @@ services:
 networks:
   kite:
     driver: bridge
-  kiteprivate:
+  kite-private:
     driver: bridge
