@@ -29,6 +29,14 @@ services:
       kite:
         aliases:
           - kiteredis
+    kite-mongo:
+    environment:
+      MONGO_INITDB_DATABASE: kite
+    build: ./kite-mongo
+    networks:
+      kite-private:
+        aliases:
+          - kitemongo
 networks:
   kite:
     driver: bridge
