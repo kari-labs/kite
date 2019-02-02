@@ -89,8 +89,6 @@ export default {
       const req = await this.$jraph`
         mutation{
           container: createContainer(
-            owner: "${this.user._id}",
-            userid: "${this.user.userid}",
             nickname: "${this.form.nickname}"
           )
         }

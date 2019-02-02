@@ -22,17 +22,21 @@ export default {
       containers: [],
     };
   },
-
-  async mounted() {
-    this.containers = ( await this.$jraph`
-      query{
-        containers: getContainers{
-          nickname
-          image
-          status
+  methods: {
+    async fetchContainers(){
+      this.containers = ( await this.$jraph`
+        query{
+          containers: getContainers{
+            nickname
+            image
+            status
+          }
         }
-      }
-    `).data.containers;
+      `).data.containers;
+    }
+  },
+  async mounted() {
+    await this.fetchContainers();
   },
   components: {
     KGrid,
