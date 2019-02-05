@@ -1,6 +1,9 @@
 version: '3'
 services:
   kite-api:
+    depends_on:
+      - kite-mongo
+      - kite-redis
     build: ./kite-api
     volumes:
        - "/var/run/docker.sock:/var/run/docker.sock"
@@ -9,7 +12,10 @@ services:
         kite:
           aliases:
             - kiteapi
+        kite-private:
   kite-nginx:
+    depends_on:
+      - kite-api
     build: ./kite-nginx
 #    volumes:
 #      - "${KITE_SSLCERT}:/etc/nginx/cert.crt"
@@ -26,9 +32,19 @@ services:
     sysctls:
       net.core.somaxconn: 1024
     networks:
-      kite:
+      kite-private:
         aliases:
           - kiteredis
+  kite-mongo:
+    environment:
+      MONGO_INITDB_DATABASE: kite
+    build: ./kite-mongo
+    networks:
+      kite-private:
+        aliases:
+          - kitemongo
 networks:
   kite:
+    driver: bridge
+  kite-private:
     driver: bridge
