@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
-const { dbConnect } = require('./mongo.util');
-const saltRounds = 10;
-dbConnect(process.env.DB_AUTH_USER, process.env.DB_AUTH_PASS);
+const { saltRounds } = require('../../config/config');
 
 const createUser = async (userData) => {
   const hash = await bcrypt.hash(userData.password, saltRounds);

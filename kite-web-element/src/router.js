@@ -4,6 +4,7 @@ import Login from "@/views/Login.vue";
 import Containers from "@/views/Containers.vue";
 import FileManager from "@/views/FileManager.vue";
 import Help from "@/views/Help.vue";
+import K404 from "@/views/404.vue";
 import { getUserScope } from "@/utils/auth.util.js";
 
 Vue.use(Router);
@@ -57,6 +58,19 @@ const router = new Router({
       meta: { 
         hideHeader: false,
         requiresAuth: true,
+      }
+    },
+    {
+      path: "*",
+      name: "404",
+      // route level code-splitting
+      // this generates a separate chunk (containers.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      //component: () => import(/* webpackChunkName: "containers" */ "./views/Containers.vue")
+      component: K404,
+      meta: { 
+        hideHeader: true,
+        requiresAuth: false,
       }
     }
   ]

@@ -3,13 +3,10 @@ const Docker = require('dockerode');
 const config = require('../../config/config');
 const { ObjectId } = require("mongoose").Types;
 
-const { dbConnect } = require('./mongo.util');
 const Container = require("../models/container.model");
 
 const docker = new Docker(config.dockerConfig);
 const containers = {};
-
-dbConnect(process.env.DB_CONTAINER_USER, process.env.DB_CONTAINER_PASS);
 
 async function createContainer(obj) {
   if (!fs.existsSync(config.userFolderPath))
