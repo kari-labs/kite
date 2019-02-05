@@ -1,6 +1,6 @@
 const mutationType = `
     type Mutation {
-        createContainer(nickname: String!): String
+        createContainer(nickname: String!): Container
         deleteContainer(userid: String!): String
         singleUpload(userid: String!, file: Upload!): File!
         multipleUpload(userid: String!, files: [Upload!]!): [File!]!
