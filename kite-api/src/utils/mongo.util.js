@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const dbConnect = async (username, password) => {
-  mongoose.connect(`mongodb+srv://${username}:${password}@${process.env.DB_HOST}`, { useNewUrlParser: true });
+const dbConnect = async () => {
+  mongoose.connect(`mongodb://kitemongo:27017/kite`, { useNewUrlParser: true });
   const db = mongoose.connection;
-  db.on('error', () => { 
-    throw new Error('Error Connection to Database')
+  db.on('error', (err) => { 
+    throw new Error(err)
   });
 }
 

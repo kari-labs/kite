@@ -3,16 +3,10 @@ const Docker = require('dockerode');
 const config = require('../../config/config');
 const { ObjectId } = require("mongoose").Types;
 
-const { dbConnect } = require('./mongo.util');
 const Container = require("../models/container.model");
 
 const docker = new Docker(config.dockerConfig);
-dbConnect(process.env.DB_CONTAINER_USER, process.env.DB_CONTAINER_PASS);
-
 const containers = {};
-
-const deleteContainer = async container_id => await Container.deleteOne({container_id});
-
 
 async function createContainer(options) {
   if (!fs.existsSync(config.userFolderPath))
@@ -53,6 +47,7 @@ async function createContainer(options) {
 }
 
 async function getContainer(container_id) {
+  //eslint-disable-next-line
   let actual_status = (await docker.getContainer(container_id).inspect()).State.Status;
   let container = await Container.findOne(
     {
@@ -66,7 +61,6 @@ async function getContainer(container_id) {
   /* 
   * If container is stopped, then update that container in the database, or delete it
   */
-  if( actual_status != container.status && container.status == "running" ) deleteContainer(container_id);
   return container;
 }
 

@@ -10,9 +10,8 @@ const ContainerResolvers = {
       throw new Error("There was an error creating that container: " + err);
     }
   },
-  getContainer: async ({ container_id }, req) => {
+  getContainer: async ({ container_id }) => {
     try {
-      let store = req.session.userStore;
       let container = await getContainer(container_id);
       return container;
     } catch (err) {

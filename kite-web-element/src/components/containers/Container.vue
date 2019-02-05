@@ -16,7 +16,6 @@
         <small>{{ container.image }}</small>
       </span>
     </div>
-    
   </el-card>
 </template>
 
@@ -39,6 +38,9 @@ export default {
       })
     },
   },
+  components: {
+    
+  }
 };
 </script>
 
@@ -50,15 +52,5 @@ export default {
 .el-card-header-title {
   margin: 0px;
   font-weight: 500;
-}
-.el-card__body {
-  display: flex;
-  flex-direction: column;
-  align-content: flex-start;
-  align-items: flex-start;
-  justify-content: flex-start;
-  font-weight: 300;
-  padding: 12px 19.416px !important;
-  height: max-content;
 }
 </style>
