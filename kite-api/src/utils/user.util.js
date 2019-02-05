@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const User = require('../models/user.model');
-const { dbConnect } = require('./mongo.util');
-const saltRounds = 10;
-dbConnect(process.env.DB_AUTH_USER, process.env.DB_AUTH_PASS);
+const { saltRounds } = require('../../config/config');
 
 const createUser = async (userData) => {
   const hash = await bcrypt.hash(userData.password, saltRounds);
@@ -25,17 +23,26 @@ const createUser = async (userData) => {
 }
 
 const loginUser = async (userData, req) => {
-  const userDB = await User.findOne({ userid: userData.userid });
+  const userDB = await User.findOne({ userid: userData.userid }).exec();
   const match = await bcrypt.compare(userData.password, userDB.password);
   if(match) {
     req.session.userStore = userDB;
-    return req.session.userStore;
+    return userDB;
   }
   return "Incorrect user name or password";
 }
-const getUsers = async () => {
+const getAllUsers = async () => {
   const users = await User.find();
   return users;
 }
 
-module.exports = { createUser, loginUser, getUsers };
+const getUserScope = async (req) => {
+  const user = req.session.userStore;
+  if(user) {
+    return user.scope
+  }
+  return [];
+}
+
+
+module.exports = { createUser, loginUser, getUserScope, getAllUsers };

@@ -1,5 +1,6 @@
 <template>
   <el-upload
+    id="root"
     action=""
     :on-preview="handlePreview"
     :on-remove="handleRemove"
@@ -68,5 +69,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 </style>

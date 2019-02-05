@@ -13,8 +13,25 @@ export const loginUser = async (userid, password) => {
         }
       }`
     }),
+    credentials: 'include',
   });
   response = await response.json();
-
   return response.data;
+}
+
+export const getUserScope = async () => {
+  let response = await fetch('https://localhost/api/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `{
+        scope: getUserScope
+      }`
+    }),
+    credentials: 'include',
+  });
+  response = await response.json();
+  return response.data.scope;
 }
