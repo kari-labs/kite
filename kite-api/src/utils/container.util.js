@@ -16,8 +16,10 @@ async function createContainer(options) {
 
   await docker.pull(config.phpServerImage);
 
+  let dockerContainerName = options.userid+"_"+options.nickname.replace(" ", "_");
+
   let container = await docker.createContainer({
-    name: options.nickname,
+    name: dockerContainerName,
     image: config.phpServerImage,
     HostConfig: {
       AutoRemove: false,
@@ -28,7 +30,7 @@ async function createContainer(options) {
     },
   });
   await container.start();
-  containers[`${options.userid}php`] = container;
+  containers[dockerContainerName] = container;
 
   let info = await container.inspect();
 
@@ -47,8 +49,7 @@ async function createContainer(options) {
 }
 
 async function getContainer(container_id) {
-  //eslint-disable-next-line
-  let actual_status = (await docker.getContainer(container_id).inspect()).State.Status;
+  //let actual_status = (await docker.getContainer(container_id).inspect()).State.Status;
   let container = await Container.findOne(
     {
       container_id: {
@@ -65,9 +66,18 @@ async function getContainer(container_id) {
 }
 
 const getContainers = async _id => {
-  let containers = await Container.find({owner: { _id }}).populate('owner').exec();
-  //Error here
-  return containers.filter(async c => c.status == ( await docker.getContainer(c.container_id).inspect() ).State.Status );
+  let user_containers = await Container.find({owner: { _id }}).populate('owner').exec();
+  user_containers.forEach( async uc => {
+    const c = docker.getContainer(uc.container_id)
+    const status = (await c.inspect()).State.Status;
+    if(status === uc.status){
+      //Good to go
+    }else if (status !== uc.status && uc.status === "running") {
+      //Start the container
+      await c.start();
+    }
+  });
+  return user_containers;
 };
 
 async function stopContainer(userid) {
@@ -78,7 +88,6 @@ async function stopContainer(userid) {
 
 process.on('SIGTERM', () => {
   for (let container of Object.keys(containers)) {
-    //We dont want to delete the container from the DB because that defeats the purpose of the containers
     stopContainer(container);
   }
 });
