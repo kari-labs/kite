@@ -59,9 +59,6 @@ async function getContainer(container_id) {
   )
   .populate("owner")
   .exec();
-  /* 
-  * If container is stopped, then update that container in the database, or delete it
-  */
   return container;
 }
 
