@@ -34,6 +34,7 @@
             @click.native.prevent="deleteRow(scope.$index, tableData4)"
             type="text"
             size="small"
+            @click="deleteUser().exact"
           >
             Remove
           </el-button>
@@ -44,12 +45,13 @@
 </template>
 
 <script>
+
 export default {
   
   name: "KATable",
   methods: {
     deleteUser() {
-      
+      console.log(this)
     }
   },
   data() {
