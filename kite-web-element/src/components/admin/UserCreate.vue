@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card class="card">
     <el-form>
       <el-form-item label="User ID">
         <el-input />
@@ -20,6 +20,20 @@
             v-model="rulePass.checkPass"
             autocomplete="off"
           />
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="value5"
+            multiple
+            placeholder="Select"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item>
           <el-button
@@ -69,7 +83,19 @@ export default {
               checkPass: [
                   { validator: validatorPassTwo, trigger: 'blur' }
               ]
-          }
+          },
+          options: [{
+          value: 'containers',
+          label: 'Containers'
+        }, {
+          value: 'admin',
+          label: 'Admin'
+        }, {
+          value: 'createAdmin',
+          label: 'Super Admin'
+        }],
+        value5: [],
+        value11: []
       };
   },
   methods: {
@@ -81,25 +107,32 @@ export default {
                   console.log();
               }
           })
-      }
-  }
+      },
+    }
+}
   /*
   async created() {
     this.usersTable = (await this.$jraph`
-    query{
-        users: getUsers{
-            userid,
-            name,
-            scope,
-            containers,
-        }
-      }
+    mutation{
+  createUser(
+    userid: "", 
+    name: "", 
+    password: "", 
+    scope: [""]
+  ){
+    userid,name,scope
+  }
+}
     `).data.users;
   }
   */
-}
 </script>
 
 <style>
-
+    .card{
+        width: 25%;
+    }
+    el-form-item{
+        margin-bottom: 2px;
+    }
 </style>
