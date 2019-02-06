@@ -53,7 +53,7 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 648000 // 3 hours in ms
+    maxAge: 10800000 // 3 hours in ms
   }
 }
 
