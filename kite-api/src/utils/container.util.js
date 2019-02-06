@@ -8,6 +8,9 @@ const Container = require("../models/container.model");
 const docker = new Docker(config.dockerConfig);
 const containers = {};
 
+//This function fixes the ObjectId of mongoose query responses from appearing as a BSON object
+const standardize = obj => ({...obj.toObject(), _id: obj._id.toString()})
+
 async function createContainer(options) {
   if (!fs.existsSync(config.userFolderPath))
     fs.mkdirSync(config.userFolderPath);
@@ -16,7 +19,7 @@ async function createContainer(options) {
 
   await docker.pull(config.phpServerImage);
 
-  let dockerContainerName = options.userid+"_"+options.nickname.replace(" ", "_");
+  let dockerContainerName = options.userid+"_"+options.nickname.replace(/[\s]/g, "_");
 
   let container = await docker.createContainer({
     name: dockerContainerName,
@@ -29,23 +32,28 @@ async function createContainer(options) {
       ],
     },
   });
+
   await container.start();
   containers[dockerContainerName] = container;
 
   let info = await container.inspect();
-
-  let c = new Container(
-    {
-      nickname: options.nickname,
-      owner: ObjectId(options.owner),
-      container_id: info.Id,
-      status: info.State.Status,
-      image: info.Config.Image
-    }
-  );
-  const savedContainer = await c.save();
-
-  return savedContainer;
+  let c;
+  if(container){
+    c = new Container(
+      {
+        nickname: options.nickname,
+        owner: ObjectId(options.owner),
+        container_id: info.Id,
+        status: info.State.Status,
+        image: info.Config.Image
+      }
+    );
+  }
+  let saved = await c.save();
+  return {
+    ...saved.toObject(),
+    _id: saved._id.toString()
+  };
 }
 
 async function getContainer(container_id) {
@@ -58,24 +66,27 @@ async function getContainer(container_id) {
   )
   .populate("owner")
   .exec();
-  return container;
+  return standardize(container);
 }
 
 const getContainers = async _id => {
   let user_containers = await Container.find({owner: { _id }}).populate('owner').exec();
-  return user_containers;
+  return user_containers.map(c=>standardize(c));
 };
 
-async function stopContainer(userid) {
-  let container = docker.getContainer(userid);
-  let stopped = await container.stop();
-  return stopped;
+async function deleteContainer(_id) {
+  let c = await Container.findByIdAndDelete(_id).exec();
+  let container = docker.getContainer(c.container_id);
+  await container.stop();
+  await container.remove();
+  return c;
 }
 
+//This might be why the API takes 3000+ years to stop
 process.on('SIGTERM', () => {
   for (let container of Object.keys(containers)) {
-    stopContainer(container);
+    container.stop();
   }
 });
 
-module.exports = { createContainer, stopContainer, getContainer, getContainers }
+module.exports = { createContainer, deleteContainer, getContainer, getContainers }

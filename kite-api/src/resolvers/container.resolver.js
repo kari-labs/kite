@@ -1,4 +1,4 @@
-const { createContainer, stopContainer, getContainer, getContainers } = require('../utils/container.util');
+const { createContainer, deleteContainer, getContainer, getContainers } = require('../utils/container.util');
 
 const ContainerResolvers = {
   createContainer: async ({ nickname }, req) => {
@@ -7,7 +7,8 @@ const ContainerResolvers = {
       const c = await createContainer({ owner: store._id, userid: store.userid, nickname });
       return c;
     } catch (err) {
-      throw new Error("There was an error creating that container: " + err);
+      console.error(err);
+      throw new Error(err);
     }
   },
   getContainer: async ({ container_id }) => {
@@ -27,12 +28,12 @@ const ContainerResolvers = {
       return `Error retriving the containers - ${err}`;
     }
   },
-  deleteContainer: async ({ userid }) => {
+  deleteContainer: async ({ _id }) => {
     try {
-      await stopContainer(`${userid}php`);
-      return `Successfully deleted container for student ${userid}`;
+      await deleteContainer(_id);
+      return `Successfully deleted container ${_id}`;
     } catch (err) {
-      return `Error deleting container for student - ${err}`;
+      throw new Error(err);
     }
   }
 };
