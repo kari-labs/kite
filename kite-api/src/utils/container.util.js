@@ -63,16 +63,6 @@ async function getContainer(container_id) {
 
 const getContainers = async _id => {
   let user_containers = await Container.find({owner: { _id }}).populate('owner').exec();
-  user_containers.forEach( async uc => {
-    const c = docker.getContainer(uc.container_id)
-    const status = (await c.inspect()).State.Status;
-    if(status === uc.status){
-      //Good to go
-    }else if (status !== uc.status && uc.status === "running") {
-      //Start the container
-      await c.start();
-    }
-  });
   return user_containers;
 };
 
