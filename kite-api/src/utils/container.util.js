@@ -22,7 +22,7 @@ async function createContainer(options) {
     name: dockerContainerName,
     image: config.phpServerImage,
     HostConfig: {
-      AutoRemove: false,
+      RestartPolicy: config.dockerConfig.RestartPolicy,
       NetworkMode: config.networkName,
       Binds: [
         `${config.userHostFolderPath}${options.userid}:/app/htdocs/`
@@ -49,7 +49,6 @@ async function createContainer(options) {
 }
 
 async function getContainer(container_id) {
-  //let actual_status = (await docker.getContainer(container_id).inspect()).State.Status;
   let container = await Container.findOne(
     {
       container_id: {
