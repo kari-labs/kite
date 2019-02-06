@@ -5,6 +5,7 @@
         v-for="c in containers" 
         :key="c._id"
         :container="c"
+        @deleted="fetchContainers"
       />
       <k-create-container @created="fetchContainers"/>
     </k-grid>
