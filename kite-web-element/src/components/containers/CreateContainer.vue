@@ -10,23 +10,23 @@
     <el-dialog
       title="Create New Container"
       :visible.sync="dialogVisible"
-      width="550px"
+      width="600px"
     >
       <div>
         <el-form
           :model="form"
           :label-width="formLabelWidth"
-          ref="createContainer"
           v-loading="loading"
+          :rules="rules"
+          ref="createContainer"
         >
-          <el-form-item label="Container name">
+          <el-form-item label="Container name" prop="nickname">
             <el-input v-model="form.nickname" placeholder="My Cool Container" />
           </el-form-item>
-          <el-form-item label="Container image">
+          <el-form-item label="Container image" prop="image">
             <el-select
               v-model="form.image"
               placeholder="Select container image"
-              
               :filterable="true"
             >
               <el-option
@@ -69,8 +69,17 @@ export default {
         nickname: "",
         image: "PHP",
       },
-      formLabelWidth: "120px",
+      formLabelWidth: "140px",
       loading: false,
+      rules: {
+          nickname: [
+            { required: true, message: 'Please name your container', trigger: 'change' },
+            { min: 3, message: 'Please give it a name longer than three characters', trigger: 'change' }
+          ],
+          image: [
+            { required: true, message: "Please select an image for your container-baby, or they'll die!", trigger: 'change' }
+          ],
+        }
     };
   },
   computed: {
@@ -78,34 +87,43 @@ export default {
   },
   methods: {
     async handleCreateContainer() {
-      this.loading = true;
-      const res = await this.$jraph`
-        mutation{
-          container: createContainer(
-            nickname: "${this.form.nickname}"
-          ){
-            nickname
-            container_id
-            image
-            status
-          }
-        }
-      `;
       
-      if(res.errors){
-        console.log(res.errors);
-        const h = this.$createElement;
-        if(res.errors.length == 1){
-          this.$message.error(res.errors[0].message);
-        }else{
-          res.errors.map( e => { this.$message.error(e.message); } )
-        }
+      await this.$refs.createContainer.validate( async valid => {
         
-      }else{
-        this.$emit("created", null);
-      }
-      this.loading = false;
-      this.dialogVisible = false;
+        if (valid) {
+          this.loading = true;
+          const res = await this.$jraph`
+            mutation{
+              container: createContainer(
+                nickname: "${this.form.nickname}"
+              ){
+                nickname
+                container_id
+                image
+                status
+              }
+            }
+          `;
+          if(res.errors){
+            this.loading = false;
+            console.log(res.errors);
+            const h = this.$createElement;
+            if(res.errors.length == 1){
+              this.$message.error(res.errors[0].message);
+            }else{
+              res.errors.map( e => { this.$message.error(e.message); } )
+            }
+          }else{
+            this.loading = false;
+            this.$emit("created", null);
+            this.dialogVisible = false;
+          }
+        } else {
+          this.$message.error('Please fill out the form correctly');
+          this.loading = false;
+          return false;
+        }
+      } );
     },
   }
 };
