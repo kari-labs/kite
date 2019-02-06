@@ -32,13 +32,13 @@ const loginUser = async (userData, req) => {
   return "Incorrect user name or password";
 }
 
-const getUserScope = async (req) => {
+const getUser = req => {
   const user = req.session.userStore;
   if(user) {
-    return user.scope
+    return user;
   }
-  return [];
+  return {};
 }
 
 
-module.exports = { createUser, loginUser, getUserScope };
+module.exports = { createUser, loginUser, getUser };
