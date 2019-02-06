@@ -22,5 +22,9 @@
     {
         "name": "faQuestion",
         "reason": "Help Page Navigation Icon"
+    },
+    {
+        "name": "faTrash",
+        "reason": "Delete Container Icon"
     }
 ]

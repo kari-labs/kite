@@ -10,15 +10,17 @@
     <el-dialog
       title="Create New Container"
       :visible.sync="dialogVisible"
-      :before-close="handleClose"
+      width="550px"
     >
-      <el-container>
+      <div>
         <el-form
           :model="form"
           :label-width="formLabelWidth"
+          ref="createContainer"
+          v-loading="loading"
         >
           <el-form-item label="Container name">
-            <el-input v-model="form.nickname" />
+            <el-input v-model="form.nickname" placeholder="My Cool Container" />
           </el-form-item>
           <el-form-item label="Container image">
             <el-select
@@ -40,12 +42,9 @@
             </el-select>
           </el-form-item>
         </el-form>
-      </el-container>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="handleClose">
+      </div>
+      <span slot="footer">
+        <el-button @click="dialogVisible = false">
           Cancel
         </el-button>
         <el-button
@@ -71,30 +70,41 @@ export default {
         image: "PHP",
       },
       formLabelWidth: "120px",
+      loading: false,
     };
   },
   computed: {
     ...mapState(['user'])
   },
   methods: {
-    handleClose(done) {
-      this.$confirm("Are you sure to close this dialog?")
-        .then(() => {
-          this.dialogVisible = false;
-          done();
-        })
-        .catch(() => {});
-    },
     async handleCreateContainer() {
-      const req = await this.$jraph`
+      this.loading = true;
+      const res = await this.$jraph`
         mutation{
           container: createContainer(
             nickname: "${this.form.nickname}"
-          )
+          ){
+            nickname
+            container_id
+            image
+            status
+          }
         }
       `;
-      this.$emit("created", null);
-      console.log(req);
+      
+      if(res.errors){
+        console.log(res.errors);
+        const h = this.$createElement;
+        if(res.errors.length == 1){
+          this.$message.error(res.errors[0].message);
+        }else{
+          res.errors.map( e => { this.$message.error(e.message); } )
+        }
+        
+      }else{
+        this.$emit("created", null);
+      }
+      this.loading = false;
       this.dialogVisible = false;
     },
   }
@@ -118,5 +128,8 @@ export default {
 .new:hover{
   border-color: rgba(0,0,0,0.3);
   color: rgba(0,0,0,0.4);
+}
+.el-select {
+  width: 100%;
 }
 </style>
