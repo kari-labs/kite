@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
     <div
       slot="header"
       class="el-card-header"
@@ -18,9 +18,11 @@
     </div>
     <div id="belt">
       <template v-for="tool in tools">
-        <el-button @click="tool.action" :key="tool.text">
-          <fa-icon :icon="tool.icon" />
-        </el-button>
+        <el-tooltip effect="dark" :content="tool.text" placement="bottom" :key="tool.text">
+          <el-button @click="tool.action">
+            <fa-icon :icon="tool.icon" :style="(tool.style || {})" size="lg"/>
+          </el-button>
+        </el-tooltip>
       </template>
     </div>
   </el-card>
@@ -47,16 +49,30 @@ export default {
     return {
       tools: [
         {
+          text: "Open Container URL",
+          icon: "external-link-square-alt",
+          action: ()=>{},
+        },
+        {
+          text: "Open File Manager",
+          icon: "folder",
+          action: this.fileManager,
+        },
+        {
           text: "Delete Container",
           icon: "trash",
-          action: this.deleteContainer
-        }
-      ]
+          action: this.deleteContainer,
+          style: {
+            color: "#F56C6C",
+          },
+        },
+      ],
+      loading: false,
     };
   },
   methods: {
     async deleteContainer() {
-      this.$message.success("Container Deleted");
+      this.loading = true;
       await this.$jraph`
         mutation {
           deleteContainer(_id: "${this.container._id}"){
@@ -65,7 +81,16 @@ export default {
         }
       `
       await this.$emit("deleted", null);
-    }
+      this.loading = false;
+      this.$message.success("Container Deleted");
+    },
+    fileManager() {
+      this.$notify({
+          title: "File Manager!",
+          message: "Hey! We haven't built this feature yet :-(",
+          position: "bottom-left",
+      });
+    },
   },
 };
 </script>
@@ -79,5 +104,12 @@ export default {
   margin: 0px;
   font-weight: 500;
 }
-#belt {}
+#belt {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  align-content: center;
+  padding-top: 10px;
+}
 </style>
