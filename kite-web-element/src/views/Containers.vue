@@ -6,7 +6,7 @@
         :key="c.name"
         :container="c"
       />
-      <k-create-container @created="fetchContainers" />
+      <k-create-container />
     </k-grid>
   </div>
 </template>

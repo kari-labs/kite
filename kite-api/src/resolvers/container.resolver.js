@@ -6,7 +6,7 @@ const ContainerResolvers = {
           const c = await createContainer({owner, userid, nickname});
           return c;
       } catch (err) {
-          throw new Error("There was an error creating that container: ", err);
+          throw new Error("There was an error creating that container: " + err);
       }
   },
   getContainer: async ({container_id}) => {

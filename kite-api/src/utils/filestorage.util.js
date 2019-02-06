@@ -127,6 +127,7 @@ const processUpload = async (userid, upload) => {
   const stream = createReadStream()
   const { fullpath } = await storeFS(userid, { stream, filename })
   const userPath = path.join(config.userFolderPath, userid);
+  console.log(userPath, fullpath)
   return getFileInfo(userPath, fullpath)
 }
 

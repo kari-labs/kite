@@ -16,10 +16,12 @@
         <small>{{ container.image }}</small>
       </span>
     </div>
+    <k-quick-upload />
   </el-card>
 </template>
 
 <script>
+import KQuickUpload from "@/components/filesys/QuickUpload.vue";
 
 export default {
   name: "KCard",
@@ -39,7 +41,7 @@ export default {
     },
   },
   components: {
-    
+    KQuickUpload
   }
 };
 </script>
