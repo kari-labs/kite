@@ -27,7 +27,9 @@ export const getUserScope = async () => {
     },
     body: JSON.stringify({
       query: `{
-        scope: getUserScope
+        scope: getUser {
+          scope
+        }
       }`
     }),
     credentials: 'include',
