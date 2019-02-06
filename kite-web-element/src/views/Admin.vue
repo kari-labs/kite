@@ -1,7 +1,17 @@
 <template>
-  <el-row :gutter="20">
-    <el-col><k-admin-table /></el-col>
-    <el-col><k-a-create /></el-col>
+  <el-row>
+    <el-col
+      :span="16"
+      class="table"
+    >
+      <k-admin-table />
+    </el-col>
+    <el-col
+      :span="4"
+      class="form"
+    >
+      <k-a-create />
+    </el-col>
   </el-row>
 </template>
 
@@ -17,5 +27,10 @@ export default {
 </script>
 
 <style>
-
+  .form{
+    margin-left: 8%;
+  }
+  .table{
+    min-height: 30%;
+  }
 </style>

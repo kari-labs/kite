@@ -73,12 +73,6 @@ export default {
 </script>
 
 <style>
-  .box-card{
-    width: 50%;
-  }
-  .table{
-    width:100%;
-  }
   [class ^= cell ] {
     font-family: "Roboto";
     font-weight: 500;
