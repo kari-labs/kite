@@ -8,42 +8,52 @@ const Container = require("../models/container.model");
 const docker = new Docker(config.dockerConfig);
 const containers = {};
 
-async function createContainer(obj) {
+//This function fixes the ObjectId of mongoose query responses from appearing as a BSON object
+const standardize = obj => ({...obj.toObject(), _id: obj._id.toString()})
+
+async function createContainer(options) {
   if (!fs.existsSync(config.userFolderPath))
     fs.mkdirSync(config.userFolderPath);
-  if (!fs.existsSync(`${config.userFolderPath}${obj.userid}`))
-    fs.mkdirSync(`${config.userFolderPath}${obj.userid}`);
+  if (!fs.existsSync(`${config.userFolderPath}${options.userid}`))
+    fs.mkdirSync(`${config.userFolderPath}${options.userid}`);
 
   await docker.pull(config.phpServerImage);
 
+  let dockerContainerName = options.userid+"_"+options.nickname.replace(/[\s]/g, "_");
+
   let container = await docker.createContainer({
-    name: `${obj.userid}php`,
+    name: dockerContainerName,
     image: config.phpServerImage,
     HostConfig: {
-      AutoRemove: true,
+      RestartPolicy: config.dockerConfig.RestartPolicy,
       NetworkMode: config.networkName,
       Binds: [
-        `${config.userHostFolderPath}${obj.userid}:/app/htdocs/`
+        `${config.userHostFolderPath}${options.userid}:/app/htdocs/`
       ],
     },
   });
+
   await container.start();
-  containers[`${obj.userid}php`] = container;
+  containers[dockerContainerName] = container;
 
   let info = await container.inspect();
-
-  let c = new Container(
-    {
-      nickname: obj.nickname,
-      owner: ObjectId(obj.owner),
-      container_id: info.Id,
-      status: info.State.Status,
-      image: info.Config.Image
-    }
-  );
-  const savedContainer = await c.save();
-
-  return savedContainer;
+  let c;
+  if(container){
+    c = new Container(
+      {
+        nickname: options.nickname,
+        owner: ObjectId(options.owner),
+        container_id: info.Id,
+        status: info.State.Status,
+        image: info.Config.Image
+      }
+    );
+  }
+  let saved = await c.save();
+  return {
+    ...saved.toObject(),
+    _id: saved._id.toString()
+  };
 }
 
 async function getContainer(container_id) {
@@ -56,24 +66,27 @@ async function getContainer(container_id) {
   )
   .populate("owner")
   .exec();
-  return container;
+  return standardize(container);
 }
 
-async function getContainers() {
-  const containers = await Container.find({}).populate('owner').exec();
-  return containers;
+const getContainers = async _id => {
+  let user_containers = await Container.find({owner: { _id }}).populate('owner').exec();
+  return user_containers.map(c=>standardize(c));
+};
+
+async function deleteContainer(_id) {
+  let c = await Container.findByIdAndDelete(_id).exec();
+  let container = docker.getContainer(c.container_id);
+  await container.stop();
+  await container.remove();
+  return c;
 }
 
-async function stopContainer(userid) {
-  let container = docker.getContainer(userid);
-  let stopped = await container.stop();
-  return stopped;
-}
-
+//This might be why the API takes 3000+ years to stop
 process.on('SIGTERM', () => {
   for (let container of Object.keys(containers)) {
-    stopContainer(container);
+    container.stop();
   }
 });
 
-module.exports = { createContainer, stopContainer, getContainer, getContainers }
+module.exports = { createContainer, deleteContainer, getContainer, getContainers }

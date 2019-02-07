@@ -22,5 +22,17 @@
     {
         "name": "faQuestion",
         "reason": "Help Page Navigation Icon"
+    },
+    {
+        "name": "faTrash",
+        "reason": "Delete Container Icon"
+    },
+    {
+        "name": "faFolder",
+        "reason": "Delete Container Icon"
+    },
+    {
+        "name": "faExternalLinkSquareAlt",
+        "reason": "Open container page"
     }
 ]

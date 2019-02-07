@@ -3,10 +3,11 @@
     <k-grid>
       <k-card 
         v-for="c in containers" 
-        :key="c.name"
+        :key="c._id"
         :container="c"
+        @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers" />
+      <k-create-container @created="fetchContainers"/>
     </k-grid>
   </div>
 </template>
@@ -20,19 +21,33 @@ export default {
   data(){
     return {
       containers: [],
+      loading: false,
     };
   },
-
-  async mounted() {
-    this.containers = ( await this.$jraph`
-      query{
-        containers: getContainers{
-          nickname
-          image
-          status
+  methods: {
+    async fetchContainers(){
+      const res = await this.$jraph`
+        query{
+          containers: getContainers{
+            _id
+            nickname
+            image
+            status
+          }
         }
+      `;
+      if(res.errors){
+        console.log(res.errors);
+        const h = this.$createElement;
+        this.$message.error('An error occured');
+      }else{
+        this.containers = res.data.containers;
       }
-    `).data.containers;
+      
+    }
+  },
+  async mounted() {
+    await this.fetchContainers();
   },
   components: {
     KGrid,
