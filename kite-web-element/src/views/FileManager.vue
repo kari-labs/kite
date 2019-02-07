@@ -1,47 +1,49 @@
 <template>
   <div>
-    <k-grid>
-      <k-card 
-        v-for="c in containers" 
-        :key="c.name"
-        :container="c"
+    <el-card>
+      <el-tree
+        :props="treeProps"
+        :load="loadFiles"
+        lazy
+        show-checkbox
       />
-      <k-create-container />
-    </k-grid>
+    </el-card>
   </div>
 </template>
 
 <script>
-import KGrid from "@/components/containers/Grid.vue";
-import KCard from "@/components/containers/Container.vue";
-import KCreateContainer from "@/components/containers/CreateContainer.vue";
+import * as path from 'path';
 
 export default {
   data(){
     return {
-      containers: []
+      treeProps: {
+        label: 'name',
+        isLeaf: data => !data.isdirectory
+      },
+      files: []
     };
   },
-  async mounted() {
-    this.containers = ( await this.$jraph`
-      query{
-        containers: getAllContainers{
-          Name
-          State{ Status }
-          Config{ Image }
-        }
+  methods: {
+    async loadFiles(node, resolve) {
+      console.log(node)
+      if(node.level === 0) {
+        return resolve(await this.$fileManager.getFiles('001416358', ''))
       }
-    `).data.containers.map(c => ({
-        name: c.Name,
-        status: c.State.Status,
-        image: c.Config.Image
-      }) 
-    );
+      let currentNode = node;
+      let filepath = "";
+      while(currentNode && currentNode.data) {
+        filepath = path.join(currentNode.data.name, filepath);
+        currentNode = currentNode.parent;
+      }
+
+      return resolve(await this.$fileManager.getFiles('001416358', filepath))
+
+    }
   },
-  components: {
-    KGrid,
-    KCard,
-    KCreateContainer,
+  async mounted() {
+    this.files = await this.$fileManager.getFiles('001416358', '');
+    console.log(this.files)
   }
 };
 </script>

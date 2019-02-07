@@ -40,7 +40,7 @@ const getDirContents = async (userid, filepath) => {
     try {
       const files = await fsp.readdir(file)
       return {
-          files: await Promise.all(files.map(async filename => {
+          files: (await Promise.all(files.map(async filename => {
           const filepath = path.join(file, filename);
           const fileStats =  await fsp.stat(filepath);
           return {
@@ -50,7 +50,12 @@ const getDirContents = async (userid, filepath) => {
             modified: fileStats.mtime,
             size: fileStats.size
           }
-        }))
+        }))).sort((a, b) => {
+          if(a.isdirectory === b.isdirectory) {
+            return a.name > b.name ? -1 : 1; // Sort descending by name
+          }
+          return a.isdirectory ? -1 : 1; // Directories go first
+        })
       }
     } catch(e) {
       throw new Error('File is not a directory');

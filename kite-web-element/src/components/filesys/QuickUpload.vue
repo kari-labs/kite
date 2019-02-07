@@ -46,7 +46,7 @@ export default {
       return this.$confirm(`delete ${file.name}?`);
     },
     async handleUpload(args) {
-      let req = await this.$fileManager.uploadFiles(args.file);
+      let req = await this.$fileManager.uploadFiles('001416358', [args.file]);
       if(req.data){
         this.$emit("success");
       }else if(req.errors){

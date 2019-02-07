@@ -1,5 +1,3 @@
-import path from 'path';
-
 export default class FileManager {
 	constructor() { }
 
@@ -7,10 +5,35 @@ export default class FileManager {
 		this.api_url = config.api_url || '';
 	}
 
-	async getFiles(userid, filepath) {
-		const reqpath = path.join(userid, filepath || '/');
-		const files = await fetch(`${this.api_url}api/files/${reqpath}`);
-		return files.json();
+	async getFiles(userid, filepath) {    
+		let res = await fetch(`${this.api_url}api/graphql`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				query: `
+					query {
+						getDirContents(userid: "${userid}", path: "${filepath}") {
+							files {
+								name,
+								isdirectory,
+								modified,
+								created,
+								size
+							}
+						}
+					}
+				`
+			}),
+		});
+
+		let json = await res.json();
+		
+		if(!json.data) {
+			throw new Error(json.errors);
+		}
+
+		return json.data.getDirContents.files;
+		//return files.json();
 	}
 
 	downloadFile(file, filename) {
@@ -47,9 +70,8 @@ export default class FileManager {
 
 		return fetch(`${this.api_url}api/graphql`, {
 			method: 'POST',
-			mode: 'cors',
-			body: data
-		})
+			body: data,
+		});
 
 		// `obj` should contain a definition for `files`, `query`
 		/*let data = new FormData();
@@ -68,19 +90,18 @@ export default class FileManager {
 			body: data,
 		}).then(res => res.text())*/
 	}
-}
-
-FileManager.install = function(Vue, options) {
-	Object.defineProperty(Vue.prototype, '$fileManager', {
-		get() {return this.$root._fileManager}
-	})
-
-	Vue.mixin({
-		beforeCreate() {
-			if(this.$options.fileManager) {
-				this._fileManager = this.$options.fileManager
-				this._fileManager.configure(options)
+	static install(Vue, options) {
+		Object.defineProperty(Vue.prototype, '$fileManager', {
+			get() {return this.$root._fileManager}
+		})
+	
+		Vue.mixin({
+			beforeCreate() {
+				if(this.$options.fileManager) {
+					this._fileManager = this.$options.fileManager
+					this._fileManager.configure(options)
+				}
 			}
-		}
-	})
+		})
+	}
 }
