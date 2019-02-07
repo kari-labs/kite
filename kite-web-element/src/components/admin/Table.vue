@@ -8,36 +8,48 @@
         fixed
         prop="userid"
         label="UserID"
-        width="150"
       />
       <el-table-column
         prop="name"
         label="Name"
-        width="120"
       />
       <el-table-column
         prop="containers"
         label="Containers"
-        width="120"
       />
       <el-table-column
         prop="scope"
         label="Scope"
-        width="120"
       />
       <el-table-column
         label="Operations"
-        width="120"
       >
         <template slot-scope="scope">
           <el-button
-            @click.native.prevent="deleteRow(scope.$index, tableData4)"
             type="text"
-            size="small"
-            @click="deleteUser().exact"
+            @click="dialogFormVisible = true"
           >
-            Remove
+            Edit
           </el-button>
+          <el-button
+            type="text"
+            @click="warning(scope.$index, usersTable)"
+          >
+            Delete
+          </el-button>
+          <!-- Beginning of edit form
+          <el-dialog title="User Update" :visible.sync="dialogFormVisible">
+            <el-form ref="userForm" :rules="rules" :model="form">
+              <el-form-item label="User ID">
+                <el-input v-model="form.userid" disabled/>
+              </el-form-item>
+              <el-form-item label="Name">
+                <el-input v-model="form.name"/>
+              </el-form-item>
+              -
+            </el-form>
+          </el-dialog>
+          -->
         </template>
       </el-table-column>
     </el-table>
@@ -50,8 +62,35 @@ export default {
   
   name: "KATable",
   methods: {
-    deleteUser() {
-      console.log(this)
+    deleteUser(index, data) {
+      console.log(data[index].userid)
+      this.$jraph`
+        mutation{
+          deleteUser(userid: "${data[index].userid}"){
+            userid
+            }
+          }`
+    },
+    update() {
+
+    },
+    warning(index, data) {
+      this.$confirm('This will permanently delete this user. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type:'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: 'Delete completed'
+        })
+        this.deleteUser(index, data);
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled'
+        })
+      })
     }
   },
   data() {
