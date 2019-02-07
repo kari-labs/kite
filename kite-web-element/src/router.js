@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Login from "@/views/Login.vue";
 import Containers from "@/views/Containers.vue";
 import Help from "@/views/Help.vue";
+import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
 import { getUserScope } from "@/utils/auth.util.js";
 
@@ -61,6 +62,16 @@ const router = new Router({
         hideHeader: true,
         requiresAuth: false,
       }
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      // route level code-splitting
+      // this generates a separate chunk (containers.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      //component: () => import(/* webpackChunkName: "containers" */ "./views/Containers.vue")
+      component: Admin,
+      meta: { hideHeader: false }
     }
   ]
 });

@@ -24,6 +24,10 @@
         "reason": "Help Page Navigation Icon"
     },
     {
+        "name": "faUserShield",
+        "reason": "Admin Panel Navigation Icon"
+    },
+    {
         "name": "faTrash",
         "reason": "Delete Container Icon"
     },
