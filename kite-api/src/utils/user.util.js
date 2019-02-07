@@ -40,13 +40,12 @@ const getUsers = async () => {
   return users;
 }
 
-const getUserScope = async (req) => {
+const getUser = req => {
   const user = req.session.userStore;
   if(user) {
-    return user.scope
+    return user;
   }
-  return [];
+  return {};
 }
 
-
-module.exports = { createUser, loginUser, getUserScope, getUsers, deleteUser };
+module.exports = { createUser, loginUser, getUser, getUsers, deleteUser };

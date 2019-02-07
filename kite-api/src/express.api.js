@@ -6,33 +6,10 @@ const redis = require('redis').createClient(6379, 'kiteredis');
 const RedisStore = require('connect-redis')(session);
 const cors = require('cors');
 
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const User = require('./models/user.model');
-const { dbConnect } = require('./utils/mongo.util');
-const { saltRounds } = require('../config/config');
+const { dbConnect, createDefaultAdmin } = require('./utils/mongo.util');
 
 dbConnect();
-
-const query = User.countDocuments({ scope: { $in: ["createAdmin"] }}).exec();
-query.then(async count => {
-  if(count < 1) {
-    const hash = await bcrypt.hash('pass', saltRounds);
-    new User({
-      _id: mongoose.Types.ObjectId(),
-      userid: 'admin',
-      password: hash,
-      forceReset: true,
-      logins: 0,
-      name: 'defaultUser',
-      containers: [],
-      preferences: {
-        theme: 'Light'
-      },
-      scope: ["containers", "admin", "createAdmin"],
-    }).save();
-  }
-});
+createDefaultAdmin('admin', 'pass');
 
 const app = express();
 const port = 3000;
@@ -53,7 +30,7 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: false,
   cookie: {
-    maxAge: 648000 // 3 hours in ms
+    maxAge: 3 * 60 * 60 * 1000 // 3 hours in ms
   }
 }
 
