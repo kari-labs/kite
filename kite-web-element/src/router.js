@@ -17,10 +17,21 @@ const router = new Router({
       path: "/",
       name: "login",
       component: Login,
+      beforeEnter: (to, from, next) => {
+        try {
+          if(store.state.auth.user.scope.length > 0) {
+            next({
+              path: '/containers'
+            });
+          }
+        } catch (error) {
+          next()
+        }
+      },
       meta: { 
         hideHeader: true,
         requiresAuth: false,
-      }
+      },
     },
     {
       path: "/containers",
