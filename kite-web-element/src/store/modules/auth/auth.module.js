@@ -24,7 +24,7 @@ export const authModule = {
             user: result.data.user
           });
           if(component.$route.query.redirect) component.$router.push(component.$route.query.redirect);
-          // We give the users the chocie to chose a homepage and send them there by default
+          // We give the users the choice to chose a homepage and send them there by default
           else component.$router.push('/containers');
         } else {
           if(result.errors) {
