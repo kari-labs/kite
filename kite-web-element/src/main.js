@@ -7,6 +7,11 @@ import "./plugins/font-awesome";
 import Jraph from "./plugins/jraph";
 import "./assets/helper.css";
 import "normalize.css";
+import VueTour from 'vue-tour'
+
+import 'vue-tour/dist/vue-tour.css';
+
+Vue.use(VueTour)
 
 Vue.use(Jraph, {api: "https://localhost/api/graphql"});
 
