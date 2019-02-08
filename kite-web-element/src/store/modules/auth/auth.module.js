@@ -17,16 +17,21 @@ export const authModule = {
     [types.LOGIN_USER] ({ commit }, { userid, pass, component }) {
       const response = loginUser(userid, pass)
       
-      response.then(({ user }) => {
-        if(user.scope) {
+      response.then(result => {
+        if(result.data.user !== null) {
           commit({
             type: types.STORE_USER,
-            user: user
+            user: result.data.user
           });
           if(component.$route.query.redirect) component.$router.push(component.$route.query.redirect);
+          // We give the users the chocie to chose a homepage and send them there by default
           else component.$router.push('/containers');
         } else {
-          alert('Incorrect User ID or Password');
+          if(result.errors) {
+            result.errors.map(err => {
+              component.$message.error(err.message);
+            });
+          }
         }
       });
     }

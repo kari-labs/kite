@@ -28,12 +28,15 @@ const deleteUser = async (userData) => {
 
 const loginUser = async (userData, req) => {
   const userDB = await User.findOne({ userid: userData.userid }).exec();
-  const match = await bcrypt.compare(userData.password, userDB.password);
-  if(match) {
-    req.session.userStore = userDB;
-    return userDB;
+  if(userDB) {
+    const match = await bcrypt.compare(userData.password, userDB.password);
+    if(match) {
+      req.session.userStore = userDB;
+      return userDB;
+    }
+    return "Incorrect password.";
   }
-  return "Incorrect user name or password";
+  return "User does not exist.";
 }
 const getUsers = async () => {
   const users = await User.find();
