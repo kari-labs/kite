@@ -9,6 +9,10 @@ export const loginUser = async (userid, password) => {
         user: loginUser(userid:"${userid}",password:"${password}") {
           userid
           name
+          containers
+          preferences {
+            theme
+          }
           scope
         }
       }`
