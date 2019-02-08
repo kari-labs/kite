@@ -52,7 +52,7 @@
     </el-menu-item>
     <el-menu-item
       index="6"
-      v-to="'/'"
+      @click="signOutUser"
     >
       <i class="el-icon rotate-180">
         <fa-icon icon="sign-out-alt" />
@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import { SIGN_OUT_USER } from '@/store/modules/auth/auth.types';
+
 export default {
   name: "KNav",
   props: {
@@ -79,6 +81,12 @@ export default {
     };
   },
   methods: {
+    signOutUser() {
+      this.$store.dispatch({
+        type: SIGN_OUT_USER,
+        component: this
+      });
+    },
     handleOpen() {
       //Code for nav opening
     },

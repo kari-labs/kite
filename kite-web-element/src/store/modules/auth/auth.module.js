@@ -1,4 +1,4 @@
-import { loginUser } from '@/utils/auth.util';
+import { loginUser, signOutUser } from '@/utils/auth.util';
 import * as types from './auth.types';
 
 export const authModule = {
@@ -15,7 +15,7 @@ export const authModule = {
   },
   actions: {
     [types.LOGIN_USER] ({ commit }, { userid, pass, component }) {
-      const response = loginUser(userid, pass)
+      const response = loginUser(userid, pass);
       
       response.then(result => {
         if(result.data.user !== null) {
@@ -26,6 +26,26 @@ export const authModule = {
           if(component.$route.query.redirect) component.$router.push(component.$route.query.redirect);
           // We give the users the chocie to chose a homepage and send them there by default
           else component.$router.push('/containers');
+        } else {
+          if(result.errors) {
+            result.errors.map(err => {
+              component.$message.error(err.message);
+            });
+          }
+        }
+      });
+    },
+    [types.SIGN_OUT_USER] ({ commit }, { component }) {
+      const response = signOutUser();
+
+      response.then(result => {
+        if(result.data.stats !== null) {
+          if(result.data.status === 'Successfully signed out.') {
+            commit(types.REMOVE_USER);
+            component.$router.push('/');
+          } else {
+            component.$message.error(result.data.status);
+          }
         } else {
           if(result.errors) {
             result.errors.map(err => {

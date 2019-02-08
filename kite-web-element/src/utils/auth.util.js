@@ -23,3 +23,20 @@ export const loginUser = async (userid, password) => {
   response = await response.json();
   return response;
 }
+
+export const signOutUser = async () => {
+  let response = await fetch('https://localhost/api/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      query: `mutation {
+        status: signOutUser
+      }`
+    }),
+    credentials: 'include',
+  });
+  response = await response.json();
+  return response;
+}
