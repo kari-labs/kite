@@ -1,21 +1,17 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from 'vuex-persistedstate';
 
 // Module Imports
-import { userModule } from "@/store/modules/user/user.module";
+import { authModule } from "@/store/modules/auth/auth.module";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    user: userModule
+    auth: authModule
   },
-  state: {
-    user: {
-      _id: "5c50ef4aac536d001061bb77",
-      userid: "001416358",
-    },
-  },
-  mutations: {},
-  actions: {},
+  plugins: [
+    createPersistedState({ storage: window.sessionStorage }),
+  ]
 });
