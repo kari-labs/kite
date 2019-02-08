@@ -7,8 +7,9 @@
         :container="c"
         @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers"/>
+      <k-create-container @created="fetchContainers" data-v-step="1" ref="createContainer"/>
     </k-grid>
+    <v-tour name="myTour" :steps="steps" :callbacks="cbs"></v-tour>
   </div>
 </template>
 
@@ -22,6 +23,46 @@ export default {
     return {
       containers: [],
       loading: false,
+      cbs: {
+        onNextStep: this.nextStep,
+      },
+      steps: [
+        {
+          target: '[data-v-step="0"]',
+          content: 'This is the containers page, where all the magic happens!',
+          params: {
+            placement: 'bottom'
+          }
+        },
+        {
+          target: '[data-v-step="1"]',
+          content: 'Click this to create a container!',
+          params: {
+            placement: 'bottom'
+          }
+        },
+        {
+          target: '[data-v-step="2"]',
+          content: 'Give it a name!',
+          params: {
+            placement: 'bottom'
+          }
+        },
+        {
+          target: '[data-v-step="3"]',
+          content: 'Image',
+          params: {
+            placement: 'bottom'
+          }
+        },
+        {
+          target: '[data-v-step="4"]',
+          content: 'Click this shit',
+          params: {
+            placement: 'bottom'
+          }
+        },
+      ],
     };
   },
   methods: {
@@ -44,10 +85,20 @@ export default {
         this.containers = res.data.containers;
       }
       
+    },
+    nextStep(currentStep) {
+      if(currentStep === 1) {
+        // Click on the element
+        console.log(this.$refs.createContainer.$el);
+        this.$refs.createContainer.$el.querySelector(".new").click();
+        this.$tours['myTour'].start(2);
+      }
     }
   },
   async mounted() {
     await this.fetchContainers();
+    console.log(this.$tours['myTour'])
+    this.$tours['myTour'].start()
   },
   components: {
     KGrid,
@@ -57,4 +108,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+/* I'm sorry for sinning CSSenpai but I need this fix pweeaaasseeeeee uuuuuWuuuuu */
+.v-step {
+  z-index: 150173408139270 !important;
+}
+</style>

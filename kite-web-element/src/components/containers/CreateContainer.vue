@@ -21,9 +21,9 @@
           ref="createContainer"
         >
           <el-form-item label="Container name" prop="nickname">
-            <el-input v-model="form.nickname" placeholder="My Cool Container" />
+            <el-input v-model="form.nickname" placeholder="My Cool Container" data-v-step="2"/>
           </el-form-item>
-          <el-form-item label="Container image" prop="image">
+          <el-form-item label="Container image" prop="image" data-v-step="3">
             <el-select
               v-model="form.image"
               placeholder="Select container image"
@@ -44,12 +44,13 @@
         </el-form>
       </div>
       <span slot="footer">
-        <el-button @click="dialogVisible = false">
+        <el-button @click="dialogVisible = false" >
           Cancel
         </el-button>
         <el-button
           type="primary"
           @click="handleCreateContainer"
+          data-v-step="4"
         >
           Create Container
         </el-button>
@@ -149,5 +150,8 @@ export default {
 }
 .el-select {
   width: 100%;
+}
+::overlay{
+  background: rgba(0,0,0,0.4);
 }
 </style>
