@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { LOGIN_USER } from '@/store/modules/user/user.types';
+import { LOGIN_USER } from '@/store/modules/auth/auth.types';
 
 export default {
   data() {
