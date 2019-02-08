@@ -27,7 +27,7 @@
         v-if="!$route.meta.hideHeader"
       />
       <el-container>
-        <el-main>
+        <el-main data-v-step="0">
           <router-view />
         </el-main>
         <el-footer>
@@ -50,9 +50,11 @@ export default {
   name: "App",
   data() {
     return {
-      isCollapse: true
+      isCollapse: true,
+      
     };
   },
+  methods: {},
   components: {
     SideNav
   }
