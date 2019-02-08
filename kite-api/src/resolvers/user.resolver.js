@@ -4,6 +4,7 @@ const {
   getUser, 
   getUsers, 
   deleteUser,
+  signOutUser,
 } = require('../utils/user.util');
 
 const UserResolvers = {
@@ -51,6 +52,11 @@ const UserResolvers = {
       throw new Error(err);
     }
   },
+  signOutUser: async(_, req) => {
+    const status = await signOutUser(req);
+    if(status) return 'Successfully signed out.';
+    else return 'Error signing user out.'
+  }
 }
 
 module.exports = { UserResolvers };

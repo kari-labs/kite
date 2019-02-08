@@ -51,4 +51,17 @@ const getUser = req => {
   return {};
 }
 
-module.exports = { createUser, loginUser, getUser, getUsers, deleteUser };
+const signOutUser = req => {
+  req.session.destroy();
+  if(req.session === undefined) return true;
+  else return false;
+}
+
+module.exports = { 
+  createUser, 
+  loginUser, 
+  getUser, 
+  getUsers, 
+  deleteUser, 
+  signOutUser
+};

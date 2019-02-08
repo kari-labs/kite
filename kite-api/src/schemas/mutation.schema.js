@@ -5,7 +5,8 @@ const mutationType = `
         singleUpload(userid: String!, file: Upload!): File!
         multipleUpload(userid: String!, files: [Upload!]!): [File!]!
         createUser(userid: String!, password: String!, name: String! scope: [String!]): User
-        deleteUser(userid: String!): User!
+        deleteUser(userid: String!): User
+        signOutUser: String!
     }
 `;
 
