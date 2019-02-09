@@ -1,4 +1,4 @@
-// Exports all user types as constants
+// Exports all auth types as constants
 
 // GETTERS
 
