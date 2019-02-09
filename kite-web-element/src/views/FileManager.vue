@@ -1,9 +1,15 @@
 <template>
   <div>
     <el-card>
+      <el-button @click="reload()">reload</el-button>
       <el-tree
+        v-if="show"
         :props="treeProps"
         :load="loadFiles"
+        draggable
+        @node-drop="handleDrop"
+        :allow-drop="allowDrop"
+        :allow-drag="allowDrag"
         lazy
         show-checkbox
       />
@@ -21,7 +27,8 @@ export default {
         label: 'name',
         isLeaf: data => !data.isdirectory
       },
-      files: []
+      files: [],
+      show: true
     };
   },
   methods: {
@@ -39,6 +46,19 @@ export default {
 
       return resolve(await this.$fileManager.getFiles('001416358', filepath))
 
+    },
+    handleDrop(draggingNode, dropNode, dropType, ev) {
+      console.log('tree drop: ', dropNode.label, dropType);
+    },
+    allowDrop(draggingNode, dropNode, type) {
+      if(type=='next' || type=='prev') return false
+      return dropNode.data.isdirectory;
+    },
+    reload() {
+      this.show = false;
+      this.$nextTick(() => {
+          this.show = true
+      })
     }
   },
   async mounted() {

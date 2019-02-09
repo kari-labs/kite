@@ -29,6 +29,31 @@ const getFileInfo = async (userDir, file) => {
 
 const getFileInfoHandler = async (userid, filepath) => getFileInfo(path.join(config.userFolderPath, userid), path.join(config.userFolderPath, userid, filepath));
 
+const renameFile = async (userid, filepath, newFilePath) => {
+  const oldFile = path.join(config.userFolderPath, userid, filepath);
+  const newFile = path.join(config.userFolderPath, userid, newFilePath);
+  const userDir = path.join(config.userFolderPath, userid);
+  if(!oldFile.startsWith(userDir)) {
+    //res.status(403).json({error: 'Access denied'});
+    throw new Error('Access denied');
+  }
+  if(!newFile.startsWith(userDir)) {
+    //res.status(403).json({error: 'Access denied'});
+    throw new Error('Access denied');
+  }
+  try {
+    await fsp.rename(oldFile, newFile);
+    return getFileInfo(path.join(config.userFolderPath, userid), newFile);
+  } catch(e) {
+    if (e.code == 'ENOENT') {
+      throw new Error('File not found');
+      //res.status(404).json({error:'File not found'})
+    } else {
+      throw e;
+    }
+  }
+}
+
 const getDirContents = async (userid, filepath) => {
   const file = path.join(config.userFolderPath, userid, filepath);
   const userDir = path.join(config.userFolderPath, userid);
@@ -143,5 +168,6 @@ module.exports = {
   getDirContents, 
   getFileSizeInBytes, 
   getDirSizeInBytesHandler, 
-  processUpload 
+  processUpload,
+  renameFile
 };
