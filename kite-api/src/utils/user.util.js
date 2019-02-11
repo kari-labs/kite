@@ -31,8 +31,9 @@ const loginUser = async (userData, req) => {
   if(userDB) {
     const match = await bcrypt.compare(userData.password, userDB.password);
     if(match) {
-      req.session.userStore = userDB;
-      return userDB;
+      const updatedUserDB = await User.findOneAndUpdate({ _id: userDB._id }, { logins: userDB.logins + 1 }, { new: true }).exec();
+      req.session.userStore = updatedUserDB;
+      return updatedUserDB;
     }
     return "Incorrect password.";
   }

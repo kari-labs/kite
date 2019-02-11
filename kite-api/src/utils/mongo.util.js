@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const { saltRounds } = require('../../config/config');
 
 const dbConnect = () => {
-  mongoose.connect(`mongodb://kitemongo:27017/kite`, { useNewUrlParser: true });
+  mongoose.connect(`mongodb://kitemongo:27017/kite`, { useNewUrlParser: true, useFindAndModify: false });
   const db = mongoose.connection;
   db.on('error', (err) => { 
     throw new Error(err)

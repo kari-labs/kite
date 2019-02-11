@@ -5,7 +5,7 @@ export const loginUser = async (userid, password) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: `{
+      query: `mutation {
         user: loginUser(userid:"${userid}",password:"${password}") {
           _id
           userid
