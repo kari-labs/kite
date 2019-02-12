@@ -1,4 +1,5 @@
 import { loginUser } from '@/utils/auth.util';
+import router from "@/router.js";
 import * as types from './auth.types';
 
 export const authModule = {
@@ -14,17 +15,17 @@ export const authModule = {
     }
   },
   actions: {
-    [types.LOGIN_USER] ({ commit }, { userid, pass, component }) {
-      const response = loginUser(userid, pass)
-      
+    [types.LOGIN_USER] ({ commit }, { userid, pass, redirect }) {
+      const response = loginUser(userid, pass);
+
       response.then(({ user }) => {
         if(user.scope) {
           commit({
             type: types.STORE_USER,
             user: user
           });
-          if(component.$route.query.redirect) component.$router.push(component.$route.query.redirect);
-          else component.$router.push('/containers');
+          if(redirect) router.push(redirect);
+          else router.push('/containers');
         } else {
           alert('Incorrect User ID or Password');
         }
