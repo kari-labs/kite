@@ -25,39 +25,40 @@ export default {
       loading: false,
       cbs: {
         onNextStep: this.nextStep,
+        onPreviousStep: this.prevStep,
       },
       steps: [
         {
           target: '[data-v-step="0"]',
-          content: 'This is the containers page, where all the magic happens!',
+          content: 'This is the containers page, where all the magic happens',
           params: {
             placement: 'bottom'
           }
         },
         {
           target: '[data-v-step="1"]',
-          content: 'Click this to create a container!',
+          content: 'You would click this to create a container',
           params: {
             placement: 'bottom'
           }
         },
         {
           target: '[data-v-step="2"]',
-          content: 'Give it a name!',
+          content: 'Here is where you give your container a name',
           params: {
-            placement: 'bottom'
+            placement: 'top'
           }
         },
         {
           target: '[data-v-step="3"]',
-          content: 'Image',
+          content: 'Here is where you select the image that your container will run',
           params: {
-            placement: 'bottom'
+            placement: 'top'
           }
         },
         {
           target: '[data-v-step="4"]',
-          content: 'Click this shit',
+          content: 'Click here to create your container',
           params: {
             placement: 'bottom'
           }
@@ -86,12 +87,17 @@ export default {
       }
       
     },
-    nextStep(currentStep) {
+    async nextStep(currentStep) {
       if(currentStep === 1) {
-        // Click on the element
         console.log(this.$refs.createContainer.$el);
-        this.$refs.createContainer.$el.querySelector(".new").click();
-        this.$tours['myTour'].start(2);
+        await this.$refs.createContainer.$el.querySelector(".new").click();
+        await this.$tours['myTour'].start(2);
+      }
+    },
+    prevStep(currentStep) {
+      if(currentStep === 2) {
+        console.log(this.$refs.createContainer.$el);
+        this.$refs.createContainer.$el.querySelector("#closeDialog").click();
       }
     }
   },
@@ -109,8 +115,7 @@ export default {
 </script>
 
 <style>
-/* I'm sorry for sinning CSSenpai but I need this fix pweeaaasseeeeee uuuuuWuuuuu */
 .v-step {
-  z-index: 150173408139270 !important;
+  z-index: 150173408139270;
 }
 </style>
