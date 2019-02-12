@@ -9,16 +9,34 @@
         draggable
         @node-drop="handleDrop"
         :allow-drop="allowDrop"
-        :allow-drag="allowDrag"
         lazy
         show-checkbox
-      />
+      >
+        <span slot-scope="{ node, data }">
+          <i
+            class="el-icon-document"
+            v-if="!data.isdirectory"
+          />
+          {{data.name}}
+        </span>
+      </el-tree>
     </el-card>
   </div>
 </template>
 
 <script>
 import * as path from 'path';
+
+function getFilePath(node) {
+  console.log('getfp', node)
+  let currentNode = node;
+  let filepath = "";
+  while(currentNode && currentNode.data) {
+    filepath = path.join(currentNode.data.name, filepath);
+    currentNode = currentNode.parent;
+  }
+  return filepath
+}
 
 export default {
   data(){
@@ -33,21 +51,16 @@ export default {
   },
   methods: {
     async loadFiles(node, resolve) {
-      console.log(node)
+      console.log('loadf', node)
       if(node.level === 0) {
         return resolve(await this.$fileManager.getFiles('001416358', ''))
       }
-      let currentNode = node;
-      let filepath = "";
-      while(currentNode && currentNode.data) {
-        filepath = path.join(currentNode.data.name, filepath);
-        currentNode = currentNode.parent;
-      }
 
-      return resolve(await this.$fileManager.getFiles('001416358', filepath))
+      return resolve(await this.$fileManager.getFiles('001416358', getFilePath(node)))
 
     },
     handleDrop(draggingNode, dropNode, dropType, ev) {
+      console.log(`Renaming ${getFilePath(draggingNode)} to ${path.join(getFilePath(dropNode), dropNode.data.name)}`)
       console.log('tree drop: ', dropNode.label, dropType);
     },
     allowDrop(draggingNode, dropNode, type) {
@@ -62,8 +75,8 @@ export default {
     }
   },
   async mounted() {
-    this.files = await this.$fileManager.getFiles('001416358', '');
-    console.log(this.files)
+    //this.files = await this.$fileManager.getFiles('001416358', '');
+    //console.log(this.files)
   }
 };
 </script>

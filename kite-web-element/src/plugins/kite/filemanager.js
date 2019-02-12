@@ -36,6 +36,37 @@ export default class FileManager {
 		//return files.json();
 	}
 
+	async renameFile(userid, filepath, newFilepath) {    
+		let res = await fetch(`${this.api_url}api/graphql`, {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				query: `
+					mutation {
+						renameFile(userid: "${userid}", path: "${filepath}", newPath: "${newFilepath}") {
+							files {
+								name,
+								isdirectory,
+								modified,
+								created,
+								size
+							}
+						}
+					}
+				`
+			}),
+		});
+
+		let json = await res.json();
+		
+		if(!json.data) {
+			throw new Error(json.errors);
+		}
+
+		return json.data.getDirContents.files;
+		//return files.json();
+	}
+
 	downloadFile(file, filename) {
 		var element = document.createElement('a');
 		element.setAttribute('href', 'data:text/plain;base64,' + file.contents);
