@@ -82,23 +82,8 @@ export default {
             type: LOGIN_USER,
             userid: this.authForm.userid,
             pass: this.authForm.pass,
-            component: this
+            redirect: this.$route.query.redirect
           });
-          
-          // The above store.dispatch now contains this code
-
-          /* const data = loginUser(this.authForm.userid, this.authForm.pass)
-          data.then(data => {
-            if(data.user.scope) {
-              if(this.$route.query.redirect) {
-                this.$router.push(this.$route.query.redirect);
-              } else {
-                this.$router.push('/containers')
-              }
-            } else {
-              alert('Incorrect User ID or Password');
-            }
-          }); */
         } else {
           return false;
         }
