@@ -82,11 +82,10 @@ export default {
   methods: {
     async deleteContainer() {
       this.loading = true;
+      
       await this.$jraph`
         mutation {
-          deleteContainer(_id: "${this.container._id}"){
-            nickname
-          }
+          msg: deleteContainer(_id: "${this.container._id}")
         }
       `
       await this.$emit("deleted", null);
@@ -94,7 +93,7 @@ export default {
       this.$message.success("Container Deleted");
     },
     fileManager() {
-      this.$notify({
+      this.$notify.error({
           title: "File Manager!",
           message: "Hey! We haven't built this feature yet :-(",
           position: "bottom-left",
