@@ -84,7 +84,7 @@ export default {
           }]
           return usersTable;
       } */
-      return usersData.map(u => ({ ...u, containers: u.containers.length}) );
+      return usersData.map(u => ({ ...u, containers: u.containers.length, scope: u.scope.join(", ")}) );
     },
     warning(index, data) {
       this.$confirm('This will permanently delete this user. Continue?', 'Warning', {
