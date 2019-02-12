@@ -7,7 +7,7 @@
         :container="c"
         @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers"/>
+      <k-create-container @created="fetchContainers" />
     </k-grid>
   </div>
 </template>
@@ -38,7 +38,6 @@ export default {
       `;
       if(res.errors){
         console.log(res.errors);
-        const h = this.$createElement;
         this.$message.error('An error occured');
       }else{
         this.containers = res.data.containers;
