@@ -74,6 +74,18 @@ export default {
     update() {
 
     },
+    dataManip(usersData) {
+      /* for (var counter = 0; counter < usersData.length; counter ++){
+          const usersTable = [{
+            userid: usersData[counter].userid,
+            name: usersData[counter].name,
+            scope: usersData[counter].scope,
+            containers: usersData[counter].containers.length
+          }]
+          return usersTable;
+      } */
+      return usersData.map(u => ({ ...u, containers: u.containers.length}) );
+    },
     warning(index, data) {
       this.$confirm('This will permanently delete this user. Continue?', 'Warning', {
         confirmButtonText: 'OK',
@@ -99,7 +111,7 @@ export default {
     };
   },
   async created() {
-    this.usersTable = (await this.$jraph`
+    this.usersData = (await this.$jraph`
     query{
         users: getUsers{
             userid,
@@ -109,6 +121,7 @@ export default {
         }
       }
     `).data.users;
+    this.usersTable = this.dataManip(this.usersData);
   }
 };
 </script>
