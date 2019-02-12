@@ -44,7 +44,7 @@
         </el-form>
       </div>
       <span slot="footer">
-        <el-button @click="dialogVisible = false" >
+        <el-button @click="dialogVisible = false;" id="closeDialog">
           Cancel
         </el-button>
         <el-button
@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     async handleCreateContainer() {
-      
+      this.$tours['myTour'].stop();
       await this.$refs.createContainer.validate( async valid => {
         
         if (valid) {
