@@ -10,21 +10,32 @@
     <el-dialog
       title="Create New Container"
       :visible.sync="dialogVisible"
-      :before-close="handleClose"
+      width="600px"
     >
-      <el-container>
+      <div>
         <el-form
           :model="form"
           :label-width="formLabelWidth"
+          v-loading="loading"
+          :rules="rules"
+          ref="createContainer"
         >
-          <el-form-item label="Container name">
-            <el-input v-model="form.nickname" />
+          <el-form-item
+            label="Container name"
+            prop="nickname"
+          >
+            <el-input
+              v-model="form.nickname"
+              placeholder="My Cool Container"
+            />
           </el-form-item>
-          <el-form-item label="Container image">
+          <el-form-item
+            label="Container image"
+            prop="image"
+          >
             <el-select
               v-model="form.image"
               placeholder="Select container image"
-              
               :filterable="true"
             >
               <el-option
@@ -40,12 +51,9 @@
             </el-select>
           </el-form-item>
         </el-form>
-      </el-container>
-      <span
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="handleClose">
+      </div>
+      <span slot="footer">
+        <el-button @click="dialogVisible = false">
           Cancel
         </el-button>
         <el-button
@@ -60,8 +68,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
   data() {
     return {
@@ -70,34 +76,57 @@ export default {
         nickname: "",
         image: "PHP",
       },
-      formLabelWidth: "120px",
+      formLabelWidth: "140px",
+      loading: false,
+      rules: {
+          nickname: [
+            { required: true, message: 'Please name your container', trigger: 'change' },
+            { min: 3, message: 'Please give it a name longer than three characters', trigger: 'change' }
+          ],
+          image: [
+            { required: true, message: "Please select an image for your container-baby, or they'll die!", trigger: 'change' }
+          ],
+        }
     };
   },
-  computed: {
-    ...mapState(['user'])
-  },
   methods: {
-    handleClose(done) {
-      this.$confirm("Are you sure to close this dialog?")
-        .then(() => {
-          this.dialogVisible = false;
-          done();
-        })
-        .catch(() => {});
-    },
     async handleCreateContainer() {
-      const req = await this.$jraph`
-        mutation{
-          container: createContainer(
-            owner: "${this.user._id}",
-            userid: "${this.user.userid}",
-            nickname: "${this.form.nickname}"
-          )
+      
+      await this.$refs.createContainer.validate( async valid => {
+        
+        if (valid) {
+          this.loading = true;
+          const res = await this.$jraph`
+            mutation{
+              container: createContainer(
+                nickname: "${this.form.nickname}"
+              ){
+                nickname
+                container_id
+                image
+                status
+              }
+            }
+          `;
+          if(res.errors){
+            this.loading = false;
+            console.log(res.errors);
+            if(res.errors.length == 1){
+              this.$message.error(res.errors[0].message);
+            }else{
+              res.errors.map( e => { this.$message.error(e.message); } )
+            }
+          }else{
+            this.loading = false;
+            this.$emit("created", null);
+            this.dialogVisible = false;
+          }
+        } else {
+          this.$message.error('Please fill out the form correctly');
+          this.loading = false;
+          return false;
         }
-      `;
-      this.$emit("created", null);
-      console.log(req);
-      this.dialogVisible = false;
+      } );
     },
   }
 };
@@ -120,5 +149,8 @@ export default {
 .new:hover{
   border-color: rgba(0,0,0,0.3);
   color: rgba(0,0,0,0.4);
+}
+.el-select {
+  width: 100%;
 }
 </style>

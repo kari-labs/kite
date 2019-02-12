@@ -1,5 +1,6 @@
 const containerType = `
     type Container {
+        _id: String
         nickname: String
         owner: User
         image: String

@@ -1,13 +1,12 @@
 const mutationType = `
     type Mutation {
-        createContainer(owner: String!, userid: String!, nickname: String!): String
-        deleteContainer(userid: String!): String
-
+        createContainer(nickname: String!): Container
+        deleteContainer(_id: String!): Container
         singleUpload(userid: String!, file: Upload!): File!
         multipleUpload(userid: String!, files: [Upload!]!): [File!]!
         renameFile(userid: String!, path: String!, newPath: String!): File!
-
-        createUser(userid: String!, password: String!, name: String! scope: [String!]): User!
+        deleteUser(userid: String!): User!
+        createUser(userid: String!, password: String!, name: String! scope: [String!]): User
     }
 `;
 

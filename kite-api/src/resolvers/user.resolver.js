@@ -1,4 +1,4 @@
-const { loginUser, createUser, getUserScope } = require('../utils/user.util');
+const { loginUser, createUser, getUser, getUsers, deleteUser } = require('../utils/user.util');
 
 const UserResolvers = {
   createUser: async ({ ...userData }) => {
@@ -12,6 +12,13 @@ const UserResolvers = {
       return `${err}`;
     }
   },
+  deleteUser: async ({ ...userData}) =>{
+    try{
+      return deleteUser(userData);
+    } catch (err) {
+      throw new Error (err);
+    }
+  },
   loginUser: async ({ ...userData }, req) => {
     try {
       const userDB = await loginUser(userData, req);
@@ -23,10 +30,18 @@ const UserResolvers = {
       return `${err}`;
     }
   },
-  getUserScope: async (_, req) => {
+  getUser: async (_, req) => {
     try {
-      const scope = await getUserScope(req);
+      const scope = await getUser(req);
       return scope;
+    } catch (err) {
+      return `${err}`;
+    }
+  },
+  getUsers: async () => {
+    try {
+      const users = await getUsers();
+      return users;
     } catch (err) {
       return `${err}`;
     }

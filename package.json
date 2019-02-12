@@ -10,7 +10,8 @@
     "setup:prod": "npm i && cd kite-web-element && npm run build && cd ../kite-api && docker-compose -f ../docker-compose.prod.yml build --no-cache && docker-compose -f ../docker-compose.prod.yml up -d",
     "serve:web": "cd kite-web-element && npm run serve",
     "build:web": "cd kite-web-element && npm run build",
-    "lint": "eslint . --ext .js --ext .vue --ignore-pattern node_modules/ --ignore-pattern dist/ --fix"
+    "lint": "eslint . --ext .js --ext .vue --ignore-pattern node_modules/ --ignore-pattern dist/ --fix",
+    "compose": "npm run build:web && docker-compose up --build"
   },
   "repository": {
     "type": "git",
@@ -57,6 +58,5 @@
     "ignore": [
       "**/dist"
     ]
-  },
-  "dependencies": {}
+  }
 }

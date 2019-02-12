@@ -1,7 +1,9 @@
 <template>
   <div>
     <el-card>
-      <el-button @click="reload()">reload</el-button>
+      <el-button @click="reload()">
+        reload
+      </el-button>
       <el-tree
         v-if="show"
         :props="treeProps"
@@ -17,7 +19,7 @@
             class="el-icon-document"
             v-if="!data.isdirectory"
           />
-          {{data.name}}
+          {{ data.name }}
         </span>
       </el-tree>
     </el-card>
@@ -59,7 +61,7 @@ export default {
       return resolve(await this.$fileManager.getFiles('001416358', getFilePath(node)))
 
     },
-    handleDrop(draggingNode, dropNode, dropType, ev) {
+    handleDrop(draggingNode, dropNode, dropType) {
       console.log(`Renaming ${getFilePath(draggingNode)} to ${path.join(getFilePath(dropNode), dropNode.data.name)}`)
       console.log('tree drop: ', dropNode.label, dropType);
     },

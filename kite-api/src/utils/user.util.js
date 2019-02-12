@@ -22,6 +22,10 @@ const createUser = async (userData) => {
   return user;
 }
 
+const deleteUser = async (userData) => {
+  return User.findOneAndDelete({userid: userData.userid}).exec();
+}
+
 const loginUser = async (userData, req) => {
   const userDB = await User.findOne({ userid: userData.userid }).exec();
   const match = await bcrypt.compare(userData.password, userDB.password);
@@ -31,14 +35,17 @@ const loginUser = async (userData, req) => {
   }
   return "Incorrect user name or password";
 }
-
-const getUserScope = async (req) => {
-  const user = req.session.userStore;
-  if(user) {
-    return user.scope
-  }
-  return [];
+const getUsers = async () => {
+  const users = await User.find();
+  return users;
 }
 
+const getUser = req => {
+  const user = req.session.userStore;
+  if(user) {
+    return user;
+  }
+  return {};
+}
 
-module.exports = { createUser, loginUser, getUserScope };
+module.exports = { createUser, loginUser, getUser, getUsers, deleteUser };

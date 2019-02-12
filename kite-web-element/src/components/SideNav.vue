@@ -43,8 +43,17 @@
       </i>
     </k-nav-item>
     <k-nav-item
-      to="/"
+      to="admin"
       index="4"
+      title="Admin"
+    >
+      <i class="el-icon">
+        <fa-icon icon="user-shield" />
+      </i>
+    </k-nav-item>
+    <k-nav-item
+      to="/"
+      index="5"
       title="Sign Out"
     >
       <i
