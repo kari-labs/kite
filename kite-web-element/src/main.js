@@ -7,6 +7,7 @@ import "./plugins/font-awesome";
 import Jraph from "./plugins/jraph";
 import "./assets/helper.css";
 import "normalize.css";
+import apolloProvider from "./apollo";
 
 Vue.use(Jraph, {api: "https://localhost/api/graphql"});
 
@@ -15,5 +16,6 @@ Vue.config.productionTip = false;
 new Vue({
   router,
   store,
+  apolloProvider,
   render: h => h(App)
 }).$mount("#app");
