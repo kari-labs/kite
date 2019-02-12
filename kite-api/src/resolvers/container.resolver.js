@@ -1,5 +1,6 @@
 const { createContainer, deleteContainer, getContainer, getContainers } = require('../utils/container.util');
-
+const User = require("../models/user.model");
+const { ObjectId } = require('mongoose').Types;
 const ContainerResolvers = {
   createContainer: async ({ nickname }, req) => {
     let c;
@@ -7,6 +8,8 @@ const ContainerResolvers = {
       let store = req.session.userStore;
       if(store) {
         c = await createContainer({ owner: store._id, userid: store.userid, nickname });
+        let u = await User.findByIdAndUpdate({_id: ObjectId(store._id)}, { $push: { "containers": c._id.toString() } }, { new: true });
+        console.dir(u);
       }
       else throw new Error("User not logged in");
       return c;
