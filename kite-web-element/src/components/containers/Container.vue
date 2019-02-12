@@ -18,9 +18,18 @@
     </div>
     <div id="belt">
       <template v-for="tool in tools">
-        <el-tooltip effect="dark" :content="tool.text" placement="bottom" :key="tool.text">
+        <el-tooltip
+          effect="dark"
+          :content="tool.text"
+          placement="bottom"
+          :key="tool.text"
+        >
           <el-button @click="tool.action">
-            <fa-icon :icon="tool.icon" :style="(tool.style || {})" size="lg"/>
+            <fa-icon
+              :icon="tool.icon"
+              :style="(tool.style || {})"
+              size="lg"
+            />
           </el-button>
         </el-tooltip>
       </template>
