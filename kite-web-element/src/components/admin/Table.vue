@@ -27,7 +27,7 @@
         <template slot-scope="scope">
           <el-button
             type="text"
-            @click="dialogFormVisible = true"
+            @click="edit(scope.$index, usersTable)"
           >
             Edit
           </el-button>
@@ -63,7 +63,7 @@ export default {
   name: "KATable",
   methods: {
     deleteUser(index, data) {
-      console.log(data[index].userid)
+      data[index].userid
       this.$jraph`
         mutation{
           deleteUser(userid: "${data[index].userid}"){
@@ -103,6 +103,26 @@ export default {
           message: 'Delete canceled'
         })
       })
+    },
+    edit() {
+      this.$prompt('User Edit Form',{
+        inputPlaceHolder: 'UserID',
+        distinguishCancelAndClose: true,
+        confirmButtonText: 'Save',
+        cancelButtonText: 'Discard Changes'
+      }).then(() => {
+      this.$message({
+        type: 'success',
+        message: 'Changes saved'
+        });
+      }).catch(action => {
+      this.$message({
+        type: 'info',
+        message: action === 'cancel'
+        ? 'Changes discarded'
+        : 'Stay in the current route'
+        })
+      });
     }
   },
   data() {
