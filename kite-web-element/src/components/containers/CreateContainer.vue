@@ -151,7 +151,4 @@ export default {
 .el-select {
   width: 100%;
 }
-::overlay{
-  background: rgba(0,0,0,0.4);
-}
 </style>

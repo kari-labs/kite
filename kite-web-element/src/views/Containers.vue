@@ -104,7 +104,7 @@ export default {
   async mounted() {
     await this.fetchContainers();
     console.log(this.$tours['myTour'])
-    this.$tours['myTour'].start()
+    this.$tours['myTour'].start();
   },
   components: {
     KGrid,
