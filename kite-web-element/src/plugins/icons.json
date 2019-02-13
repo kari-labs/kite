@@ -32,11 +32,19 @@
         "reason": "Delete Container Icon"
     },
     {
-        "name": "faFolder",
-        "reason": "Delete Container Icon"
-    },
-    {
         "name": "faExternalLinkSquareAlt",
         "reason": "Open container page"
+    },
+    {
+        "name": "faFolder",
+        "reason": "Folder icon"
+    },
+    {
+        "name": "faFile",
+        "reason": "File icon"
+    },
+    {
+        "name": "faSyncAlt",
+        "reason": "Reload icon"
     }
 ]

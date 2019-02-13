@@ -1,8 +1,11 @@
 <template>
   <div>
     <el-card>
+      File Manager
       <el-button @click="reload()">
-        reload
+        <fa-icon
+          icon="sync-alt"
+        />
       </el-button>
       <el-tree
         v-if="show"
@@ -15,10 +18,16 @@
         show-checkbox
       >
         <span slot-scope="{ node, data }">
-          <i
-            class="el-icon-document"
-            v-if="!data.isdirectory"
-          />
+          <i class="el-icon">
+            <fa-icon
+              icon="folder"
+              v-if="data.isdirectory"
+            />
+            <fa-icon
+              icon="file"
+              v-else
+            />
+          </i>
           {{ data.name }}
         </span>
       </el-tree>
@@ -27,6 +36,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import * as path from 'path';
 
 function getFilePath(node) {
@@ -51,14 +61,17 @@ export default {
       show: true
     };
   },
+  computed: {
+      ...mapState({user: state => state.auth.user})
+  },
   methods: {
     async loadFiles(node, resolve) {
       console.log('loadf', node)
       if(node.level === 0) {
-        return resolve(await this.$fileManager.getFiles('001416358', ''))
+        return resolve(await this.$fileManager.getFiles(this.user.userid, ''))
       }
 
-      return resolve(await this.$fileManager.getFiles('001416358', getFilePath(node)))
+      return resolve(await this.$fileManager.getFiles(this.user.userid, getFilePath(node)))
 
     },
     handleDrop(draggingNode, dropNode, dropType) {
@@ -83,4 +96,14 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.el-icon {
+  margin-right: 5px;
+  vertical-align: baseline;
+  width: 18px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1;
+  display: inline-block;
+}
+</style>

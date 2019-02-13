@@ -47,7 +47,10 @@
       index="4"
       title="Admin"
     >
-      <i class="el-icon">
+      <i
+        class="el-icon"
+        slot="icon"
+      >
         <fa-icon icon="user-shield" />
       </i>
     </k-nav-item>
