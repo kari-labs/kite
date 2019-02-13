@@ -82,10 +82,7 @@ export default {
   },
   methods: {
     signOutUser() {
-      this.$store.dispatch({
-        type: SIGN_OUT_USER,
-        component: this
-      });
+      this.$store.dispatch(SIGN_OUT_USER);
     },
     handleOpen() {
       //Code for nav opening

@@ -6,6 +6,7 @@ import Help from "@/views/Help.vue";
 import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
 import store from '@/store/store';
+import { SIGN_OUT_USER } from '@/store/modules/auth/auth.types';
 
 Vue.use(Router);
 
@@ -23,6 +24,8 @@ const router = new Router({
             next({
               path: '/containers'
             });
+          } else {
+            next();
           }
         } catch (error) {
           next()
@@ -94,10 +97,26 @@ const router = new Router({
 // (next) - lets user proceed to page
 router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
-    const scope = store.state.auth.user.scope;
-    try {
-      if(scope.length > 0) next();
-      else {
+    const expiry = Date.parse(localStorage.getItem('expiry'));
+    const current = Date.parse(new Date(Date.now()).toUTCString());
+    if(current >= expiry) {
+      // Change this to show pop-up letting users know their session expired
+      // Put Sign-Out code in popup on button click
+      console.log('Expired');
+      store.dispatch(SIGN_OUT_USER);
+    } else {
+      const scope = store.state.auth.user.scope;
+      try {
+        if(scope.length > 0) next();
+        else {
+          next({
+            path: '/',
+            query: {
+              redirect: to.fullPath
+            }
+          });
+        }
+      } catch (error) {
         next({
           path: '/',
           query: {
@@ -105,13 +124,6 @@ router.beforeEach((to, from, next) => {
           }
         });
       }
-    } catch (error) {
-      next({
-        path: '/',
-        query: {
-          redirect: to.fullPath
-        }
-      });
     }
   } else {
     next();

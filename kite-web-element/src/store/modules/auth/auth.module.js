@@ -25,6 +25,7 @@ export const authModule = {
             type: types.STORE_USER,
             user: result.data.user
           });
+          localStorage.setItem('expiry', new Date(Date.now() + (5 * 60 * 1000)).toUTCString());
           if(redirect) router.push(redirect);
           // We give the users the choice to chose a homepage and send them there by default
           else router.push('/containers');
@@ -44,6 +45,7 @@ export const authModule = {
         if(result.data.stats !== null) {
           if(result.data.status === 'Successfully signed out.') {
             commit(types.REMOVE_USER);
+            localStorage.removeItem('expiry');
             router.push('/');
           } else {
             Message.error(result.data.status);
