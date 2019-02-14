@@ -82,7 +82,7 @@ export default {
             type: LOGIN_USER,
             userid: this.authForm.userid,
             pass: this.authForm.pass,
-            redirect: this.$route.query.redirect,
+            redirect: this.$route.query.redirect
           });
         } else {
           return false;

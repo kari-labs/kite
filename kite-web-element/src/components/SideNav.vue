@@ -4,10 +4,23 @@
     class="el-menu-vertical-demo"
     @open="handleOpen"
     @close="handleClose"
-    :collapse="toggle"
+    :collapse="isCollapse"
   >
     <el-menu-item
       index="1"
+      @click="isCollapse = !isCollapse"
+    >
+      <i class="el-icon" v-if="isCollapse">
+        <fa-icon
+            icon="bars"
+          />
+      </i>
+      <span slot="title" v-else>
+        KITE
+      </span>
+    </el-menu-item>
+    <el-menu-item
+      index="2"
       v-to="'containers'"
     >
       <i class="el-icon">
@@ -77,7 +90,8 @@ export default {
   },
   data() {
     return {
-      dark: false
+      dark: false,
+      isCollapse: true,
     };
   },
   methods: {
