@@ -1,32 +1,17 @@
 <template>
-  <div class="tall">
-    <el-header v-show="!$route.meta.hideHeader">
-      <el-button
-        type="text"
-        @click="isCollapse = !isCollapse"
-      >
-        <i id="menuToggle">
-          <fa-icon
-            icon="bars"
-            size="lg"
-          />
-        </i>
-      </el-button>
-      <span class="h1 display ml-1">
-        <router-link
-          to="/"
-          class="el-link"
-        >
-          Kite
-        </router-link>
-      </span>
-    </el-header>
-    <el-container>
-      <side-nav
-        :toggle="isCollapse"
-        v-if="!$route.meta.hideHeader"
-      />
+  <el-container class="tall">
+    <side-nav v-if="!$route.meta.hideHeader"/>
       <el-container>
+        <el-header v-show="!$route.meta.hideHeader">
+          <span class="h1 display">
+            <router-link
+              to="/"
+              class="el-link"
+            >
+              Kite
+            </router-link>
+          </span>
+        </el-header>
         <el-main>
           <router-view />
         </el-main>
@@ -39,8 +24,7 @@
           </span>
         </el-footer>
       </el-container>
-    </el-container>
-  </div>
+  </el-container>
 </template>
 
 <script>
@@ -49,13 +33,11 @@ import SideNav from "@/components/SideNav.vue";
 export default {
   name: "App",
   data() {
-    return {
-      isCollapse: true
-    };
+    return {};
   },
   components: {
-    SideNav
-  }
+    SideNav,
+  },
 };
 </script>
 
@@ -67,6 +49,7 @@ export default {
 .el-header{
   line-height: 60px;
   width: 100%;
+  border-bottom: 1px solid rgba(117, 117, 117, 0.3);
 }
 .el-footer {
   background-color: #b3c0d1;
