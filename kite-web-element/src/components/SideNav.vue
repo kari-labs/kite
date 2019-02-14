@@ -4,11 +4,23 @@
     class="el-menu-vertical-demo"
     @open="handleOpen"
     @close="handleClose"
-    :collapse="toggle"
+    :collapse="isCollapse"
   >
     <k-nav-item
-      to="containers"
       index="1"
+      title="Toggle Navigation Collapse"
+      @click="isCollapse = !isCollapse"
+    >
+      <i class="el-icon" v-if="isCollapse">
+        <fa-icon icon="bars" />
+      </i>
+      <span slot="title" v-else>
+        KITE
+      </span>
+    </k-nav-item>
+    <k-nav-item
+      to="containers"
+      index="2"
       title="Containers"
     >
       <i
@@ -20,7 +32,7 @@
     </k-nav-item>
     <k-nav-item
       to="files"
-      index="2"
+      index="3"
       title="File Manager"
     >
       <i
@@ -32,7 +44,7 @@
     </k-nav-item>
     <k-nav-item
       to="help"
-      index="3"
+      index="4"
       title="Help"
     >
       <i
@@ -44,7 +56,7 @@
     </k-nav-item>
     <k-nav-item
       to="admin"
-      index="4"
+      index="5"
       title="Admin"
     >
       <i
@@ -56,7 +68,7 @@
     </k-nav-item>
     <k-nav-item
       to="/"
-      index="5"
+      index="6"
       title="Sign Out"
     >
       <i
@@ -82,7 +94,8 @@ export default {
   },
   data() {
     return {
-      dark: false
+      dark: false,
+      isCollapse: true,
     };
   },
   methods: {

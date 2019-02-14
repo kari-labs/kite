@@ -1,5 +1,5 @@
 <template>
-  <el-card v-loading="loading">
+  <el-card v-loading="loading" ref="card">
     <div
       slot="header"
       class="el-card-header"
@@ -39,6 +39,10 @@
 
 <script>
 import KQuickUpload from "@/components/filesys/QuickUpload.vue";
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms*1000));
+}
 
 export default {
   name: "KCard",
@@ -83,15 +87,21 @@ export default {
   methods: {
     async deleteContainer() {
       this.loading = true;
+      this.$refs.card.$el.classList.toggle("littleHang");
       
       await this.$jraph`
         mutation {
           msg: deleteContainer(_id: "${this.container._id}")
         }
       `
-      await this.$emit("deleted", null);
+      this.$refs.card.$el.classList.toggle("littleHang");
+      this.$refs.card.$el.style["transform"] = "rotate(45deg)";
+      this.$refs.card.$el.style["transform-origin"] = "top left";
+      this.$refs.card.$el.classList.add("drop");
+      await sleep(1);
       this.loading = false;
       this.$message.success("Container Deleted");
+      await this.$emit("deleted", null);
     },
     fileManager() {
       this.$notify.error({
@@ -105,6 +115,17 @@ export default {
 </script>
 
 <style>
+.hang {
+  animation: 4s hang forwards;
+}
+
+.drop {
+  animation: 1s drop ease-in forwards;
+}
+
+.littleHang {
+  animation: 1s littleHang ease-in-out infinite alternate forwards;
+}
 .el-card-header {
   display: grid;
   text-align: left;
@@ -120,5 +141,64 @@ export default {
   align-items: center;
   align-content: center;
   padding-top: 10px;
+}
+
+@keyframes hang {
+  0% {
+    transform: translate(0) rotate(0);
+    transform-origin: top left;
+    display: inherit;
+  }
+  
+  25% {
+    transform: rotate(90deg);
+    transform-origin: top left;
+  }
+  
+  50% {
+    transform: rotate(45deg);
+    transform-origin: top left;
+  }
+  
+  75% {
+    transform: rotate(90deg);
+    transform-origin: top left;
+  }
+  
+  85% {
+    transform: rotate(45deg);
+    transform-origin: top left;
+  }
+  
+  100% {
+    transform: rotate(45deg);
+    transform-origin: top left;
+  }
+}
+
+@keyframes littleHang {
+  0% {
+    transform: rotate(45deg);
+    transform-origin: top left;
+  }
+  50% {
+    transform: rotate(90deg);
+    transform-origin: top left;
+  }
+  
+  100% {
+    transform: rotate(45deg);
+    transform-origin: top left;
+  }
+}
+@keyframes drop {
+
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(200vh);
+    visibility: hidden;
+  }
 }
 </style>
