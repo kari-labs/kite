@@ -115,8 +115,11 @@ export default {
 </script>
 
 <style>
-.hang {
-  animation: 4s hang forwards;
+:root {
+  --transform-origin: top right;
+  --transform-angle-one: -45deg;
+  --transform-angle-two: -90deg;
+  --transform-angle-three: -75deg;
 }
 
 .drop {
@@ -145,28 +148,28 @@ export default {
 
 @keyframes littleHang {
   0% {
-    transform: rotate(45deg);
-    transform-origin: top right;
+    transform: rotate(var(--transform-angle-one));
+    transform-origin: var(--transform-origin);
   }
   50% {
-    transform: rotate(90deg);
-    transform-origin: top right;
+    transform: rotate(var(--transform-angle-two));
+    transform-origin: var(--transform-origin);
   }
   
   100% {
-    transform: rotate(45deg);
-    transform-origin: top right;
+    transform: rotate(var(--transform-angle-one));
+    transform-origin: var(--transform-origin);
   }
 }
 @keyframes drop {
 
   0% {
-    transform: translateY(0) rotate(75deg);
-    transform-origin: top right;
+    transform: translateY(0) rotate(var(--transform-angle-three));
+    transform-origin: var(--transform-origin);
   }
   100% {
-    transform: translateY(120vh) rotate(75deg);
-    transform-origin: top right;
+    transform: translateY(120vh) rotate(var(--transform-angle-three));
+    transform-origin: var(--transform-origin);
     visibility: hidden;
   }
 }
