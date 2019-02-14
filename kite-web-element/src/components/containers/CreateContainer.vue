@@ -2,6 +2,8 @@
   <div>
     <div
       @click="dialogVisible = true"
+      v-shortkey="['ctrl', 'alt', 'n']" 
+      @shortkey="dialogVisible = true"
       class="new"
     >
       Click here to create a container
