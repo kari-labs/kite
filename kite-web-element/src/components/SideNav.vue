@@ -6,9 +6,8 @@
     @close="handleClose"
     :collapse="isCollapse"
   >
-    <k-nav-item
+    <el-menu-item
       index="1"
-      title="Toggle Navigation Collapse"
       @click="isCollapse = !isCollapse"
     >
       <i class="el-icon" v-if="isCollapse">
@@ -17,7 +16,7 @@
       <span slot="title" v-else>
         KITE
       </span>
-    </k-nav-item>
+    </el-menu-item>
     <k-nav-item
       to="containers"
       index="2"
