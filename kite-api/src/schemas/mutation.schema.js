@@ -6,8 +6,9 @@ const mutationType = `
         clearFalseContainersFromUser: Boolean
         singleUpload(userid: String!, file: Upload!): File!
         multipleUpload(userid: String!, files: [Upload!]!): [File!]!
-        createUser(userid: String!, password: String!, name: String! scope: [String!]): User
+        renameFile(userid: String!, path: String!, newPath: String!): File!
         deleteUser(userid: String!): User!
+        createUser(userid: String!, password: String!, name: String! scope: [String!]): User
     }
 `;
 

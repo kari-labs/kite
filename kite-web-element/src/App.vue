@@ -16,9 +16,9 @@
           <router-view />
         </el-main>
         <el-footer>
-          <b class="title">
+          <span class="subtitle">
             Kite
-          </b>
+          </span>
           <span class="subtitle">
             &copy; GLB Group 2019
           </span>
@@ -52,7 +52,7 @@ export default {
   border-bottom: 1px solid rgba(117, 117, 117, 0.3);
 }
 .el-footer {
-  background-color: #b3c0d1;
+  background-color: #d3dce6;
   color: #333;
   display: flex;
   flex-direction: column;
