@@ -104,11 +104,12 @@ export default {
       await this.$emit("deleted", null);
     },
     fileManager() {
-      this.$notify.error({
+      /* this.$notify.error({
           title: "File Manager!",
           message: "Hey! We haven't built this feature yet :-(",
           position: "bottom-left",
-      });
+      }); */
+      this.$router.push('files');
     },
   },
 };
@@ -119,7 +120,7 @@ export default {
   --transform-origin: top right;
   --transform-angle-one: -45deg;
   --transform-angle-two: -90deg;
-  --transform-angle-three: -75deg;
+  --transform-angle-three: -45deg;
 }
 
 .drop {
