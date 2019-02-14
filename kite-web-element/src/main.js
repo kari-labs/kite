@@ -12,7 +12,7 @@ import "normalize.css";
 import apolloProvider from "./apollo";
 
 Vue.use(Jraph, {api: "https://localhost/api/graphql"});
-
+Vue.use(require('vue-shortkey'));
 Vue.use(FileManager, {
   api_url: 'https://localhost/'
 })
