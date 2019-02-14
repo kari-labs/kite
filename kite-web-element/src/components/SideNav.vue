@@ -6,78 +6,84 @@
     @close="handleClose"
     :collapse="isCollapse"
   >
-    <el-menu-item
+    <k-nav-item
       index="1"
+      title="Toggle Navigation Collapse"
       @click="isCollapse = !isCollapse"
     >
       <i class="el-icon" v-if="isCollapse">
-        <fa-icon
-            icon="bars"
-          />
+        <fa-icon icon="bars" />
       </i>
       <span slot="title" v-else>
         KITE
       </span>
-    </el-menu-item>
-    <el-menu-item
+    </k-nav-item>
+    <k-nav-item
+      to="containers"
       index="2"
-      v-to="'containers'"
+      title="Containers"
     >
-      <i class="el-icon">
+      <i
+        class="el-icon"
+        slot="icon"
+      >
         <fa-icon icon="cube" />
       </i>
-      <span slot="title">
-        Containers
-      </span>
-    </el-menu-item>
-    <el-menu-item
+    </k-nav-item>
+    <k-nav-item
+      to="files"
       index="3"
-      disabled
+      title="File Manager"
     >
-      <i class="el-icon">
+      <i
+        class="el-icon"
+        slot="icon"
+      >
         <fa-icon icon="file" />
       </i>
-      <span slot="title">
-        Editor
-      </span>
-    </el-menu-item>
-    <el-menu-item
+    </k-nav-item>
+    <k-nav-item
+      to="help"
       index="4"
-      v-to="'help'"
+      title="Help"
     >
-      <i class="el-icon">
+      <i
+        class="el-icon"
+        slot="icon"
+      >
         <fa-icon icon="question" />
       </i>
-      <span slot="title">
-        Help
-      </span>
-    </el-menu-item>
-    <el-menu-item
+    </k-nav-item>
+    <k-nav-item
+      to="admin"
       index="5"
-      v-to="'admin'"
+      title="Admin"
     >
-      <i class="el-icon">
+      <i
+        class="el-icon"
+        slot="icon"
+      >
         <fa-icon icon="user-shield" />
       </i>
-      <span slot="title">
-        Admin
-      </span>
-    </el-menu-item>
-    <el-menu-item
+    </k-nav-item>
+    <k-nav-item
+      to="/"
       index="6"
-      v-to="'/'"
+      title="Sign Out"
     >
-      <i class="el-icon rotate-180">
+      <i
+        class="el-icon rotate-180"
+        slot="icon"
+      >
         <fa-icon icon="sign-out-alt" />
       </i>
-      <span slot="title">
-        Sign Out
-      </span>
-    </el-menu-item>
+    </k-nav-item>
   </el-menu>
 </template>
 
 <script>
+import KNavItem from "@/components/NavItem.vue";
+
 export default {
   name: "KNav",
   props: {
@@ -100,27 +106,8 @@ export default {
       //code for nav closing
     }
   },
-  directives: {
-    to: {
-      inserted: (el, bin, vnode) => {
-        el.tabindex = "1";
-        el.attributes[0].value = "button";
-        const handleButton = () => {
-          try {
-            vnode.componentInstance.$router.push(bin.value);
-          } catch (error) {
-            // eslint-disable-next-line
-            console.group("v-to");
-            // eslint-disable-next-line
-            console.log(error);
-            // eslint-disable-next-line
-            console.groupEnd("v-to");
-          }
-        };
-        el.addEventListener("click", handleButton);
-        el.addEventListener("keypress", handleButton);
-      }
-    }
+  components: {
+    KNavItem
   }
 };
 </script>
