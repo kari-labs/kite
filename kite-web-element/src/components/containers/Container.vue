@@ -143,61 +143,30 @@ export default {
   padding-top: 10px;
 }
 
-@keyframes hang {
-  0% {
-    transform: translate(0) rotate(0);
-    transform-origin: top left;
-    display: inherit;
-  }
-  
-  25% {
-    transform: rotate(90deg);
-    transform-origin: top left;
-  }
-  
-  50% {
-    transform: rotate(45deg);
-    transform-origin: top left;
-  }
-  
-  75% {
-    transform: rotate(90deg);
-    transform-origin: top left;
-  }
-  
-  85% {
-    transform: rotate(45deg);
-    transform-origin: top left;
-  }
-  
-  100% {
-    transform: rotate(45deg);
-    transform-origin: top left;
-  }
-}
-
 @keyframes littleHang {
   0% {
     transform: rotate(45deg);
-    transform-origin: top left;
+    transform-origin: top right;
   }
   50% {
     transform: rotate(90deg);
-    transform-origin: top left;
+    transform-origin: top right;
   }
   
   100% {
     transform: rotate(45deg);
-    transform-origin: top left;
+    transform-origin: top right;
   }
 }
 @keyframes drop {
 
   0% {
     transform: translateY(0) rotate(75deg);
+    transform-origin: top right;
   }
   100% {
     transform: translateY(120vh) rotate(75deg);
+    transform-origin: top right;
     visibility: hidden;
   }
 }
