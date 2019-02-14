@@ -28,9 +28,9 @@
         <template slot-scope="scope">
           <el-button
             type="text"
-            @click="dialogFormVisible = true"
+            @click="edit(scope.$index, usersTable)"
           >
-            open a Form nested Dialog
+            Edit
           </el-button>
           
           <el-button
@@ -88,7 +88,10 @@ export default {
           }`
     },
     //Edit Button Function--------------------------------------------------------->
-    edit() {
+    edit(index, data) {
+      this.dialogFormVisible = true;
+      console.log(index);
+      console.log(data);
     },
     update() {//Called in edit.
 
