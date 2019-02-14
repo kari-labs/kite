@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <k-grid>
       <k-card 
         v-for="c in containers" 
@@ -103,7 +102,7 @@ export default {
   },
   async mounted() {
     await this.fetchContainers();
-    console.log(this.$tours['myTour'])
+    console.log(this.$tours['myTour']);
     this.$tours['myTour'].start();
     console.log(this.$store.state.auth.user.containers);
   },
