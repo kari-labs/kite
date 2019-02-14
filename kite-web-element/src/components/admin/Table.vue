@@ -24,35 +24,29 @@
       <el-table-column
         label="Operations"
       >
+        <!-- Operations -->
         <template slot-scope="scope">
           <el-button
             type="text"
-            @click="edit(scope.$index, usersTable)"
+            @click="dialogFormVisible = true"
           >
-            Edit
+            open a Form nested Dialog
           </el-button>
+          
           <el-button
             type="text"
             @click="warning(scope.$index, usersTable)"
           >
             Delete
           </el-button>
-          <!-- Beginning of edit form
-          <el-dialog title="User Update" :visible.sync="dialogFormVisible">
-            <el-form ref="userForm" :rules="rules" :model="form">
-              <el-form-item label="User ID">
-                <el-input v-model="form.userid" disabled/>
-              </el-form-item>
-              <el-form-item label="Name">
-                <el-input v-model="form.name"/>
-              </el-form-item>
-              -
-            </el-form>
-          </el-dialog>
-          -->
         </template>
+        <!-- Operations Closed -->
       </el-table-column>
     </el-table>
+    <el-dialog
+      title="Shipping address"
+      :visible.sync="dialogFormVisible"
+    />
   </el-card>
 </template>
 
@@ -62,30 +56,10 @@ export default {
   
   name: "KATable",
   methods: {
-    deleteUser(index, data) {
-      data[index].userid
-      this.$jraph`
-        mutation{
-          deleteUser(userid: "${data[index].userid}"){
-            userid
-            }
-          }`
-    },
-    update() {
-
-    },
     dataManip(usersData) {
-      /* for (var counter = 0; counter < usersData.length; counter ++){
-          const usersTable = [{
-            userid: usersData[counter].userid,
-            name: usersData[counter].name,
-            scope: usersData[counter].scope,
-            containers: usersData[counter].containers.length
-          }]
-          return usersTable;
-      } */
       return usersData.map(u => ({ ...u, containers: u.containers.length, scope: u.scope.join(", ")}) );
     },
+    //Delete Button Function--------------------------------------------------------->
     warning(index, data) {
       this.$confirm('This will permanently delete this user. Continue?', 'Warning', {
         confirmButtonText: 'OK',
@@ -104,33 +78,40 @@ export default {
         })
       })
     },
+    deleteUser(index, data) {//Called in warning.
+      data[index].userid
+      this.$jraph`
+        mutation{
+          deleteUser(userid: "${data[index].userid}"){
+            userid
+            }
+          }`
+    },
+    //Edit Button Function--------------------------------------------------------->
     edit() {
-      this.$prompt('User Edit Form',{
-        inputPlaceHolder: 'UserID',
-        distinguishCancelAndClose: true,
-        confirmButtonText: 'Save',
-        cancelButtonText: 'Discard Changes'
-      }).then(() => {
-      this.$message({
-        type: 'success',
-        message: 'Changes saved'
-        });
-      }).catch(action => {
-      this.$message({
-        type: 'info',
-        message: action === 'cancel'
-        ? 'Changes discarded'
-        : 'Stay in the current route'
-        })
-      });
-    }
+    },
+    update() {//Called in edit.
+
+    },
   },
   data() {
     return {
-      usersTable: []
+      usersTable: [],
+        dialogFormVisible: false,
+        form: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        formLabelWidth: '120px'
     };
   },
-  async created() {
+  async created() {//Table data fill
     this.usersData = (await this.$jraph`
     query{
         users: getUsers{
@@ -142,6 +123,7 @@ export default {
       }
     `).data.users;
     this.usersTable = this.dataManip(this.usersData);
+    this.loading = false;
   }
 };
 </script>
@@ -154,5 +136,8 @@ export default {
   }
   [class ^= el-table__header-wrapper]{
     width: 100%;
+  }
+  body {
+    margin: 0;
   }
 </style>
