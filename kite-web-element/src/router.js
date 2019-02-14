@@ -7,6 +7,7 @@ import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
 import store from '@/store/store';
 import { SIGN_OUT_USER } from '@/store/modules/auth/auth.types';
+import { MessageBox } from 'element-ui';
 
 Vue.use(Router);
 
@@ -100,10 +101,12 @@ router.beforeEach((to, from, next) => {
     const expiry = Date.parse(localStorage.getItem('expiry'));
     const current = Date.parse(new Date(Date.now()).toUTCString());
     if(current >= expiry) {
-      // Change this to show pop-up letting users know their session expired
-      // Put Sign-Out code in popup on button click
-      console.log('Expired');
-      store.dispatch(SIGN_OUT_USER);
+      MessageBox.alert('Please log in again.', 'Session Expired', {
+        confirmButtonText: 'Back to Login',
+        callback: () => {
+          store.dispatch(SIGN_OUT_USER);
+        }
+      });
     } else {
       const scope = store.state.auth.user.scope;
       try {
