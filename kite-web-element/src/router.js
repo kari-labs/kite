@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Login from "@/views/Login.vue";
 import Containers from "@/views/Containers.vue";
+import FileManager from "@/views/FileManager.vue";
 import Help from "@/views/Help.vue";
 import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
@@ -36,6 +37,16 @@ const router = new Router({
         hideHeader: true,
         requiresAuth: false,
       },
+    },
+    {
+      path: "/files",
+      name: "files",
+      // route level code-splitting
+      // this generates a separate chunk (containers.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      //component: () => import(/* webpackChunkName: "containers" */ "./views/Containers.vue")
+      component: FileManager,
+      meta: { hideHeader: false }
     },
     {
       path: "/containers",

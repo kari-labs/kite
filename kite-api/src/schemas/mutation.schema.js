@@ -10,6 +10,7 @@ const mutationType = `
         deleteUser(userid: String!): User
         loginUser(userid: String!, password: String!): User
         signOutUser: String!
+        renameFile(userid: String!, path: String!, newPath: String!): File!
     }
 `;
 

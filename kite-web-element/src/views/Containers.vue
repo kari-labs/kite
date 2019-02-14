@@ -11,7 +11,7 @@
         :container="c"
         @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers" />
+      <k-create-container />
     </k-grid>
   </div>
 </template>

@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import KQuickUpload from "@/components/filesys/QuickUpload.vue";
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms*1000));
@@ -193,10 +194,10 @@ export default {
 @keyframes drop {
 
   0% {
-    transform: translateY(0);
+    transform: translateY(0) rotate(75deg);
   }
   100% {
-    transform: translateY(200vh);
+    transform: translateY(120vh) rotate(75deg);
     visibility: hidden;
   }
 }
