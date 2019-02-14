@@ -58,8 +58,5 @@
     "ignore": [
       "**/dist"
     ]
-  },
-  "dependencies": {
-    "vue-tour": "^1.1.0"
   }
 }

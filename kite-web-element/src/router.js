@@ -2,14 +2,13 @@ import Vue from "vue";
 import Router from "vue-router";
 import Login from "@/views/Login.vue";
 import Containers from "@/views/Containers.vue";
+import FileManager from "@/views/FileManager.vue";
 import Help from "@/views/Help.vue";
 import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
-import { getUserScope } from "@/utils/auth.util.js";
+import store from '@/store/store';
 
 Vue.use(Router);
-
-
 
 const router = new Router({
   mode: "history",
@@ -19,10 +18,31 @@ const router = new Router({
       path: "/",
       name: "login",
       component: Login,
+      beforeEnter: (to, from, next) => {
+        try {
+          if(store.state.auth.user.scope.length > 0) {
+            next({
+              path: '/containers'
+            });
+          }
+        } catch (error) {
+          next()
+        }
+      },
       meta: { 
         hideHeader: true,
         requiresAuth: false,
-      }
+      },
+    },
+    {
+      path: "/files",
+      name: "files",
+      // route level code-splitting
+      // this generates a separate chunk (containers.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      //component: () => import(/* webpackChunkName: "containers" */ "./views/Containers.vue")
+      component: FileManager,
+      meta: { hideHeader: false }
     },
     {
       path: "/containers",
@@ -85,16 +105,10 @@ const router = new Router({
 // (next) - lets user proceed to page
 router.beforeEach((to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
-    const data = getUserScope();
-    data.then(user => {
-      // This currently just checks if the user has any scope.
-      // At some point we should check if the user has the required scope to visit the requested page.
-      // Ex. - User with scope of ["adminpanel", "containers"] requests to visit the "editor" page. They should be denied because they don't have the required scope.
-      // The current system works like this - User with scope ["containers", "help"] requests page "adminpanel", he/she is allowed to go there because
-      //     this function only checks if the user has any scope at all.
-      if(user.scope.length > 0) {
-        next();
-      } else {
+    const scope = store.state.auth.user.scope;
+    try {
+      if(scope.length > 0) next();
+      else {
         next({
           path: '/',
           query: {
@@ -102,7 +116,14 @@ router.beforeEach((to, from, next) => {
           }
         });
       }
-    });
+    } catch (error) {
+      next({
+        path: '/',
+        query: {
+          redirect: to.fullPath
+        }
+      });
+    }
   } else {
     next();
   }

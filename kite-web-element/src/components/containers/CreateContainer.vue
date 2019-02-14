@@ -20,10 +20,21 @@
           :rules="rules"
           ref="createContainer"
         >
-          <el-form-item label="Container name" prop="nickname">
-            <el-input v-model="form.nickname" placeholder="My Cool Container" data-v-step="2"/>
+          <el-form-item
+            label="Container name"
+            prop="nickname"
+            data-v-step="2"
+          >
+            <el-input
+              v-model="form.nickname"
+              placeholder="My Cool Container"
+            />
           </el-form-item>
-          <el-form-item label="Container image" prop="image" data-v-step="3">
+          <el-form-item
+            label="Container image"
+            prop="image"
+            data-v-step="3"
+          >
             <el-select
               v-model="form.image"
               placeholder="Select container image"
@@ -60,8 +71,6 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-
 export default {
   data() {
     return {
@@ -83,14 +92,10 @@ export default {
         }
     };
   },
-  computed: {
-    ...mapState(['user'])
-  },
   methods: {
     async handleCreateContainer() {
       this.$tours['myTour'].stop();
       await this.$refs.createContainer.validate( async valid => {
-        
         if (valid) {
           this.loading = true;
           const res = await this.$jraph`
@@ -108,7 +113,6 @@ export default {
           if(res.errors){
             this.loading = false;
             console.log(res.errors);
-            const h = this.$createElement;
             if(res.errors.length == 1){
               this.$message.error(res.errors[0].message);
             }else{

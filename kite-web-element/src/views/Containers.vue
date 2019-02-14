@@ -1,6 +1,10 @@
 <template>
   <div>
+    
     <k-grid>
+      <el-card>
+        <h1>You have  {{containers.length}} containers</h1>
+      </el-card>
       <k-card 
         v-for="c in containers" 
         :key="c._id"
@@ -80,7 +84,6 @@ export default {
       `;
       if(res.errors){
         console.log(res.errors);
-        const h = this.$createElement;
         this.$message.error('An error occured');
       }else{
         this.containers = res.data.containers;
@@ -105,6 +108,7 @@ export default {
     await this.fetchContainers();
     console.log(this.$tours['myTour'])
     this.$tours['myTour'].start();
+    console.log(this.$store.state.auth.user.containers);
   },
   components: {
     KGrid,
