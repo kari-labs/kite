@@ -1,13 +1,17 @@
 <template>
   <div>
+    
     <k-grid>
+      <el-card>
+        <h1>You have  {{containers.length}} containers</h1>
+      </el-card>
       <k-card 
         v-for="c in containers" 
         :key="c._id"
         :container="c"
         @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers"/>
+      <k-create-container @created="fetchContainers" />
     </k-grid>
   </div>
 </template>
@@ -38,7 +42,6 @@ export default {
       `;
       if(res.errors){
         console.log(res.errors);
-        const h = this.$createElement;
         this.$message.error('An error occured');
       }else{
         this.containers = res.data.containers;
@@ -48,6 +51,7 @@ export default {
   },
   async mounted() {
     await this.fetchContainers();
+    console.log(this.$store.state.auth.user.containers);
   },
   components: {
     KGrid,

@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { loginUser } from '../../utils/auth.util';
+import { LOGIN_USER } from '@/store/modules/auth/auth.types';
 
 export default {
   data() {
@@ -75,22 +75,14 @@ export default {
     };
   },
   methods: {
-    // This function can be improved.
-    // REFACTOR
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
         if (valid) {
-          const data = loginUser(this.authForm.userid, this.authForm.pass)
-          data.then(data => {
-            if(data.user.scope) {
-              if(this.$route.query.redirect) {
-                this.$router.push(this.$route.query.redirect);
-              } else {
-                this.$router.push('/containers')
-              }
-            } else {
-              alert('Incorrect User ID or Password');
-            }
+          this.$store.dispatch({
+            type: LOGIN_USER,
+            userid: this.authForm.userid,
+            pass: this.authForm.pass,
+            redirect: this.$route.query.redirect
           });
         } else {
           return false;
