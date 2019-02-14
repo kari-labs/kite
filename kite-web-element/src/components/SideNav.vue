@@ -5,6 +5,8 @@
     @open="handleOpen"
     @close="handleClose"
     :collapse="isCollapse"
+    v-shortkey="{'open': ['arrowright'], 'close': ['arrowleft']}" 
+    @shortkey.native="handleHotKeys"
   >
     <el-menu-item
       index="1"
@@ -103,6 +105,16 @@ export default {
     },
     handleClose() {
       //code for nav closing
+    },
+    handleHotKeys(e) {
+      switch(e.srcKey){
+        case 'open':
+          this.isCollapse = false;
+          break;
+        case 'close':
+          this.isCollapse = true;
+          break;
+      }
     }
   },
   components: {
