@@ -5,8 +5,9 @@ export const loginUser = async (userid, password) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: `{
+      query: `mutation {
         user: loginUser(userid:"${userid}",password:"${password}") {
+          _id
           userid
           name
           containers
@@ -20,24 +21,22 @@ export const loginUser = async (userid, password) => {
     credentials: 'include',
   });
   response = await response.json();
-  return response.data;
+  return response;
 }
 
-export const getUserScope = async () => {
+export const signOutUser = async () => {
   let response = await fetch('https://localhost/api/graphql', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      query: `{
-        scope: getUser {
-          scope
-        }
+      query: `mutation {
+        status: signOutUser
       }`
     }),
     credentials: 'include',
   });
   response = await response.json();
-  return response.data.scope;
+  return response;
 }

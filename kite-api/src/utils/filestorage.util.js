@@ -29,6 +29,31 @@ const getFileInfo = async (userDir, file) => {
 
 const getFileInfoHandler = async (userid, filepath) => getFileInfo(path.join(config.userFolderPath, userid), path.join(config.userFolderPath, userid, filepath));
 
+const renameFile = async (userid, filepath, newFilePath) => {
+  const oldFile = path.join(config.userFolderPath, userid, filepath);
+  const newFile = path.join(config.userFolderPath, userid, newFilePath);
+  const userDir = path.join(config.userFolderPath, userid);
+  if(!oldFile.startsWith(userDir)) {
+    //res.status(403).json({error: 'Access denied'});
+    throw new Error('Access denied');
+  }
+  if(!newFile.startsWith(userDir)) {
+    //res.status(403).json({error: 'Access denied'});
+    throw new Error('Access denied');
+  }
+  try {
+    await fsp.rename(oldFile, newFile);
+    return getFileInfo(path.join(config.userFolderPath, userid), newFile);
+  } catch(e) {
+    if (e.code == 'ENOENT') {
+      throw new Error('File not found');
+      //res.status(404).json({error:'File not found'})
+    } else {
+      throw e;
+    }
+  }
+}
+
 const getDirContents = async (userid, filepath) => {
   const file = path.join(config.userFolderPath, userid, filepath);
   const userDir = path.join(config.userFolderPath, userid);
@@ -40,7 +65,7 @@ const getDirContents = async (userid, filepath) => {
     try {
       const files = await fsp.readdir(file)
       return {
-          files: await Promise.all(files.map(async filename => {
+          files: (await Promise.all(files.map(async filename => {
           const filepath = path.join(file, filename);
           const fileStats =  await fsp.stat(filepath);
           return {
@@ -50,7 +75,12 @@ const getDirContents = async (userid, filepath) => {
             modified: fileStats.mtime,
             size: fileStats.size
           }
-        }))
+        }))).sort((a, b) => {
+          if(a.isdirectory === b.isdirectory) {
+            return a.name > b.name ? -1 : 1; // Sort descending by name
+          }
+          return a.isdirectory ? -1 : 1; // Directories go first
+        })
       }
     } catch(e) {
       throw new Error('File is not a directory');
@@ -127,6 +157,7 @@ const processUpload = async (userid, upload) => {
   const stream = createReadStream()
   const { fullpath } = await storeFS(userid, { stream, filename })
   const userPath = path.join(config.userFolderPath, userid);
+  console.log(userPath, fullpath)
   return getFileInfo(userPath, fullpath)
 }
 
@@ -137,5 +168,6 @@ module.exports = {
   getDirContents, 
   getFileSizeInBytes, 
   getDirSizeInBytesHandler, 
-  processUpload 
+  processUpload,
+  renameFile
 };

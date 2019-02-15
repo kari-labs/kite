@@ -2,6 +2,7 @@
   <el-form
     :model="authForm"
     :rules="authRules"
+    @submit.native.prevent="submitForm('authForm')"
     ref="authForm"
   >
     <el-form-item

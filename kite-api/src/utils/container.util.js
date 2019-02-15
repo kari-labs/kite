@@ -4,6 +4,7 @@ const config = require('../../config/config');
 const { ObjectId } = require("mongoose").Types;
 
 const Container = require("../models/container.model");
+const User = require("../models/user.model");
 
 const docker = new Docker(config.dockerConfig);
 const containers = {};
@@ -48,6 +49,13 @@ async function createContainer(options) {
         image: info.Config.Image
       }
     );
+    if(c){
+      console.log("container_id", c._id.toString());
+      let user = await User.findByIdAndUpdate({_id: ObjectId(options.owner)}, { $push: { "containers": c._id.toString() } }, { new: true }).exec();
+      console.log(user);
+    }
+  }else{
+    throw new Error("Docker: Docker could not create the container");
   }
   let saved = await c.save();
   return {
@@ -74,12 +82,37 @@ const getContainers = async _id => {
   return user_containers.map(c=>standardize(c));
 };
 
-async function deleteContainer(_id) {
+async function deleteContainer(_id, owner) {
   let c = await Container.findByIdAndDelete(_id).exec();
+  await User.findByIdAndUpdate({_id: ObjectId(owner)}, { $pull: { "containers": _id } }, { new: true }).exec();
   let container = docker.getContainer(c.container_id);
   await container.stop();
   await container.remove();
   return c;
+}
+
+async function deleteAllContainers(owner, { removeFromUser = true}) {
+  let user = await User.findById(owner).exec();
+  if(removeFromUser == true){
+    user.containers.forEach(async c => {
+      await User.findByIdAndUpdate(owner, { $pull: {"containers": c} }).exec();
+    });
+  }
+  
+  console.log(user.containers.length);
+}
+
+async function clearFalseContainersFromUser(_id) {
+  /* where _id is the users document id */
+  let user = await User.findById(_id).exec();
+  let puser = await User.findById(_id).populate('containers').exec();
+  let supposedContainers = user.containers;
+  let actualContainers = puser.containers.map(c => c._id.toString());
+  supposedContainers.forEach( async c => {
+    if(!actualContainers.contains(c)){
+      await User.findByIdAndUpdate(_id, { $pull: { "containers": c } }).exec();
+    }
+  });
 }
 
 //This might be why the API takes 3000+ years to stop
@@ -89,4 +122,4 @@ process.on('SIGTERM', () => {
   }
 });
 
-module.exports = { createContainer, deleteContainer, getContainer, getContainers }
+module.exports = { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers }
