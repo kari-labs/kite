@@ -1,4 +1,11 @@
-const { loginUser, createUser, getUser, getUsers, deleteUser } = require('../utils/user.util');
+const { 
+  loginUser, 
+  createUser, 
+  getUser, 
+  getUsers, 
+  deleteUser,
+  signOutUser,
+} = require('../utils/user.util');
 
 const UserResolvers = {
   createUser: async ({ ...userData }) => {
@@ -9,7 +16,7 @@ const UserResolvers = {
         _id: userDB._id.toString(),
       }
     } catch(err) {
-      return `${err}`;
+      throw new Error(err);
     }
   },
   deleteUser: async ({ ...userData}) =>{
@@ -20,22 +27,21 @@ const UserResolvers = {
     }
   },
   loginUser: async ({ ...userData }, req) => {
-    try {
-      const userDB = await loginUser(userData, req);
+    const userDB = await loginUser(userData, req);
+    if(typeof userDB === "object") {
       return {
         ...userDB.toObject(),
         _id: userDB._id.toString()
       }
-    } catch (err) {
-      return `${err}`;
     }
+    else throw new Error(userDB);
   },
   getUser: async (_, req) => {
     try {
       const scope = await getUser(req);
       return scope;
     } catch (err) {
-      return `${err}`;
+      throw new Error(err);
     }
   },
   getUsers: async () => {
@@ -43,8 +49,13 @@ const UserResolvers = {
       const users = await getUsers();
       return users;
     } catch (err) {
-      return `${err}`;
+      throw new Error(err);
     }
+  },
+  signOutUser: async(_, req) => {
+    const status = await signOutUser(req);
+    if(status) return 'Successfully signed out.';
+    else return 'Error signing user out.'
   }
 }
 

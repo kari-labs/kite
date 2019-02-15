@@ -68,6 +68,7 @@
     <k-nav-item
       to="/"
       index="6"
+      @click="signOutUser"
       title="Sign Out"
     >
       <i
@@ -81,6 +82,7 @@
 </template>
 
 <script>
+import { SIGN_OUT_USER } from '@/store/modules/auth/auth.types';
 import KNavItem from "@/components/NavItem.vue";
 
 export default {
@@ -98,6 +100,9 @@ export default {
     };
   },
   methods: {
+    signOutUser() {
+      this.$store.dispatch(SIGN_OUT_USER);
+    },
     handleOpen() {
       //Code for nav opening
     },

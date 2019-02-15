@@ -6,11 +6,11 @@
     class="fullscreen"
   >
     <el-card class="login-card">
-      <p 
+      <h1
         class="title"
       >
         Kite
-      </p>
+      </h1>
       <auth-form />
     </el-card>
   </el-row>
@@ -35,6 +35,7 @@ export default {
   height: 90%;
 }
 .title {
-  font-size: 24px;
+  font-size: 20px;
+  font-weight: 400;
 }
 </style>
