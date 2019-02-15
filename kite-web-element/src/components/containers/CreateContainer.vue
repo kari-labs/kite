@@ -91,9 +91,7 @@ export default {
   },
   methods: {
     async handleCreateContainer() {
-      
       await this.$refs.createContainer.validate( async valid => {
-        
         if (valid) {
           this.loading = true;
           const res = await this.$jraph`

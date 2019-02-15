@@ -1,5 +1,5 @@
 <template>
-  <el-card v-loading="loading">
+  <el-card v-loading="loading" ref="card">
     <div
       slot="header"
       class="el-card-header"
@@ -38,6 +38,11 @@
 </template>
 
 <script>
+import KQuickUpload from "@/components/filesys/QuickUpload.vue";
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms*1000));
+}
 
 export default {
   name: "KCard",
@@ -82,28 +87,49 @@ export default {
   methods: {
     async deleteContainer() {
       this.loading = true;
+      this.$refs.card.$el.classList.toggle("littleHang");
       
       await this.$jraph`
         mutation {
           msg: deleteContainer(_id: "${this.container._id}")
         }
       `
-      await this.$emit("deleted", null);
+      this.$refs.card.$el.classList.toggle("littleHang");
+      this.$refs.card.$el.style["transform"] = "rotate(45deg)";
+      this.$refs.card.$el.style["transform-origin"] = "top left";
+      this.$refs.card.$el.classList.add("drop");
+      await sleep(1);
       this.loading = false;
       this.$message.success("Container Deleted");
+      await this.$emit("deleted", null);
     },
     fileManager() {
-      this.$notify.error({
+      /* this.$notify.error({
           title: "File Manager!",
           message: "Hey! We haven't built this feature yet :-(",
           position: "bottom-left",
-      });
+      }); */
+      this.$router.push('files');
     },
   },
 };
 </script>
 
 <style>
+:root {
+  --transform-origin: top right;
+  --transform-angle-one: -45deg;
+  --transform-angle-two: -90deg;
+  --transform-angle-three: -45deg;
+}
+
+.drop {
+  animation: 1s drop ease-in forwards;
+}
+
+.littleHang {
+  animation: 1s littleHang ease-in-out infinite alternate forwards;
+}
 .el-card-header {
   display: grid;
   text-align: left;
@@ -119,5 +145,33 @@ export default {
   align-items: center;
   align-content: center;
   padding-top: 10px;
+}
+
+@keyframes littleHang {
+  0% {
+    transform: rotate(var(--transform-angle-one));
+    transform-origin: var(--transform-origin);
+  }
+  50% {
+    transform: rotate(var(--transform-angle-two));
+    transform-origin: var(--transform-origin);
+  }
+  
+  100% {
+    transform: rotate(var(--transform-angle-one));
+    transform-origin: var(--transform-origin);
+  }
+}
+@keyframes drop {
+
+  0% {
+    transform: translateY(0) rotate(var(--transform-angle-three));
+    transform-origin: var(--transform-origin);
+  }
+  100% {
+    transform: translateY(120vh) rotate(var(--transform-angle-three));
+    transform-origin: var(--transform-origin);
+    visibility: hidden;
+  }
 }
 </style>
