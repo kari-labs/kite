@@ -1,5 +1,5 @@
 <template>
-  <el-row>
+  <el-row class="all">
     <el-col
       :span="16"
       class="table"
@@ -28,9 +28,15 @@ export default {
 
 <style>
   .form{
-    margin-left: 8%;
+    margin-left: 4%;
+    margin-right: 4%;
   }
   .table{
-    min-height: 30%;
+    margin-left: 4%;
+    margin-right: 4%;
+  }
+  .all{
+    margin-left: 4%;
+    margin-right: 4%;
   }
 </style>

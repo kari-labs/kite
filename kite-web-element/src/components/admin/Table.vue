@@ -44,9 +44,91 @@
       </el-table-column>
     </el-table>
     <el-dialog
-      title="Shipping address"
+      title="Update User"
       :visible.sync="dialogFormVisible"
-    />
+    >
+      <el-form
+        :model="form"
+        ref="userForm"
+        :rules="rules"
+      >
+        <el-form-item
+          label="User ID:"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            v-model="form.userid"
+            autocomplete="on"
+            disabled
+          />
+        </el-form-item>
+        <el-form-item
+          label="Name"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            v-model="form.name"
+            autocomplete="on"
+          />
+        </el-form-item>
+        <el-form-item 
+          label="Password"
+          prop="pass"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            type="password"
+            v-model="form.pass"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item
+          label="Confirm"
+          prop="checkPass"
+          :label-width="formLabelWidth"
+        >
+          <el-input
+            type="password"
+            v-model="form.checkPass"
+            autocomplete="off"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-select
+            v-model="form.type"
+            multiple
+            placeholder="Select"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="dialogFormVisible = false; $message({type: 'info', message: 'Update canceled'})">
+          Cancel
+        </el-button>
+        <el-button
+          type="primary"
+          @click="update()"
+        >
+          Confirm
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-button
+      type="text"
+      @click="edit(/*scope.$index, usersTable*/)"
+    >
+      Edit
+    </el-button>
   </el-card>
 </template>
 
@@ -68,13 +150,13 @@ export default {
       }).then(() => {
         this.$message({
           type: 'success',
-          message: 'Delete completed'
-        })
+          message: 'Delete Completed'
+        });
         this.deleteUser(index, data);
       }).catch(() => {
         this.$message({
           type: 'info',
-          message: 'Delete canceled'
+          message: 'Delete Canceled'
         })
       })
     },
@@ -88,29 +170,64 @@ export default {
           }`
     },
     //Edit Button Function--------------------------------------------------------->
-    edit(index, data) {
+    edit(/*index, data*/) {
       this.dialogFormVisible = true;
-      console.log(index);
-      console.log(data);
     },
     update() {//Called in edit.
-
+      this.dialogFormVisible = false;
+      this.$message({
+          type: 'success',
+          message: 'Update Completed'
+      });
     },
   },
   data() {
+    const validatorPass = (rule, value, callBack) => {
+      if (value === "") {
+        callBack(new Error("Please input the password"));
+      } else {
+        if (this.form.checkPass !== "") {
+          this.$refs.userForm.validateField("checkPass");
+        }
+        callBack();
+      }
+    };
+    const validatorPassTwo = (rule, value, callBack) => {
+      if (value === "") {
+        callBack(new Error("Please input the password"));
+      } else if (value !== this.form.pass) {
+        callBack(new Error("The passwords don't match!"));
+      } else {
+        callBack();
+      }
+    };
     return {
       usersTable: [],
         dialogFormVisible: false,
         form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
+          name: 'Kyle Riley',
+          userid: '001417108',
           type: [],
-          resource: '',
-          desc: ''
+          pass: '',
+          checkPass: '',
         },
+        rules: {
+        pass: [{ validator: validatorPass, trigger: "blur" }],
+        checkPass: [{ validator: validatorPassTwo, trigger: "blur" }]
+        },
+        options: [
+        {
+          value: "containers",
+          label: "Containers"
+        },
+        {
+          value: "admin",
+          label: "Admin"
+        },
+        {
+          value: "createAdmin",
+          label: "Super Admin"
+        }],
         formLabelWidth: '120px'
     };
   },
@@ -133,7 +250,6 @@ export default {
 
 <style>
   [class ^= cell ] {
-    font-family: "Roboto";
     font-weight: 500;
     color: #000;
   }
@@ -142,5 +258,9 @@ export default {
   }
   body {
     margin: 0;
+  }
+  .table {
+    max-height: 50vh;
+    min-width: 600px;
   }
 </style>

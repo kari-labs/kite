@@ -5,10 +5,16 @@
       :rules="rules"
       :model="form"
     >
-      <el-form-item label="User ID">
+      <el-form-item
+        label="User ID"
+        prop="userid"
+      >
         <el-input v-model="form.userid" />
       </el-form-item>
-      <el-form-item label="Name">
+      <el-form-item
+        label="Name"
+        prop="name"
+      >
         <el-input v-model="form.name" />
       </el-form-item>
       <el-form-item 
@@ -31,7 +37,7 @@
           autocomplete="off"
         />
       </el-form-item>
-      <el-form-item>
+      <el-form-item prop="scope">
         <el-select
           v-model="form.scope"
           multiple
@@ -127,14 +133,30 @@ export default {
                         }
                     }
                 `;
+          this.$message({
+            type: 'success',
+            message: 'User Created'
+          });
         } else {
           console.log();
         }
       });
+      
+    },
+    resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.$message({
+          type: 'info',
+          message: 'Field Cleared'
+        })
     }
   }
 };
 </script>
 
 <style>
+  .card{
+    height: 50vh;
+    min-width: 20vh;
+  }
 </style>
