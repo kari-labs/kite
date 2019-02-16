@@ -1,3 +1,7 @@
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkari-labs%2Fkite.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkari-labs%2Fkite?ref=badge_shield)
+
+[![Build Status](https://travis-ci.com/neit-kite/kite.svg?branch=dev)](https://travis-ci.com/neit-kite/kite)
+
 # Getting Started
 
 ### Dev setup full (runs front-end and back-end) - This is usually all you need
