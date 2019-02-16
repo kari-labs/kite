@@ -137,8 +137,6 @@ export default {
             type: 'success',
             message: 'User Created'
           });
-        } else {
-          console.log();
         }
       });
       
