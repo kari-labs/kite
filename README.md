@@ -1,4 +1,4 @@
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkari-labs%2Fkite.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkari-labs%2Fkite?ref=badge_shield)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkari-labs%2Fkite.svg?type=small)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkari-labs%2Fkite?ref=badge_small)
 
 [![Build Status](https://travis-ci.com/neit-kite/kite.svg?branch=dev)](https://travis-ci.com/neit-kite/kite)
 
