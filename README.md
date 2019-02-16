@@ -1,4 +1,6 @@
 # Getting Started
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkari-labs%2Fkite.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkari-labs%2Fkite?ref=badge_shield)
+
 
 ### Dev setup full (runs front-end and back-end) - This is usually all you need
 ```
@@ -73,3 +75,6 @@ Currently the plan is to use the NGINX server to serve our static app. Because m
 ### The API + NGINX Containers
 
 Right now the API and NGINX are in their own containers. The Vue build will go into the NGINX container and be hosted there. The only change from running the API + NGINX containers normally is that you have to use the right docker-compose file. To specify which docker-compose file to use, use the -f parameter. Currently our GCP server is Ubuntu linux and would require the use of the docker-compose.linux.yml file.
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fkari-labs%2Fkite.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fkari-labs%2Fkite?ref=badge_large)
