@@ -1,5 +1,8 @@
 <template>
-  <el-card v-loading="loading" ref="card">
+  <el-card
+    v-loading="loading"
+    ref="card"
+  >
     <div
       slot="header"
       class="el-card-header"
@@ -38,7 +41,6 @@
 </template>
 
 <script>
-import KQuickUpload from "@/components/filesys/QuickUpload.vue";
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms*1000));

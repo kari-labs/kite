@@ -1,29 +1,29 @@
 <template>
   <el-container class="tall">
-    <side-nav v-if="!$route.meta.hideHeader"/>
-      <el-container>
-        <el-header v-show="!$route.meta.hideHeader">
-          <span class="h1 display">
-            <router-link
-              to="/"
-              class="el-link"
-            >
-              Kite
-            </router-link>
-          </span>
-        </el-header>
-        <el-main>
-          <router-view />
-        </el-main>
-        <el-footer>
-          <span class="subtitle">
+    <side-nav v-if="!$route.meta.hideHeader" />
+    <el-container>
+      <el-header v-show="!$route.meta.hideHeader">
+        <span class="h1 display">
+          <router-link
+            to="/"
+            class="el-link"
+          >
             Kite
-          </span>
-          <span class="subtitle">
-            &copy; GLB Group 2019
-          </span>
-        </el-footer>
-      </el-container>
+          </router-link>
+        </span>
+      </el-header>
+      <el-main>
+        <router-view />
+      </el-main>
+      <el-footer>
+        <span class="subtitle">
+          Kite
+        </span>
+        <span class="subtitle">
+          &copy; GLB Group 2019
+        </span>
+      </el-footer>
+    </el-container>
   </el-container>
 </template>
 
