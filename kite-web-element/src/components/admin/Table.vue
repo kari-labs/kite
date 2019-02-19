@@ -1,25 +1,34 @@
 <template>
   <el-card class="box-card">
     <el-table
+      ref="adminTable"
       :data="usersTable"
       class="table"
+      @selection-change="handleSelectionChange"
     >
+      <el-table-column
+        type="selection"
+      />
       <el-table-column
         fixed
         prop="userid"
         label="UserID"
+        sortable
       />
       <el-table-column
         prop="name"
         label="Name"
+        sortable
       />
       <el-table-column
         prop="containers"
         label="Containers"
+        sortable
       />
       <el-table-column
         prop="scope"
         label="Scope"
+        sortable
       />
       <el-table-column
         label="Operations"
@@ -123,12 +132,6 @@
         </el-button>
       </span>
     </el-dialog>
-    <el-button
-      type="text"
-      @click="edit(/*scope.$index, usersTable*/)"
-    >
-      Edit
-    </el-button>
   </el-card>
 </template>
 
@@ -139,7 +142,7 @@ export default {
   name: "KATable",
   methods: {
     dataManip(usersData) {
-      return usersData.map(u => ({ ...u, containers: u.containers.length, scope: u.scope.join(", ")}) );
+      return usersData.map(u => ({ ...u, containers: u.containers.length, scope: u.scope.join(", ")}));
     },
     //Delete Button Function--------------------------------------------------------->
     warning(index, data) {
@@ -180,6 +183,19 @@ export default {
           message: 'Update Completed'
       });
     },
+    //Selector Function------------------------------------------------------------>
+    toggleSelection(rows){
+      if (rows) {
+        rows.forEach(row => {
+          this.$refs.adminTable.toggleRowSelection(row);
+        });
+      } else {
+        this.$refs.adminTable.clearSelection();
+      }
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    }
   },
   data() {
     const validatorPass = (rule, value, callBack) => {
@@ -202,7 +218,8 @@ export default {
       }
     };
     return {
-      usersTable: [],
+        multipleSelection: [],
+        usersTable: [],
         dialogFormVisible: false,
         form: {
           name: 'Kyle Riley',
@@ -256,11 +273,9 @@ export default {
   [class ^= el-table__header-wrapper]{
     width: 100%;
   }
-  body {
-    margin: 0;
-  }
-  .table {
+  .box-card {
     max-height: 50vh;
     min-width: 600px;
+    margin-left: 4%;
   }
 </style>

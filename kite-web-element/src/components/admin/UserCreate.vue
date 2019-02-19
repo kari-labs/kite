@@ -156,5 +156,6 @@ export default {
   .card{
     height: 50vh;
     min-width: 20vh;
+    margin-right: 4vh;
   }
 </style>

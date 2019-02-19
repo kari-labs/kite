@@ -27,16 +27,11 @@ export default {
 </script>
 
 <style>
-  .form{
-    margin-left: 4%;
-    margin-right: 4%;
-  }
-  .table{
-    margin-left: 4%;
-    margin-right: 4%;
-  }
   .all{
     margin-left: 4%;
     margin-right: 4%;
+  }
+  .form{
+    float: right;
   }
 </style>
