@@ -1,6 +1,9 @@
 <template>
   <router-link :to="to">
-    <el-menu-item :index="index">
+    <el-menu-item 
+      :index="index" 
+      @click="clicked"
+    >
       <slot name="icon" />
       <span slot="title">
         {{ title }}
@@ -12,7 +15,26 @@
 <script>
 export default {
     name: 'KNavItem',
-    props: ['to', 'index', 'title']
+    props: 
+    {
+      to: { 
+        type: String,
+        default: "/"
+      },
+      index: {
+        type: String,
+        default: "1"
+      },
+      title: {
+        type: String,
+        default: "Title"
+      },
+    },
+    methods: {
+      clicked() {
+        this.$emit('clicked');
+      }
+    }
 }
 </script>
 

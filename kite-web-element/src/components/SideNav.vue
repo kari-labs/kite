@@ -10,10 +10,16 @@
       index="1"
       @click="isCollapse = !isCollapse"
     >
-      <i class="el-icon" v-if="isCollapse">
+      <i
+        class="el-icon"
+        v-if="isCollapse"
+      >
         <fa-icon icon="bars" />
       </i>
-      <span slot="title" v-else>
+      <span
+        slot="title"
+        v-else
+      >
         KITE
       </span>
     </el-menu-item>
@@ -68,7 +74,7 @@
     <k-nav-item
       to="/"
       index="6"
-      @click="signOutUser"
+      @clicked="signOutUser"
       title="Sign Out"
     >
       <i
