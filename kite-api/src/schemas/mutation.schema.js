@@ -11,6 +11,7 @@ const mutationType = `
         loginUser(userid: String!, password: String!): User
         signOutUser: String!
         renameFile(userid: String!, path: String!, newPath: String!): File!
+        updateUser(userid: String!, user: UserInput!): User
     }
 `;
 

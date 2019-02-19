@@ -13,6 +13,17 @@ const userType = `
     preferences: PreferencesConfig,
     scope: [String]
   }
+
+  input PreferencesConfigInput {
+    theme: String
+  }
+
+  input UserInput {
+    forceReset: Boolean,
+    name: String,
+    preferences: PreferencesConfigInput,
+    scope: [String]
+  }
 `;
 
 module.exports = { userType };

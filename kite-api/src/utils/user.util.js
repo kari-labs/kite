@@ -58,11 +58,16 @@ const signOutUser = req => {
   else return false;
 }
 
+const updateUser = async (userIdToUpdate, userNewInfo) => {
+  return await User.findOneAndUpdate({ userid: userIdToUpdate }, { ...userNewInfo }, { new: true }).exec();
+}
+
 module.exports = { 
   createUser, 
   loginUser, 
   getUser, 
   getUsers, 
   deleteUser, 
-  signOutUser
+  signOutUser,
+  updateUser
 };

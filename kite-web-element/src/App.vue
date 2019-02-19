@@ -15,14 +15,6 @@
       <el-main>
         <router-view />
       </el-main>
-      <el-footer>
-        <span class="subtitle">
-          Kite
-        </span>
-        <span class="subtitle">
-          &copy; GLB Group 2019
-        </span>
-      </el-footer>
     </el-container>
   </el-container>
 </template>
@@ -32,9 +24,6 @@ import SideNav from "@/components/SideNav.vue";
 
 export default {
   name: "App",
-  data() {
-    return {};
-  },
   components: {
     SideNav,
   },
@@ -101,7 +90,6 @@ body {
   height: 100vh;
   width: 100%;
   display: flex;
-  flex-direction: column;
 }
 #menuToggle {
   vertical-align: baseline;

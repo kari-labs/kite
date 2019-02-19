@@ -5,6 +5,7 @@ const {
   getUsers, 
   deleteUser,
   signOutUser,
+  updateUser,
 } = require('../utils/user.util');
 
 const UserResolvers = {
@@ -56,6 +57,10 @@ const UserResolvers = {
     const status = await signOutUser(req);
     if(status) return 'Successfully signed out.';
     else return 'Error signing user out.'
+  },
+  updateUser: async({ userid: userIdToUpdate, user: userNewInfo }) => {
+    const updatedUser = updateUser(userIdToUpdate, userNewInfo);
+    return updatedUser;
   }
 }
 
