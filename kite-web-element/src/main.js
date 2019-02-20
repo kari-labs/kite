@@ -1,7 +1,9 @@
 import Vue from "vue";
+import VueTour from 'vue-tour'
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store/store";
+import apolloProvider from "./apollo";
 import "./plugins/element";
 import "./plugins/font-awesome";
 import Jraph from "./plugins/jraph";
@@ -9,13 +11,16 @@ import FileManager from './plugins/kite/filemanager'
 
 import "./assets/helper.css";
 import "normalize.css";
-import apolloProvider from "./apollo";
+import 'vue-tour/dist/vue-tour.css';
+
 
 Vue.use(Jraph, {api: "https://localhost/api/graphql"});
 Vue.use(require('vue-shortkey'));
 Vue.use(FileManager, {
   api_url: 'https://localhost/'
-})
+});
+
+Vue.use(VueTour);
 
 Vue.config.productionTip = false;
 
