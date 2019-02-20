@@ -5,7 +5,7 @@
     @open="handleOpen"
     @close="handleClose"
     :collapse="isCollapse"
-    v-shortkey="{'open': ['arrowright'], 'close': ['arrowleft']}" 
+    v-shortkey="{'open': ['shift','arrowright'], 'close': ['shift','arrowleft'], 'containers': ['ctrl','shift', 'c'], 'files': ['ctrl', 'shift', 'f']}" 
     @shortkey.native="handleHotKeys"
   >
     <el-menu-item
@@ -107,6 +107,7 @@ export default {
       //code for nav closing
     },
     handleHotKeys(e) {
+      console.log(e);
       switch(e.srcKey){
         case 'open':
           this.isCollapse = false;
@@ -114,12 +115,18 @@ export default {
         case 'close':
           this.isCollapse = true;
           break;
+        case 'containers':
+          this.$router.push("containers");
+          break;
+        case 'files':
+          this.$router.push("files");
+          break;
       }
     }
   },
   components: {
-    KNavItem
-  }
+    KNavItem,
+  },
 };
 </script>
 
