@@ -2,7 +2,9 @@
   <el-card class="box-card">
     <el-table
       ref="adminTable"
-      :data="usersTable"
+      :data="usersTable.filter(data => !search ||
+        data.name.toLowerCase().includes(search.toLowerCase()) || 
+        data.userid.toLowerCase().includes(search.toLowerCase()))"
       class="table"
       @selection-change="handleSelectionChange"
     >
@@ -12,7 +14,7 @@
       <el-table-column
         fixed
         prop="userid"
-        label="UserID"
+        label="User ID"
         sortable
       />
       <el-table-column
@@ -26,31 +28,42 @@
         sortable
       />
       <el-table-column
-        prop="Scope"
+        prop="scope"
         label="Scope"
         :filters="scopeTags" 
         :filter-method="filterScope" 
         filter-placement="bottom-end"
+        align="left"
       >
         <template slot-scope="scope">
           <el-tag
             v-for="tag in scope.row.scope"
             :key="tag"
-            class="tag"
+            :class="'tag-'+ tag"
           >
-            {{ tag }}
+            {{ scopes[tag] }}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        label="Operations"
+        align="center"
       >
+        <template
+          slot="header"
+          slot-scope="scope"
+        >
+          <el-input
+            v-model="search"
+            size="mini"
+            placeholder="Type to search"
+          />
+        </template>
         <!-- Operations -->
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            @click="edit(scope.$index, usersTable)"
+            @click="edit(scope.$index, usersTable, form)"
           >
             Edit
           </el-button>
@@ -66,6 +79,13 @@
         <!-- Operations Closed -->
       </el-table-column>
     </el-table>
+    <el-pagination
+      :page-size="10"
+      :pager-count="5"
+      layout="prev, pager, next"
+      :total="usersTable.length"
+    />
+    <!-- Edit Dialog -->
     <el-dialog
       title="Update User"
       :visible.sync="dialogFormVisible"
@@ -146,6 +166,7 @@
         </el-button>
       </span>
     </el-dialog>
+    <!-- End of Edit Modal -->
   </el-card>
 </template>
 
@@ -187,8 +208,11 @@ export default {
           }`
     },
     //Edit Button Function--------------------------------------------------------->
-    edit(/*index, data*/) {
+    edit(index, data, form) {
       this.dialogFormVisible = true;
+      form.userid = data[index].userid;
+      form.name = data[index].name;
+      form.type = data[index].scope;
     },
     update() {//Called in edit.
       this.dialogFormVisible = false;
@@ -254,9 +278,17 @@ export default {
       }
     };
     return {
-        scopeTags: [{ text: 'Containers', value: 'containers'},
-      						  { text: 'Admin', value: 'admin'},
-                    { text: 'Create Admin', value: 'createAdmin'}],
+
+        scopes: {
+          "containers": "Containers",
+          "createAdmin": "Create Admin",
+          "admin": "Admin"
+        },
+        scopeTags: [
+          { text: 'Containers', value: 'containers'},
+          { text: 'Admin', value: 'admin'},
+          { text: 'Create Admin', value: 'createAdmin'}
+        ],
         multipleSelection: [],
         usersTable: [],
         dialogFormVisible: false,
@@ -271,6 +303,7 @@ export default {
         pass: [{ validator: validatorPass, trigger: "blur" }],
         checkPass: [{ validator: validatorPassTwo, trigger: "blur" }]
         },
+        search: '',
         options: [
         {
           value: "containers",
@@ -307,7 +340,17 @@ export default {
     margin-left: 4%;
     margin-right: 4%;
   }
-  .tag{
-    margin: 3px 5px;
+  .el-tag{
+    margin: 2px 1px;
+  }
+  .el-tag.tag-admin{
+    background-color: rgba(103, 194, 58, 0.1);
+    border-color: rgba(103, 194, 58, 0.2);
+    color: rgba(103, 194, 58);
+  }
+  .el-tag.tag-createAdmin{
+    background-color: rgba(255, 194, 58, 0.1);
+    border-color: rgba(255, 194, 58, 0.2);
+    color: rgba(255, 194, 58);
   }
 </style>
