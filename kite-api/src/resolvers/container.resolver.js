@@ -1,36 +1,79 @@
-const { createContainer, stopContainer, getContainer, getAllContainers } = require('../index.js');
+const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers, clearFalseContainersFromUser } = require('../utils/container.util');
 
 const ContainerResolvers = {
-  createContainer: async ({userid}) => {
-      try {
-          await createContainer(userid);
-          return `Successfully created container for student ${userid}`;
-      } catch (err) {
-          return `Error creating container for student - ${err}`;
-      }
-  },
-  getContainer: async ({userid}) => {
-      try {
-          let container = await getContainer(`${userid}php`);
-          return container;
-      } catch (err) {
-          return `Error retrieving your container - ${err}`;
-      }
-  },
-  getAllContainers: async () => {
-      try {
-          let containers = await getAllContainers();
-          return containers;
-      } catch (err) {
-          return `Error retriving the containers - ${err}`;
-      }
-  },
-  deleteContainer: async ({userid}) => {
+  createContainer: async ({ nickname }, req) => {
+    let c;
     try {
-      await stopContainer(`${userid}php`);
-      return `Successfully deleted container for student ${userid}`;
+      let user = req.session.userStore;
+      if(user) {
+        c = await createContainer({ owner: user._id, userid: user.userid, nickname });
+      }
+      else throw new Error("User not logged in");
+      return c;
     } catch (err) {
-      return `Error deleting container for student - ${err}`;
+      console.error(err);
+      throw new Error(err);
+    }
+  },
+  getContainer: async ({ container_id }, req) => {
+    let c;
+    try {
+      let user = req.session.userStore;
+      if(user) c = await getContainer(container_id);
+      else throw new Error("User not logged in");
+      return c;
+    } catch (err) {
+      throw err;
+    }
+  },
+  getContainers: async (_, req) => {
+    let c;
+    try {
+      let user = req.session.userStore;
+      if(user) c = await getContainers(user._id);
+      else throw new Error("User not logged in");
+      return c;
+    } catch (err) {
+      throw err;
+    }
+  },
+  deleteContainer: async ({ _id }, req) => {
+    try {
+      let user = req.session.userStore;
+      if(user) {
+        await deleteContainer(_id);
+      }
+      else throw new Error("User not logged in");
+      return `Successfully deleted container ${_id}`;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  },
+  deleteAllContainers: async (_, req) => {
+    try {
+      let user = req.session.userStore;
+      if(user) {
+        let containers = await deleteAllContainers(user._id);
+        return containers;
+      }
+      else throw new Error("User not logged in");
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  },
+  clearFalseContainers: async (_, req) => {
+    try {
+      let user = req.session.userStore;
+      if(user) {
+        await clearFalseContainersFromUser(user._id);
+      }
+      else throw new Error("User not logged in");
+      return true;
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
     }
   }
 };

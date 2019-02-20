@@ -1,17 +1,28 @@
 import Vue from "vue";
-// To add UI components, import here first.
-import { Button, Input, Card, Form, FormItem } from "element-ui";
-import App from "./App.vue";
+import App from "@/App.vue";
+import router from "@/router";
+import store from "@/store/store";
+import "./plugins/element";
+import "./plugins/font-awesome";
+import Jraph from "./plugins/jraph";
+import FileManager from './plugins/kite/filemanager'
+
+import "./assets/helper.css";
+import "normalize.css";
+import apolloProvider from "./apollo";
+
+Vue.use(Jraph, {api: "https://localhost/api/graphql"});
+
+Vue.use(FileManager, {
+  api_url: 'https://localhost/'
+})
 
 Vue.config.productionTip = false;
 
-// Then tell Vue to use that component
-Vue.use(Button);
-Vue.use(Input);
-Vue.use(Card);
-Vue.use(Form);
-Vue.use(FormItem);
-
 new Vue({
+  router,
+  store,
+  apolloProvider,
+  fileManager: new FileManager(),
   render: h => h(App)
 }).$mount("#app");
