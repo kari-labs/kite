@@ -11,7 +11,7 @@
         :container="c"
         @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers" />
+      <k-create-container @created="fetchContainers" tabindex="0"/>
     </k-grid>
   </div>
 </template>
@@ -56,7 +56,7 @@ export default {
     KGrid,
     KCard,
     KCreateContainer,
-  }
+  },
 };
 </script>
 
