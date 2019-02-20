@@ -200,7 +200,8 @@ export default {
         })
       })
     },
-    deleteUser(index, data) {//Called in warning.
+    //Called in warning.
+    deleteUser(index, data) {
       data[index].userid
       this.$jraph`
         mutation{
@@ -216,7 +217,8 @@ export default {
       form.name = data[index].name;
       form.type = data[index].scope;
     },
-    update() {//Called in edit.
+    //Called in edit.
+    update() {
       this.dialogFormVisible = false;
       this.$message({
           type: 'success',
