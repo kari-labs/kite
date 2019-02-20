@@ -28,12 +28,16 @@ const deleteUser = async (userData) => {
 
 const loginUser = async (userData, req) => {
   const userDB = await User.findOne({ userid: userData.userid }).exec();
-  const match = await bcrypt.compare(userData.password, userDB.password);
-  if(match) {
-    req.session.userStore = userDB;
-    return userDB;
+  if(userDB) {
+    const match = await bcrypt.compare(userData.password, userDB.password);
+    if(match) {
+      const updatedUserDB = await User.findOneAndUpdate({ _id: userDB._id }, { logins: userDB.logins + 1 }, { new: true }).exec();
+      req.session.userStore = updatedUserDB;
+      return updatedUserDB;
+    }
+    return "Incorrect password.";
   }
-  return "Incorrect user name or password";
+  return "User does not exist.";
 }
 const getUsers = async () => {
   const users = await User.find();
@@ -48,4 +52,22 @@ const getUser = req => {
   return {};
 }
 
-module.exports = { createUser, loginUser, getUser, getUsers, deleteUser };
+const signOutUser = req => {
+  req.session.destroy();
+  if(req.session === undefined) return true;
+  else return false;
+}
+
+const updateUser = async (userIdToUpdate, userNewInfo) => {
+  return await User.findOneAndUpdate({ userid: userIdToUpdate }, { ...userNewInfo }, { new: true }).exec();
+}
+
+module.exports = { 
+  createUser, 
+  loginUser, 
+  getUser, 
+  getUsers, 
+  deleteUser, 
+  signOutUser,
+  updateUser
+};
