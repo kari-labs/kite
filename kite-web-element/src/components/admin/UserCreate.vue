@@ -37,7 +37,10 @@
           autocomplete="off"
         />
       </el-form-item>
-      <el-form-item prop="scope">
+      <el-form-item 
+        prop="scope"
+        label="Scope"
+      >
         <el-select
           v-model="form.scope"
           multiple
@@ -156,8 +159,12 @@ export default {
 
 <style>
   .card{
-    height: 50vh;
-    min-width: 20vh;
-    margin-left: 4vh;
+    height: max-content;
+    min-width: 20vw;
+    margin-left: 2vw;
+  }
+  
+  .el-select {
+    width: 100%;
   }
 </style>

@@ -1,9 +1,7 @@
 <template>
   <el-menu
-    default-active="1"
+    default-active="2"
     class="el-menu-vertical-demo"
-    @open="handleOpen"
-    @close="handleClose"
     :collapse="isCollapse"
     v-shortkey="{'open': ['shift','arrowright'], 'close': ['shift','arrowleft'], 'containers': ['ctrl','shift', 'c'], 'files': ['ctrl', 'shift', 'f']}" 
     @shortkey.native="handleHotKeys"
@@ -74,19 +72,19 @@
         <fa-icon icon="user-shield" />
       </i>
     </k-nav-item>
-    <k-nav-item
-      to="/"
+    <el-menu-item
       index="6"
-      @clicked="signOutUser"
-      title="Sign Out"
+      @click="signOutUser"
     >
       <i
         class="el-icon rotate-180"
-        slot="icon"
       >
         <fa-icon icon="sign-out-alt" />
       </i>
-    </k-nav-item>
+      <span slot="title">
+        Sign Out
+      </span>
+    </el-menu-item>
   </el-menu>
 </template>
 
@@ -111,12 +109,6 @@ export default {
   methods: {
     signOutUser() {
       this.$store.dispatch(SIGN_OUT_USER);
-    },
-    handleOpen() {
-      //Code for nav opening
-    },
-    handleClose() {
-      //code for nav closing
     },
     handleHotKeys(e) {
       console.log(e);
