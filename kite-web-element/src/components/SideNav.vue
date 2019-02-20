@@ -12,10 +12,16 @@
       index="1"
       @click="isCollapse = !isCollapse"
     >
-      <i class="el-icon" v-if="isCollapse">
+      <i
+        class="el-icon"
+        v-if="isCollapse"
+      >
         <fa-icon icon="bars" />
       </i>
-      <span slot="title" v-else>
+      <span
+        slot="title"
+        v-else
+      >
         KITE
       </span>
     </el-menu-item>
@@ -70,6 +76,7 @@
     <k-nav-item
       to="/"
       index="6"
+      @clicked="signOutUser"
       title="Sign Out"
     >
       <i
@@ -83,6 +90,7 @@
 </template>
 
 <script>
+import { SIGN_OUT_USER } from '@/store/modules/auth/auth.types';
 import KNavItem from "@/components/NavItem.vue";
 
 export default {
@@ -100,6 +108,9 @@ export default {
     };
   },
   methods: {
+    signOutUser() {
+      this.$store.dispatch(SIGN_OUT_USER);
+    },
     handleOpen() {
       //Code for nav opening
     },

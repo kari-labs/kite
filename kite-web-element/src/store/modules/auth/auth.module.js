@@ -1,6 +1,7 @@
-import { loginUser } from '@/utils/auth.util';
-import router from "@/router.js";
+import { loginUser, signOutUser } from '@/utils/auth.util';
+import router from '@/router.js';
 import * as types from './auth.types';
+import { Message } from 'element-ui';
 
 export const authModule = {
   state: {
@@ -15,21 +16,47 @@ export const authModule = {
     }
   },
   actions: {
-    [types.LOGIN_USER] ({ commit }, { userid, pass, redirect }) {
-      const response = loginUser(userid, pass);
-
-      response.then(({ user }) => {
-        if(user.scope) {
-          commit({
-            type: types.STORE_USER,
-            user: user
+    async [types.LOGIN_USER] ({ commit }, { userid, pass, redirect }) {
+      const result = await loginUser(userid, pass);
+      
+      if(result.data.user !== null) {
+        commit({
+          type: types.STORE_USER,
+          user: result.data.user
+        });
+        localStorage.setItem('expiry', new Date(Date.now() + (3 * 60 * 60 * 1000)).toUTCString());
+        if(redirect) router.push(redirect);
+        // We should give the users the choice to chose a homepage and send them there by default
+        else router.push('/containers');
+      } else {
+        if(result.errors) {
+          result.errors.map(err => {
+            Message.error(err.message);
           });
-          if(redirect) router.push(redirect);
-          else router.push('/containers');
-        } else {
-          alert('Incorrect User ID or Password');
         }
-      });
+      }
+    },
+    async [types.SIGN_OUT_USER] ({ commit }) {
+      try {
+        const result = await signOutUser();
+        if(result.data.stats !== null) {
+          if(result.data.status === 'Successfully signed out.') {
+            commit(types.REMOVE_USER);
+            localStorage.removeItem('expiry');
+            router.push('/');
+          } else {
+            Message.error(result.data.status);
+          }
+        } else {
+          if(result.errors) {
+            result.errors.map(err => {
+              Message.error(err.message);
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Logged Error:', error);
+      }
     }
   }
 };
