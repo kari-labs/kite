@@ -10,9 +10,18 @@
         :container="c"
         @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers" data-v-step="1" ref="createContainer" @click="$tours['tutorial'].nextStep()"/>
+      <k-create-container
+        @created="fetchContainers"
+        data-v-step="1"
+        ref="createContainer"
+        @click="$tours['tutorial'].nextStep()"
+      />
     </k-grid>
-    <v-tour name="tutorial" :steps="steps" :callbacks="cbs"></v-tour>
+    <v-tour
+      name="tutorial"
+      :steps="steps"
+      :callbacks="cbs"
+    />
   </div>
 </template>
 
@@ -83,7 +92,6 @@ export default {
         }
       `;
       if(res.errors){
-        console.log(res.errors);
         this.$message.error('An error occured');
       }else{
         this.containers = res.data.containers;
@@ -92,14 +100,12 @@ export default {
     },
     async nextStep(currentStep) {
       if(currentStep === 1) {
-        console.log(this.$refs.createContainer.$el);
         await this.$refs.createContainer.$el.querySelector(".new").click();
         await this.$tours['tutorial'].start(2);
       }
     },
     prevStep(currentStep) {
       if(currentStep === 2) {
-        console.log(this.$refs.createContainer.$el);
         this.$refs.createContainer.$el.querySelector("#closeDialog").click();
       }
     },
@@ -109,11 +115,9 @@ export default {
   },
   async mounted() {
     await this.fetchContainers();
-    console.log(this.$store.state.auth.user);
     //This code only shows the tour when the user visits for the first time
-    if(!localStorage.getItem("previousVisitor")){
+    if(this.$store.state.auth.user.logins === 1){
       this.$tours['tutorial'].start();
-      localStorage.setItem("previousVisitor", true);
     }
   },
   components: {
