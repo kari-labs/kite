@@ -63,6 +63,7 @@
       to="admin"
       index="5"
       title="Admin"
+      v-if="$store.state.auth.user.scope.includes('admin')"
     >
       <i
         class="el-icon"

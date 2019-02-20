@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-v-step="0">
     <k-grid>
       <el-card>
         <h1>You have  {{ containers.length }} containers</h1>
@@ -10,8 +10,18 @@
         :container="c"
         @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers" />
+      <k-create-container
+        @created="fetchContainers"
+        data-v-step="1"
+        ref="createContainer"
+        @click="$tours['tutorial'].nextStep()"
+      />
     </k-grid>
+    <v-tour
+      name="tutorial"
+      :steps="steps"
+      :callbacks="cbs"
+    />
   </div>
 </template>
 
@@ -25,6 +35,48 @@ export default {
     return {
       containers: [],
       loading: false,
+      cbs: {
+        onNextStep: this.nextStep,
+        onPreviousStep: this.prevStep,
+        onStop: this.onTourStop,
+      },
+      steps: [
+        {
+          target: '[data-v-step="0"]',
+          content: 'This is the containers page, where all the magic happens',
+          params: {
+            placement: 'bottom'
+          }
+        },
+        {
+          target: '[data-v-step="1"]',
+          content: 'Click here to create a container',
+          params: {
+            placement: 'bottom'
+          }
+        },
+        {
+          target: '[data-v-step="2"]',
+          content: 'Go ahead and give your container name',
+          params: {
+            placement: 'right'
+          }
+        },
+        {
+          target: '[data-v-step="3"]',
+          content: 'Go ahead and pick the image for your container here',
+          params: {
+            placement: 'right'
+          }
+        },
+        {
+          target: '[data-v-step="4"]',
+          content: 'Click here to create your container',
+          params: {
+            placement: 'bottom'
+          }
+        },
+      ],
     };
   },
   methods: {
@@ -40,16 +92,33 @@ export default {
         }
       `;
       if(res.errors){
-        console.log(res.errors);
         this.$message.error('An error occured');
       }else{
         this.containers = res.data.containers;
       }
       
+    },
+    async nextStep(currentStep) {
+      if(currentStep === 1) {
+        await this.$refs.createContainer.$el.querySelector(".new").click();
+        await this.$tours['tutorial'].start(2);
+      }
+    },
+    prevStep(currentStep) {
+      if(currentStep === 2) {
+        this.$refs.createContainer.$el.querySelector("#closeDialog").click();
+      }
+    },
+    onTourStop(){
+      this.$refs.createContainer.$el.querySelector("#createContainerBtn").click();
     }
   },
   async mounted() {
     await this.fetchContainers();
+    //This code only shows the tour when the user visits for the first time
+    if(this.$store.state.auth.user.logins === 1){
+      this.$tours['tutorial'].start();
+    }
   },
   components: {
     KGrid,
@@ -59,4 +128,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.v-step {
+  z-index: 150173408139270;
+}
+</style>
