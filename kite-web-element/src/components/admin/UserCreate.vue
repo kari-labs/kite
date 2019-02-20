@@ -112,13 +112,14 @@ export default {
         },
         {
           value: "createAdmin",
-          label: "Super Admin"
+          label: "Create Admin"
         }
       ],
     };
   },
   methods: {
-    submitForm(formName) {
+    submitForm(formName) {//Submits User info for creation
+      this.$emit('created:user', null);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$jraph`
@@ -156,6 +157,6 @@ export default {
   .card{
     height: 50vh;
     min-width: 20vh;
-    margin-right: 4vh;
+    margin-left: 4vh;
   }
 </style>

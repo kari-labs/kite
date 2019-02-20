@@ -26,16 +26,29 @@
         sortable
       />
       <el-table-column
-        prop="scope"
+        prop="Scope"
         label="Scope"
-        sortable
-      />
+        :filters="scopeTags" 
+        :filter-method="filterScope" 
+        filter-placement="bottom-end"
+      >
+        <template slot-scope="scope">
+          <el-tag
+            v-for="tag in scope.row.scope"
+            :key="tag"
+            class="tag"
+          >
+            {{ tag }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         label="Operations"
       >
         <!-- Operations -->
         <template slot-scope="scope">
           <el-button
+            size="mini"
             type="text"
             @click="edit(scope.$index, usersTable)"
           >
@@ -44,6 +57,7 @@
           
           <el-button
             type="text"
+            size="mini"
             @click="warning(scope.$index, usersTable)"
           >
             Delete
@@ -142,7 +156,7 @@ export default {
   name: "KATable",
   methods: {
     dataManip(usersData) {
-      return usersData.map(u => ({ ...u, containers: u.containers.length, scope: u.scope.join(", ")}));
+      return usersData.map(u => ({ ...u, containers: u.containers.length}));
     },
     //Delete Button Function--------------------------------------------------------->
     warning(index, data) {
@@ -195,6 +209,28 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    //Filtering Scope-------------------------------------------------------------->
+    filterScope(value, row) {
+      return row.scope.includes(value);
+    },
+    filterHandler(value, row, column) {
+      const property = column['property'];
+      return row[property] === value;
+    },
+    async fetchUsers() {
+      this.usersData = (await this.$jraph`
+        query{
+            users: getUsers{
+                userid,
+                name,
+                scope,
+                containers,
+            }
+          }
+        `).data.users;
+      this.usersTable = this.dataManip(this.usersData);
+      this.loading = false;
     }
   },
   data() {
@@ -218,12 +254,15 @@ export default {
       }
     };
     return {
+        scopeTags: [{ text: 'Containers', value: 'containers'},
+      						  { text: 'Admin', value: 'admin'},
+                    { text: 'Create Admin', value: 'createAdmin'}],
         multipleSelection: [],
         usersTable: [],
         dialogFormVisible: false,
         form: {
-          name: 'Kyle Riley',
-          userid: '001417108',
+          name: '',
+          userid: '',
           type: [],
           pass: '',
           checkPass: '',
@@ -248,19 +287,8 @@ export default {
         formLabelWidth: '120px'
     };
   },
-  async created() {//Table data fill
-    this.usersData = (await this.$jraph`
-    query{
-        users: getUsers{
-            userid,
-            name,
-            scope,
-            containers,
-        }
-      }
-    `).data.users;
-    this.usersTable = this.dataManip(this.usersData);
-    this.loading = false;
+  async mounted() {
+    await this.fetchUsers();
   }
 };
 </script>
@@ -274,8 +302,12 @@ export default {
     width: 100%;
   }
   .box-card {
-    max-height: 50vh;
+    height: max-content;
     min-width: 600px;
     margin-left: 4%;
+    margin-right: 4%;
+  }
+  .tag{
+    margin: 3px 5px;
   }
 </style>
