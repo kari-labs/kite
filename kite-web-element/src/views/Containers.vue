@@ -26,7 +26,10 @@
         :callbacks="cbs"
       />
     </div>
-    <div v-show="selectedContainer != ''" style="flex: 0.5;">
+    <div
+      v-show="selectedContainer != ''"
+      style="flex: 0.5;"
+    >
       <k-file-manager :root="user.userid + '/' + selectedContainer" />
     </div>
   </div>
@@ -151,9 +154,23 @@ export default {
 <style>
 .split {
   display: flex;
+  height: 100%;
 }
 .split > div{
+  position: relative;
   flex: 1;
+  height: 100%;
+}
+.split > div:not(:first-child) {
+  padding-left: 20px;
+}
+.split > div:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  width: 1px;
+  height: 100%;
+  background-color:rgb(128, 128, 128, 0.5);
 }
 .v-step {
   z-index: 150173408139270;

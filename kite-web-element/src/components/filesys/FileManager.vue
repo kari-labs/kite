@@ -1,5 +1,39 @@
 <template>
   <div>
+    <el-dialog
+      :title="'Upload to ' + root"
+      :visible.sync="uploadVisible"
+      width="400px"
+    >
+      <el-upload
+        class="upload-demo"
+        drag
+        action=""
+        :http-request="handleUpload"
+        :before-remove="handleRemove"
+        multiple
+      >
+        <i class="el-icon-upload" />
+        <div class="el-upload__text">
+          Drop file here or <em>click to upload</em>
+        </div>
+      </el-upload>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="uploadVisible = false">
+          Cancel
+        </el-button>
+        <el-button
+          type="primary"
+          @click="uploadVisible = false"
+        >
+          Done
+        </el-button>
+      </span>
+    </el-dialog>
+
     <el-card shadow="never">
       <div class="header">
         <el-breadcrumb separator="/">
@@ -11,11 +45,23 @@
             {{ node }}
           </el-breadcrumb-item>
         </el-breadcrumb>
-        <el-button @click="reload()">
-          <fa-icon
-            icon="sync-alt"
-          />
-        </el-button>
+        <div>
+          <el-button
+            size="small"
+            type="primary"
+            @click="uploadVisible=true"
+          >
+            Click to upload
+          </el-button>
+          <el-button
+            size="small"
+            @click="reload()"
+          >
+            <fa-icon
+              icon="sync-alt"
+            />
+          </el-button>
+        </div>
       </div>
       <el-tree
         v-if="show"
@@ -65,8 +111,8 @@ export default {
         label: 'name',
         isLeaf: data => !data.isdirectory
       },
-      files: [],
-      show: true
+      uploadVisible: false,
+      show: true,
     };
   },
   props: {
@@ -88,6 +134,23 @@ export default {
 
       return resolve(await this.$fileManager.getFiles(this.root, getFilePath(node)))
 
+    },
+    abortUploads() {
+
+    },
+    async handleUpload(args) {
+      let req = await this.$fileManager.uploadFiles(this.root, [args.file]);
+      this.reload();
+      if(req.data){
+        this.$emit("success");
+      }else if(req.errors){
+        this.$emit("error", args.file);
+      }else{
+        this.$emit("error", args.file);
+      }
+    },
+    handleRemove() {
+      console.log('handleRemove', [...arguments])
     },
     handleDrop(draggingNode, dropNode, dropType) {
       console.log(`Renaming ${getFilePath(draggingNode)} to ${path.join(getFilePath(dropNode), dropNode.data.name)}`)
