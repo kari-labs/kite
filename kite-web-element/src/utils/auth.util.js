@@ -9,6 +9,7 @@ export const loginUser = async (userid, password) => {
         user: loginUser(userid:"${userid}",password:"${password}") {
           _id
           userid
+          logins
           name
           containers
           preferences {
