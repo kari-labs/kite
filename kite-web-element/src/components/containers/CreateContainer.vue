@@ -1,7 +1,7 @@
 <template>
   <div>
     <div
-      @click="dialogVisible = true"
+      @click="dialogVisible = true;$emit('click', null)"
       class="new"
     >
       Click here to create a container
@@ -62,6 +62,7 @@
           type="primary"
           @click="handleCreateContainer"
           data-v-step="4"
+          id="createContainerBtn"
         >
           Create Container
         </el-button>
@@ -94,7 +95,7 @@ export default {
   },
   methods: {
     async handleCreateContainer() {
-      this.$tours['myTour'].stop();
+      this.$tours['tutorial'].stop();
       await this.$refs.createContainer.validate( async valid => {
         if (valid) {
           this.loading = true;

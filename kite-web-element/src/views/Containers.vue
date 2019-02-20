@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div data-v-step="0">
     <k-grid>
       <el-card>
         <h1>You have  {{ containers.length }} containers</h1>
@@ -10,9 +10,9 @@
         :container="c"
         @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers" />
+      <k-create-container @created="fetchContainers" data-v-step="1" ref="createContainer" @click="$tours['tutorial'].nextStep()"/>
     </k-grid>
-    <v-tour name="myTour" :steps="steps" :callbacks="cbs"></v-tour>
+    <v-tour name="tutorial" :steps="steps" :callbacks="cbs"></v-tour>
   </div>
 </template>
 
@@ -29,6 +29,7 @@ export default {
       cbs: {
         onNextStep: this.nextStep,
         onPreviousStep: this.prevStep,
+        onStop: this.onTourStop,
       },
       steps: [
         {
@@ -40,23 +41,23 @@ export default {
         },
         {
           target: '[data-v-step="1"]',
-          content: 'You would click this to create a container',
+          content: 'Click here to create a container',
           params: {
             placement: 'bottom'
           }
         },
         {
           target: '[data-v-step="2"]',
-          content: 'Here is where you give your container a name',
+          content: 'Go ahead and give your container name',
           params: {
-            placement: 'top'
+            placement: 'right'
           }
         },
         {
           target: '[data-v-step="3"]',
-          content: 'Here is where you select the image that your container will run',
+          content: 'Go ahead and pick the image for your container here',
           params: {
-            placement: 'top'
+            placement: 'right'
           }
         },
         {
@@ -93,7 +94,7 @@ export default {
       if(currentStep === 1) {
         console.log(this.$refs.createContainer.$el);
         await this.$refs.createContainer.$el.querySelector(".new").click();
-        await this.$tours['myTour'].start(2);
+        await this.$tours['tutorial'].start(2);
       }
     },
     prevStep(currentStep) {
@@ -101,10 +102,19 @@ export default {
         console.log(this.$refs.createContainer.$el);
         this.$refs.createContainer.$el.querySelector("#closeDialog").click();
       }
+    },
+    onTourStop(){
+      this.$refs.createContainer.$el.querySelector("#createContainerBtn").click();
     }
   },
   async mounted() {
     await this.fetchContainers();
+    console.log(this.$store.state.auth.user);
+    //This code only shows the tour when the user visits for the first time
+    if(!localStorage.getItem("previousVisitor")){
+      this.$tours['tutorial'].start();
+      localStorage.setItem("previousVisitor", true);
+    }
   },
   components: {
     KGrid,
