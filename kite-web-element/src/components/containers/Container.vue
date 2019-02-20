@@ -110,7 +110,7 @@ export default {
       window.open("http://guthib.com/",'_blank');
     },
     fileManager() {
-      this.$router.push('files');
+      this.$emit('openFiles', this.container.nickname)
     },
   },
 };

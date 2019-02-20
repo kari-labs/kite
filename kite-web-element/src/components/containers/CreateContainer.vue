@@ -62,7 +62,7 @@
         </el-button>
         <el-button
           type="primary"
-          @click="handleCreateContainer"
+          @click.prevent="handleCreateContainer"
           data-v-step="4"
           id="createContainerBtn"
         >
