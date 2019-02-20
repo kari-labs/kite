@@ -11,7 +11,7 @@
         :container="c"
         @deleted="fetchContainers"
       />
-      <k-create-container @created="fetchContainers"/>
+      <k-create-container @created="fetchContainers" />
     </k-grid>
   </div>
 </template>
@@ -46,8 +46,7 @@ export default {
       }else{
         this.containers = res.data.containers;
       }
-      
-    }
+    },
   },
   async mounted() {
     await this.fetchContainers();
