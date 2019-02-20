@@ -118,7 +118,8 @@ export default {
     };
   },
   methods: {
-    submitForm(formName) {//Submits User info for creation
+    //Submits User info for creation
+    submitForm(formName) {
       this.$emit('created:user', null);
       this.$refs[formName].validate(valid => {
         if (valid) {
