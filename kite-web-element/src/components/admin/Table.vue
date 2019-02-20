@@ -2,9 +2,11 @@
   <el-card class="box-card">
     <el-table
       ref="adminTable"
-      :data="usersTable.filter(data => !search ||
+      :data="usersTable.filter(
+        data => !search ||
         data.name.toLowerCase().includes(search.toLowerCase()) || 
-        data.userid.toLowerCase().includes(search.toLowerCase()))"
+        data.userid.toLowerCase().includes(search.toLowerCase())
+      )"
       class="table"
       @selection-change="handleSelectionChange"
     >
