@@ -51,7 +51,6 @@ export default {
       cbs: {
         onNextStep: this.nextStep,
         onPreviousStep: this.prevStep,
-        onStop: this.onTourStop,
       },
       steps: [
         {
@@ -131,14 +130,11 @@ export default {
         this.$refs.createContainer.$el.querySelector("#closeDialog").click();
       }
     },
-    onTourStop(){
-      //this.$refs.createContainer.$el.querySelector("#createContainerBtn").click();
-    }
   },
   async mounted() {
     await this.fetchContainers();
     //This code only shows the tour when the user visits for the first time
-    if(this.$store.state.auth.user.logins === 1){
+    if(this.$store.state.auth.user.logins === 1) {
       this.$tours['tutorial'].start();
     }
   },
