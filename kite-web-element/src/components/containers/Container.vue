@@ -1,7 +1,8 @@
 <template>
-  <el-card
-    v-loading="loading"
-    ref="card"
+  <el-card 
+    v-loading="loading" 
+    ref="card" 
+    tabindex="0"
   >
     <div
       slot="header"
@@ -67,7 +68,7 @@ export default {
         {
           text: "Open Container URL",
           icon: "external-link-square-alt",
-          action: ()=>{},
+          action: this.openContainer,
         },
         {
           text: "Open File Manager",
@@ -105,12 +106,10 @@ export default {
       this.$message.success("Container Deleted");
       await this.$emit("deleted", null);
     },
+    openContainer() {
+      window.open("http://guthib.com/",'_blank');
+    },
     fileManager() {
-      /* this.$notify.error({
-          title: "File Manager!",
-          message: "Hey! We haven't built this feature yet :-(",
-          position: "bottom-left",
-      }); */
       this.$router.push('files');
     },
   },

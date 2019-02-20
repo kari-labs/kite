@@ -15,7 +15,7 @@ import 'vue-tour/dist/vue-tour.css';
 
 
 Vue.use(Jraph, {api: "https://localhost/api/graphql"});
-
+Vue.use(require('vue-shortkey'));
 Vue.use(FileManager, {
   api_url: 'https://localhost/'
 });

@@ -2,6 +2,8 @@
   <div>
     <div
       @click="dialogVisible = true;$emit('click', null)"
+      v-shortkey="['shift', 'n']" 
+      @shortkey="dialogVisible = !dialogVisible"
       class="new"
     >
       Click here to create a container

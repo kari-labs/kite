@@ -11,6 +11,7 @@
         @deleted="fetchContainers"
       />
       <k-create-container
+        tabindex="0"
         @created="fetchContainers"
         data-v-step="1"
         ref="createContainer"
@@ -96,7 +97,6 @@ export default {
       }else{
         this.containers = res.data.containers;
       }
-      
     },
     async nextStep(currentStep) {
       if(currentStep === 1) {
@@ -124,7 +124,7 @@ export default {
     KGrid,
     KCard,
     KCreateContainer,
-  }
+  },
 };
 </script>
 
