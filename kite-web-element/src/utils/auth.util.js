@@ -10,6 +10,7 @@ export const loginUser = async (userid, password) => {
           _id
           userid
           logins
+          forceReset
           name
           containers
           preferences {

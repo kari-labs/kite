@@ -6,6 +6,7 @@ import FileManager from "@/views/FileManager.vue";
 import Help from "@/views/Help.vue";
 import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
+import UpdatePassword from "@/views/UpdatePassword.vue";
 import store from '@/store/store';
 import { SIGN_OUT_USER } from '@/store/modules/auth/auth.types';
 import { MessageBox } from 'element-ui';
@@ -24,8 +25,8 @@ const router = new Router({
         try {
           if(store.state.auth.user.scope.length > 0) {
             next({
-              path: '/containers'
-            });
+              path: "/containers"
+            })
           } else {
             next();
           }
@@ -39,6 +40,30 @@ const router = new Router({
       },
     },
     {
+      path: "/updatepassword",
+      name: "updatepassword",
+      component: UpdatePassword,
+      beforeEnter: (to, from, next) => {
+        try {
+          if(store.state.auth.user.forceReset) {
+            next();
+          } else {
+            next({
+              path: from.fullPath
+            });
+          }
+        } catch (error) {
+          next({
+            path: from.fullPath
+          });
+        }
+      },
+      meta: {
+        hideHeader: true,
+        requiresAuth: true,
+      }
+    },
+    {
       path: "/files",
       name: "files",
       // route level code-splitting
@@ -46,7 +71,10 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       //component: () => import(/* webpackChunkName: "containers" */ "./views/Containers.vue")
       component: FileManager,
-      meta: { hideHeader: false }
+      meta: { 
+        hideHeader: false,
+        requiresAuth: true,
+      }
     },
     {
       path: "/containers",

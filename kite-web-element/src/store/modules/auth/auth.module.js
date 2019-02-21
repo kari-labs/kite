@@ -26,8 +26,9 @@ export const authModule = {
         });
         localStorage.setItem('expiry', new Date(Date.now() + (3 * 60 * 60 * 1000)).toUTCString());
         if(redirect) router.push(redirect);
-        // We should give the users the choice to chose a homepage and send them there by default
-        else router.push('/containers');
+        // We should give the users the ability to chose a homepage and send them there by default
+        else if (result.data.user.forceReset) router.push("/updatepassword");
+        else router.push("/containers");
       } else {
         if(result.errors) {
           result.errors.map(err => {
