@@ -91,7 +91,7 @@ export default {
   methods: {
     async deleteContainer() {
       this.loading = true;
-      this.$refs.card.$el.classList.toggle("littleHang");
+      //this.$refs.card.$el.classList.toggle("littleHang");
       await this.$apollo.mutate({
         mutation: gql`
           mutation($_id: String!) {
@@ -102,10 +102,10 @@ export default {
           _id: this.container._id
         }
       });
-      this.$refs.card.$el.classList.toggle("littleHang");
+      /* this.$refs.card.$el.classList.toggle("littleHang");
       this.$refs.card.$el.style["transform"] = "rotate(45deg)";
       this.$refs.card.$el.style["transform-origin"] = "top left";
-      this.$refs.card.$el.classList.add("drop");
+      this.$refs.card.$el.classList.add("drop"); */
       await sleep(1);
       this.loading = false;
       this.$message.success("Container Deleted");
