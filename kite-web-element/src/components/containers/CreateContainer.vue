@@ -57,12 +57,15 @@
         </el-form>
       </div>
       <span slot="footer">
-        <el-button @click="dialogVisible = false;" id="closeDialog">
+        <el-button
+          @click="dialogVisible = false;"
+          id="closeDialog"
+        >
           Cancel
         </el-button>
         <el-button
           type="primary"
-          @click="handleCreateContainer"
+          @click.prevent="handleCreateContainer"
           data-v-step="4"
           id="createContainerBtn"
         >

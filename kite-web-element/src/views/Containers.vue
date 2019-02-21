@@ -1,29 +1,40 @@
 <template>
-  <div data-v-step="0">
-    <k-grid>
-      <k-card 
-        v-for="c in containers" 
-        :key="c._id"
-        :container="c"
-        @deleted="fetchContainers"
+  <div class="split">
+    <div data-v-step="0">
+      <k-grid>
+        <k-card 
+          v-for="c in containers" 
+          :key="c._id"
+          :container="c"
+          @openFiles="openFiles"
+          @deleted="fetchContainers"
+        />
+        <k-create-container
+          tabindex="0"
+          @created="fetchContainers"
+          data-v-step="1"
+          ref="createContainer"
+          @click="$tours['tutorial'].nextStep()"
+        />
+      </k-grid>
+      <v-tour
+        name="tutorial"
+        :steps="steps"
+        :callbacks="cbs"
       />
-      <k-create-container
-        tabindex="0"
-        @created="fetchContainers"
-        data-v-step="1"
-        ref="createContainer"
-        @click="$tours['tutorial'].nextStep()"
-      />
-    </k-grid>
-    <v-tour
-      name="tutorial"
-      :steps="steps"
-      :callbacks="cbs"
-    />
+    </div>
+    <div
+      v-show="selectedContainer != ''"
+      style="flex: 0.5;"
+    >
+      <k-file-manager :root="user.userid + '/' + selectedContainer" />
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import KFileManager from "@/components/filesys/FileManager.vue";
 import KGrid from "@/components/containers/Grid.vue";
 import KCard from "@/components/containers/Container.vue";
 import KCreateContainer from "@/components/containers/CreateContainer.vue";
@@ -33,6 +44,7 @@ export default {
     return {
       containers: [],
       loading: false,
+      selectedContainer: '',
       cbs: {
         onNextStep: this.nextStep,
         onPreviousStep: this.prevStep,
@@ -76,6 +88,9 @@ export default {
       ],
     };
   },
+  computed: {
+    ...mapState({user: state => state.auth.user})
+  },
   methods: {
     async fetchContainers(){
       const res = await this.$jraph`
@@ -93,6 +108,13 @@ export default {
       }else{
         this.containers = res.data.containers;
       }
+    },
+    openFiles(containerName) {
+      console.log('open', containerName)
+      if(this.selectedContainer == containerName)
+        this.selectedContainer = ''
+      else
+        this.selectedContainer = containerName;
     },
     async nextStep(currentStep) {
       if(currentStep === 1) {
@@ -117,11 +139,32 @@ export default {
     KGrid,
     KCard,
     KCreateContainer,
+    KFileManager,
   },
 };
 </script>
 
 <style>
+.split {
+  display: flex;
+  height: 100%;
+}
+.split > div{
+  position: relative;
+  flex: 1;
+  height: 100%;
+}
+.split > div:not(:first-child) {
+  padding-left: 20px;
+}
+.split > div:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  width: 1px;
+  height: 100%;
+  background-color:rgb(128, 128, 128, 0.5);
+}
 .v-step {
   z-index: 150173408139270;
 }
