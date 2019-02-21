@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import gql from "graphql-tag";
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms*1000));
@@ -91,12 +92,16 @@ export default {
     async deleteContainer() {
       this.loading = true;
       this.$refs.card.$el.classList.toggle("littleHang");
-      
-      await this.$jraph`
-        mutation {
-          msg: deleteContainer(_id: "${this.container._id}")
+      await this.$apollo.mutate({
+        mutation: gql`
+          mutation($_id: String!) {
+            msg: deleteContainer(_id: $_id)
+          }
+        `,
+        variables: {
+          _id: this.container._id
         }
-      `
+      });
       this.$refs.card.$el.classList.toggle("littleHang");
       this.$refs.card.$el.style["transform"] = "rotate(45deg)";
       this.$refs.card.$el.style["transform-origin"] = "top left";
