@@ -2,9 +2,6 @@
   <div class="split">
     <div data-v-step="0">
       <k-grid>
-        <el-card>
-          <h1>You have  {{ containers.length }} containers</h1>
-        </el-card>
         <k-card 
           v-for="c in containers" 
           :key="c._id"
