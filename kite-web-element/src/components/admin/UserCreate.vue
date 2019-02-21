@@ -5,10 +5,16 @@
       :rules="rules"
       :model="form"
     >
-      <el-form-item label="User ID">
+      <el-form-item
+        label="User ID"
+        prop="userid"
+      >
         <el-input v-model="form.userid" />
       </el-form-item>
-      <el-form-item label="Name">
+      <el-form-item
+        label="Name"
+        prop="name"
+      >
         <el-input v-model="form.name" />
       </el-form-item>
       <el-form-item 
@@ -31,7 +37,10 @@
           autocomplete="off"
         />
       </el-form-item>
-      <el-form-item>
+      <el-form-item 
+        prop="scope"
+        label="Scope"
+      >
         <el-select
           v-model="form.scope"
           multiple
@@ -106,13 +115,15 @@ export default {
         },
         {
           value: "createAdmin",
-          label: "Super Admin"
+          label: "Create Admin"
         }
       ],
     };
   },
   methods: {
+    //Submits User info for creation
     submitForm(formName) {
+      this.$emit('created:user', null);
       this.$refs[formName].validate(valid => {
         if (valid) {
           this.$jraph`
@@ -127,14 +138,33 @@ export default {
                         }
                     }
                 `;
-        } else {
-          console.log();
+          this.$message({
+            type: 'success',
+            message: 'User Created'
+          });
         }
       });
+      
+    },
+    resetForm(formName) {
+        this.$refs[formName].resetFields();
+        this.$message({
+          type: 'info',
+          message: 'Field Cleared'
+        })
     }
   }
 };
 </script>
 
 <style>
+  .card{
+    height: max-content;
+    min-width: 20vw;
+    margin-left: 2vw;
+  }
+  
+  .el-select {
+    width: 100%;
+  }
 </style>

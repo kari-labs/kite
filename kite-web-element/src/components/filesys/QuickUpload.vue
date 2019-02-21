@@ -16,12 +16,6 @@
     >
       Click to upload
     </el-button>
-    <div
-      slot="tip"
-      class="el-upload__tip"
-    >
-      Quickly upload files to your container
-    </div>
   </el-upload>
 </template>
 
@@ -61,8 +55,6 @@ export default {
 
 <style scoped>
 #root {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  display: inline;
 }
 </style>

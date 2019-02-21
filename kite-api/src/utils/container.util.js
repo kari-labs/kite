@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path')
 const Docker = require('dockerode');
 const config = require('../../config/config');
 const { ObjectId } = require("mongoose").Types;
@@ -15,12 +16,14 @@ const standardize = obj => ({...obj.toObject(), _id: obj._id.toString()})
 async function createContainer(options) {
   if (!fs.existsSync(config.userFolderPath))
     fs.mkdirSync(config.userFolderPath);
-  if (!fs.existsSync(`${config.userFolderPath}${options.userid}`))
-    fs.mkdirSync(`${config.userFolderPath}${options.userid}`);
-
+  if (!fs.existsSync(path.join(config.userFolderPath, options.userid)))
+    fs.mkdirSync(path.join(config.userFolderPath, options.userid));
+  if (!fs.existsSync(path.join(config.userFolderPath, options.userid, options.nickname)))
+    fs.mkdirSync(path.join(config.userFolderPath, options.userid, options.nickname));
+    
   await docker.pull(config.phpServerImage);
 
-  let dockerContainerName = options.userid+"_"+options.nickname.replace(/[\s]/g, "_");
+  let dockerContainerName = options.userid+"_" + options.nickname.replace(/[\s]/g, "_");
 
   let container = await docker.createContainer({
     name: dockerContainerName,
@@ -29,7 +32,7 @@ async function createContainer(options) {
       RestartPolicy: config.dockerConfig.RestartPolicy,
       NetworkMode: config.networkName,
       Binds: [
-        `${config.userHostFolderPath}${options.userid}:/app/htdocs/`
+        `${path.join(config.userFolderPath, options.userid, options.nickname)}:/app/htdocs/`
       ],
     },
   });

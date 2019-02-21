@@ -1,7 +1,9 @@
 <template>
   <div>
     <div
-      @click="dialogVisible = true"
+      @click="dialogVisible = true;$emit('click', null)"
+      v-shortkey="['shift', 'n']" 
+      @shortkey="dialogVisible = !dialogVisible"
       class="new"
     >
       Click here to create a container
@@ -23,6 +25,7 @@
           <el-form-item
             label="Container name"
             prop="nickname"
+            data-v-step="2"
           >
             <el-input
               v-model="form.nickname"
@@ -32,6 +35,7 @@
           <el-form-item
             label="Container image"
             prop="image"
+            data-v-step="3"
           >
             <el-select
               v-model="form.image"
@@ -53,12 +57,17 @@
         </el-form>
       </div>
       <span slot="footer">
-        <el-button @click="dialogVisible = false">
+        <el-button
+          @click="dialogVisible = false;"
+          id="closeDialog"
+        >
           Cancel
         </el-button>
         <el-button
           type="primary"
-          @click="handleCreateContainer"
+          @click.prevent="handleCreateContainer"
+          data-v-step="4"
+          id="createContainerBtn"
         >
           Create Container
         </el-button>
@@ -91,6 +100,7 @@ export default {
   },
   methods: {
     async handleCreateContainer() {
+      this.$tours['tutorial'].stop();
       await this.$refs.createContainer.validate( async valid => {
         if (valid) {
           this.loading = true;

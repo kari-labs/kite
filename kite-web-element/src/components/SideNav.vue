@@ -1,10 +1,10 @@
 <template>
   <el-menu
-    default-active="1"
+    default-active="2"
     class="el-menu-vertical-demo"
-    @open="handleOpen"
-    @close="handleClose"
     :collapse="isCollapse"
+    v-shortkey="{'open': ['shift','arrowright'], 'close': ['shift','arrowleft'], 'containers': ['ctrl','shift', 'c'], 'files': ['ctrl', 'shift', 'f']}" 
+    @shortkey.native="handleHotKeys"
   >
     <el-menu-item
       index="1"
@@ -63,6 +63,7 @@
       to="admin"
       index="5"
       title="Admin"
+      v-if="$store.state.auth.user.scope.includes('admin')"
     >
       <i
         class="el-icon"
@@ -71,19 +72,19 @@
         <fa-icon icon="user-shield" />
       </i>
     </k-nav-item>
-    <k-nav-item
-      to="/"
+    <el-menu-item
       index="6"
-      @clicked="signOutUser"
-      title="Sign Out"
+      @click="signOutUser"
     >
       <i
         class="el-icon rotate-180"
-        slot="icon"
       >
         <fa-icon icon="sign-out-alt" />
       </i>
-    </k-nav-item>
+      <span slot="title">
+        Sign Out
+      </span>
+    </el-menu-item>
   </el-menu>
 </template>
 
@@ -109,16 +110,27 @@ export default {
     signOutUser() {
       this.$store.dispatch(SIGN_OUT_USER);
     },
-    handleOpen() {
-      //Code for nav opening
-    },
-    handleClose() {
-      //code for nav closing
+    handleHotKeys(e) {
+      console.log(e);
+      switch(e.srcKey){
+        case 'open':
+          this.isCollapse = false;
+          break;
+        case 'close':
+          this.isCollapse = true;
+          break;
+        case 'containers':
+          this.$router.push("containers");
+          break;
+        case 'files':
+          this.$router.push("files");
+          break;
+      }
     }
   },
   components: {
-    KNavItem
-  }
+    KNavItem,
+  },
 };
 </script>
 

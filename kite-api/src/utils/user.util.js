@@ -59,6 +59,7 @@ const signOutUser = req => {
 }
 
 const updateUser = async (userIdToUpdate, userNewInfo) => {
+  // Implement validation here
   return await User.findOneAndUpdate({ userid: userIdToUpdate }, { ...userNewInfo }, { new: true }).exec();
 }
 
