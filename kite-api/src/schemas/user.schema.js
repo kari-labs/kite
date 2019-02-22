@@ -19,6 +19,7 @@ const userType = `
   }
 
   input UserInput {
+    password: String,
     forceReset: Boolean,
     name: String,
     preferences: PreferencesConfigInput,
