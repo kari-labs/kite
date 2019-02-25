@@ -26,8 +26,6 @@
     <div
       v-show="selectedContainer != ''"
       style="flex: 0.5;"
-      @click="selectedContainer = ''"
-      class="divider"
     >
       <k-file-manager :root="user.userid + '/' + selectedContainer" />
     </div>
@@ -165,10 +163,6 @@ export default {
   width: 1px;
   height: 100%;
   background-color:rgb(128, 128, 128, 0.5);
-}
-.divider {
-  padding: 0px 20px;
-  cursor: col-resize;
 }
 .v-step {
   z-index: 150173408139270;

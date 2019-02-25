@@ -11,7 +11,7 @@ const docker = new Docker(config.dockerConfig);
 const containers = {};
 
 //This function fixes the ObjectId of mongoose query responses from appearing as a BSON object
-const standardize = obj => ({...obj.toObject(), _id: obj._id.toString()})
+const standardize = obj => ({...obj.toObject(), _id: obj._id.toString()});
 
 async function createContainer(options) {
   if (!fs.existsSync(config.userFolderPath))
