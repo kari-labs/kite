@@ -29,7 +29,7 @@
           <span>Containers</span>
       </template>
       <k-nav-item
-        to="/"
+        to="/containers"
         index="2-1"
         title="Containers"
       >
@@ -41,7 +41,7 @@
         </i>
       </k-nav-item>
       <k-nav-item
-        to="containers/trash"
+        to="/containers/trash"
         index="2-2"
         title="Trash"
       >
@@ -54,7 +54,7 @@
       </k-nav-item>
     </el-submenu>
     <k-nav-item
-      to="files"
+      to="/files"
       index="3"
       title="File Manager"
     >
@@ -66,7 +66,7 @@
       </i>
     </k-nav-item>
     <k-nav-item
-      to="help"
+      to="/help"
       index="4"
       title="Help"
     >
@@ -78,7 +78,7 @@
       </i>
     </k-nav-item>
     <k-nav-item
-      to="admin"
+      to="/admin"
       index="5"
       title="Admin"
       v-if="$store.state.auth.user.scope.includes('admin')"
