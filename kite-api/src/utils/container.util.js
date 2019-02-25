@@ -11,7 +11,7 @@ const docker = new Docker(config.dockerConfig);
 const containers = {};
 
 //This function fixes the ObjectId of mongoose query responses from appearing as a BSON object
-const standardize = obj => ({...obj.toObject(), _id: obj._id.toString()})
+const standardize = obj => ({...obj.toObject(), _id: obj._id.toString()});
 
 async function createContainer(options) {
   if (!fs.existsSync(config.userFolderPath))
@@ -103,19 +103,6 @@ async function deleteAllContainers(owner, { removeFromUser = true}) {
   }
   
   console.log(user.containers.length);
-}
-
-async function clearFalseContainersFromUser(_id) {
-  /* where _id is the users document id */
-  let user = await User.findById(_id).exec();
-  let puser = await User.findById(_id).populate('containers').exec();
-  let supposedContainers = user.containers;
-  let actualContainers = puser.containers.map(c => c._id.toString());
-  supposedContainers.forEach( async c => {
-    if(!actualContainers.contains(c)){
-      await User.findByIdAndUpdate(_id, { $pull: { "containers": c } }).exec();
-    }
-  });
 }
 
 //This might be why the API takes 3000+ years to stop
