@@ -3,7 +3,7 @@
     <div data-v-step="0">
       <k-grid v-loading="$apollo.loading">
         <k-card 
-          v-for="c in containers" 
+          v-for="c in containers"
           :key="c._id"
           :container="c"
           @openFiles="openFiles"

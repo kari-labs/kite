@@ -49,13 +49,12 @@ async function createContainer(options) {
         owner: ObjectId(options.owner),
         container_id: info.Id,
         status: info.State.Status,
-        image: info.Config.Image
+        image: info.Config.Image,
+        deleted: false,
       }
     );
     if(c){
-      console.log("container_id", c._id.toString());
-      let user = await User.findByIdAndUpdate({_id: ObjectId(options.owner)}, { $push: { "containers": c._id.toString() } }, { new: true }).exec();
-      console.log(user);
+      await User.findByIdAndUpdate({_id: ObjectId(options.owner)}, { $push: { "containers": c._id.toString() } }, { new: true }).exec();
     }
   }else{
     throw new Error("Docker: Docker could not create the container");
@@ -85,12 +84,19 @@ const getContainers = async _id => {
   return user_containers.map(c=>standardize(c));
 };
 
-async function deleteContainer(_id, owner) {
-  let c = await Container.findByIdAndDelete(_id).exec();
-  await User.findByIdAndUpdate({_id: ObjectId(owner)}, { $pull: { "containers": _id } }, { new: true }).exec();
-  let container = docker.getContainer(c.container_id);
-  await container.stop();
-  await container.remove();
+async function deleteContainer(_id, owner, permanently = false) {
+  let c;
+  if(permanently){
+    await User.findByIdAndUpdate({_id: ObjectId(owner)}, { $pull: { "containers": c._id.toString() } }, { new: false }).exec();
+    c = await Container.findByIdAndDelete(_id).exec();
+    let container = docker.getContainer(c.container_id);
+    await container.stop();
+    await container.remove();
+  }else {
+    c = await Container.findByIdAndUpdate(_id, {$set: { "deleted": true }});
+    let container = docker.getContainer(c.container_id);
+    await container.stop();
+  }
   return c;
 }
 
