@@ -59,7 +59,18 @@ const router = new Router({
       meta: { 
         hideHeader: false,
         requiresAuth: true,
-      }
+      },
+      children: [
+        {
+          path: "/containers/trash",
+          component: Containers,
+          name: "trash",
+          meta: {
+            hideHeader: false,
+            requiresAuth: true,
+          },
+        },
+      ],
     },
     {
       path: "/help",
