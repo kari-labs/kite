@@ -7,7 +7,7 @@ import Help from "@/views/Help.vue";
 import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
 import store from '@/store/store';
-import { SIGN_OUT_USER } from '@/store/modules/auth/auth.types';
+import { SIGN_OUT_USER, GET_USER } from '@/store/modules/auth/auth.types';
 import { MessageBox } from 'element-ui';
 
 Vue.use(Router);
@@ -103,11 +103,7 @@ const router = new Router({
   ]
 });
 
-// Runs auth on all routes by default
-// (to) - page the user is requesting to go to
-// (from) - page the user is coming from
-// (next) - lets user proceed to page
-router.beforeEach((to, from, next) => {
+function checkAuth(to, from, next) {
   if(to.matched.some(record => record.meta.requiresAuth)) {
     const expiry = Date.parse(localStorage.getItem('expiry'));
     const current = Date.parse(new Date(Date.now()).toUTCString());
@@ -142,6 +138,19 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+}
+
+// Runs auth on all routes by default
+// (to) - page the user is requesting to go to
+// (from) - page the user is coming from
+// (next) - lets user proceed to page
+router.beforeEach((to, from, next) => {
+  checkAuth(to, from, next);
 });
+
+router.afterEach(() => {
+  store.dispatch(GET_USER);
+});
+
 
 export default router;

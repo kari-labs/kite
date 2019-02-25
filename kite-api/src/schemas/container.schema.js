@@ -6,6 +6,7 @@ const containerType = `
         image: String
         status: String
         container_id: String
+        deleted: Boolean
     }
 `;
 
