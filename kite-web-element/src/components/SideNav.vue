@@ -23,18 +23,36 @@
         KITE
       </span>
     </el-menu-item>
-    <k-nav-item
-      to="containers"
-      index="2"
-      title="Containers"
-    >
-      <i
-        class="el-icon"
-        slot="icon"
+    <el-submenu index="2">
+      <template slot="title">
+          <i class="el-icon-menu"></i>
+          <span>Containers</span>
+      </template>
+      <k-nav-item
+        to="/"
+        index="2-1"
+        title="Containers"
       >
-        <fa-icon icon="cube" />
-      </i>
-    </k-nav-item>
+        <i
+          class="el-icon"
+          slot="icon"
+        >
+          <fa-icon icon="cube" />
+        </i>
+      </k-nav-item>
+      <k-nav-item
+        to="containers/trash"
+        index="2-2"
+        title="Trash"
+      >
+        <i
+          class="el-icon"
+          slot="icon"
+        >
+          <fa-icon icon="trash" />
+        </i>
+      </k-nav-item>
+    </el-submenu>
     <k-nav-item
       to="files"
       index="3"
@@ -130,6 +148,8 @@ export default {
   },
   components: {
     KNavItem,
+  },
+  mounted() {
   },
 };
 </script>

@@ -3,7 +3,7 @@
     <div data-v-step="0">
       <k-grid v-loading="$apollo.loading">
         <k-card 
-          v-for="c in containers"
+          v-for="c in containers.filter(c => $route.name === 'trash' ? c.deleted : !c.deleted)"
           :key="c._id"
           :container="c"
           @openFiles="openFiles"
@@ -43,6 +43,7 @@ import gql from "graphql-tag";
 export default {
   data(){
     return {
+      containers: [],
       loading: false,
       selectedContainer: '',
       cbs: {
@@ -123,6 +124,7 @@ export default {
             nickname
             image
             status
+            deleted
           }
         }`,
         skip: false,
