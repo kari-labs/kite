@@ -60,6 +60,7 @@ export default {
         container_id: "",
         status: "",
         image: "",
+        deleted: false,
       })
     },
   },
