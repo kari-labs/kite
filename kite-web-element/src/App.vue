@@ -4,12 +4,7 @@
     <el-container>
       <el-header v-show="!$route.meta.hideHeader">
         <span class="h1 display">
-          <router-link
-            to="/"
-            class="el-link"
-          >
-            Kite
-          </router-link>
+            {{$route.name | capitalize}}
         </span>
       </el-header>
       <el-main>
