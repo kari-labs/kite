@@ -62,6 +62,10 @@ const UserResolvers = {
     const updatedUser = await updateUser(userIdToUpdate, userNewInfo);
     return {
       ...updatedUser.toObject(),
+      containers: updatedUser.containers.map(container => ({
+        ...container.toObject(),
+        _id: container._id.toString(),
+      })),
       _id: updatedUser._id.toString()
     }
   }
