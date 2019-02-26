@@ -9,3 +9,4 @@ export const REMOVE_USER = 'REMOVE_USER';
 // ACTIONS
 export const LOGIN_USER = 'LOGIN_USER';
 export const SIGN_OUT_USER = 'SIGN_OUT_USER';
+export const UPDATE_USER_PASSWORD = 'UPDATE_USER_PASSWORD';
