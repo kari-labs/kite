@@ -21,7 +21,7 @@
       </span>
     </div>
     <div id="belt">
-      <template v-for="tool in tools">
+      <template v-for="tool in tools" v-if="(tool.if || true)">
         <el-tooltip
           effect="dark"
           :content="tool.text"
@@ -85,6 +85,12 @@ export default {
             color: "#F56C6C",
           },
         },
+        {
+          text: "Restore Container",
+          icon: "undo",
+          action: this.restoreContainer,
+          if: this.container.deleted,
+        },
       ],
       loading: false,
     };
@@ -92,22 +98,41 @@ export default {
   methods: {
     async deleteContainer() {
       this.loading = true;
-      //this.$refs.card.$el.classList.toggle("littleHang");
-      await this.$apollo.mutate({
-        mutation: gql`
-          mutation($_id: String!) {
-            msg: deleteContainer(_id: $_id)
+      /* if(this.container.deleted === true){
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation($_id: String!) {
+              msg: deleteContainer(_id: $_id, permanently: true)
+            }
+          `,
+          variables: {
+            _id: this.container._id
           }
-        `,
-        variables: {
-          _id: this.container._id
-        }
+        });
+      }
+      else {
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation($_id: String!) {
+              msg: deleteContainer(_id: $_id, permanently: false)
+            }
+          `,
+          variables: {
+            _id: this.container._id
+          }
+        });
+      } */
+      /* Or */
+      await this.$apollo.mutate({
+          mutation: gql`
+            mutation($_id: String!) {
+              msg: deleteContainer(_id: $_id, permanently: ${this.container.deleted})
+            }
+          `,
+          variables: {
+            _id: this.container._id
+          }
       });
-      /* this.$refs.card.$el.classList.toggle("littleHang");
-      this.$refs.card.$el.style["transform"] = "rotate(45deg)";
-      this.$refs.card.$el.style["transform-origin"] = "top left";
-      this.$refs.card.$el.classList.add("drop"); */
-      await sleep(1);
       this.loading = false;
       this.$message.success("Container Deleted");
       await this.$emit("deleted", null);
@@ -117,6 +142,9 @@ export default {
     },
     fileManager() {
       this.$emit('openFiles', this.container.nickname)
+    },
+    restoreContainer() {
+
     },
   },
 };
