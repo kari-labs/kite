@@ -15,67 +15,67 @@ const objectify = obj => ({...obj.toObject(), _id: obj._id.toString()});
 
 async function createContainer(options) {
   /* If it follows the guidelines, then check for illegal characters */
-    fs.mkdirSync(config.userFolderPath);
-  if (!fs.existsSync(path.join(config.userFolderPath, options.userid)))
-    fs.mkdirSync(path.join(config.userFolderPath, options.userid));
-  if (!fs.existsSync(path.join(config.userFolderPath, options.userid, options.nickname)))
-    fs.mkdirSync(path.join(config.userFolderPath, options.userid, options.nickname));
-    
-  await docker.pull(config.phpServerImage);
+  if(options.nickname.match(/^([aA-zZ0-9-]+)$/)) {
+    await docker.pull(config.phpServerImage);
 
-  let dockerContainerName = options.userid+"_" + options.nickname.replace(/[\s]/g, "_");
+    let dockerContainerName = options.userid+"_" + options.nickname.replace(/[\s]/g, "-");
 
-  let container = await docker.createContainer({
-    name: dockerContainerName,
-    image: config.phpServerImage,
-    HostConfig: {
-      RestartPolicy: config.dockerConfig.RestartPolicy,
-      NetworkMode: config.networkName,
-      Binds: [
-        `${path.join(config.userFolderPath, options.userid, options.nickname)}:/app/htdocs/`
-      ],
-    },
-  });
+    let container = await docker.createContainer({
+      name: dockerContainerName,
+      image: config.phpServerImage,
+      HostConfig: {
+        RestartPolicy: config.dockerConfig.RestartPolicy,
+        NetworkMode: config.networkName,
+        Binds: [
+          `${path.join(config.userFolderPath, options.userid, options.nickname)}:/app/htdocs/`
+        ],
+      },
+    });
     // Start the container through docker
-  await container.start();
+    await container.start();
     // Add it to an array of containers, for some reason
     // This was pre-db code
-  containers[dockerContainerName] = container;
+    containers[dockerContainerName] = container;
     // Get more information about the new container
-  let info = await container.inspect();
+    let info = await container.inspect();
     // Instantiate a variable to hold the mongo-container object
-  let c;
+    let c;
     // If docker successfully created the container
-  if(container){
+    if(container){
       // Create the container object in good 'ol mongo
-    c = new Container(
-      {
-        nickname: options.nickname,
-        owner: ObjectId(options.owner),
-        container_id: info.Id,
-        status: info.State.Status,
-        image: info.Config.Image,
-        deleted: false,
-      }
-    );
+      c = new Container(
+        {
+          nickname: options.nickname,
+          owner: ObjectId(options.owner),
+          container_id: info.Id,
+          status: info.State.Status,
+          image: info.Config.Image,
+          deleted: false,
+        }
+      );
       // If mongoose successfully creates the container in the DB
-    if(c){
+      if(c){
         // Add the container to the user's `containers` property
-      await User.findByIdAndUpdate({_id: ObjectId(options.owner)}, { $push: { "containers": c._id.toString() } }, { new: true }).exec();
+        await User.findByIdAndUpdate({_id: ObjectId(options.owner)}, { $push: { "containers": c._id.toString() } }, { new: true }).exec();
         // If the user folder holder folder does not exist, create it
+        if (!fs.existsSync(config.userFolderPath))
+          fs.mkdirSync(config.userFolderPath);
         //If the user folder does not exist, create it
+        if (!fs.existsSync(path.join(config.userFolderPath, options.userid)))
+          fs.mkdirSync(path.join(config.userFolderPath, options.userid));
         //If the container folder doesn't exist, create it
-    }
-  }else{
+        if (!fs.existsSync(path.join(config.userFolderPath, options.userid, options.nickname)))
+          fs.mkdirSync(path.join(config.userFolderPath, options.userid, options.nickname));
+      }
+    }else{
       // 🤷‍
-    throw new Error("Docker: Docker could not create the container");
-  }
+      throw new Error("Docker: Docker could not create the container");
+    }
     // Save the container
-  let saved = await c.save();
+    let saved = await c.save();
     // Return the container
     return objectify(saved);
-    _id: saved._id.toString()
-  };
+  }else throw new Error("Docker: Container name must match ^([aA-zZ0-9-_]+)$");
 }
 
 async function getContainer(container_id) {
