@@ -1,38 +1,38 @@
-const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers, clearFalseContainersFromUser } = require('../utils/container.util');
+const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers } = require('../utils/container.util');
 
 const ContainerResolvers = {
   createContainer: async ({ nickname }, req) => {
-    let c;
+    let containers;
     try {
       let user = req.session.userStore;
       if(user) {
-        c = await createContainer({ owner: user._id, userid: user.userid, nickname });
+        containers = await createContainer({ owner: user._id, userid: user.userid, nickname });
       }
       else throw new Error("User not logged in");
-      return c;
+      return containers;
     } catch (err) {
       console.error(err);
       throw new Error(err);
     }
   },
   getContainer: async ({ container_id }, req) => {
-    let c;
+    let containers;
     try {
-      let user = req.session.userStore;
-      if(user) c = await getContainer(container_id);
+      const user = req.session.userStore;
+      if(user) containers = await getContainer(container_id);
       else throw new Error("User not logged in");
-      return c;
+      return containers;
     } catch (err) {
       throw err;
     }
   },
-  getContainers: async ({deleted}, req) => {
-    let c;
+  getContainers: async (_, req) => {
+    let containers;
     try {
       let user = req.session.userStore;
-      if(user) c = await getContainers(user._id);
+      if(user) containers = await getContainers(user._id);
       else throw new Error("User not logged in");
-      return ((deleted != null) ? c.filter(cn => cn.deleted === deleted) : c);
+      return containers;
     } 
     catch (err) {
       throw err;
@@ -59,19 +59,6 @@ const ContainerResolvers = {
         return containers;
       }
       else throw new Error("User not logged in");
-    } catch (err) {
-      console.log(err);
-      throw new Error(err);
-    }
-  },
-  clearFalseContainers: async (_, req) => {
-    try {
-      let user = req.session.userStore;
-      if(user) {
-        await clearFalseContainersFromUser(user._id);
-      }
-      else throw new Error("User not logged in");
-      return true;
     } catch (err) {
       console.log(err);
       throw new Error(err);
