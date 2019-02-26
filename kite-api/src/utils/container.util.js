@@ -103,8 +103,12 @@ async function deleteContainer(_id, owner, permanently = false) {
     await User.findByIdAndUpdate({_id: ObjectId(owner)}, { $pull: { "containers": c._id.toString() } }, { new: false }).exec();
     c = await Container.findByIdAndDelete(_id).exec();
     let container = docker.getContainer(c.container_id);
-    await container.stop();
-    await container.remove();
+    let info = await container.inspect();
+    if(info.State.Status === "running") {
+      await container.stop();
+    }
+    else await container.remove();
+    
   }else {
     c = await Container.findByIdAndUpdate(_id, {$set: { "deleted": true }});
     let container = docker.getContainer(c.container_id);
