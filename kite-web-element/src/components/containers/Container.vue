@@ -97,45 +97,28 @@ export default {
   },
   methods: {
     async deleteContainer() {
-      this.loading = true;
-      /* if(this.container.deleted === true){
-        await this.$apollo.mutate({
-          mutation: gql`
-            mutation($_id: String!) {
-              msg: deleteContainer(_id: $_id, permanently: true)
-            }
-          `,
-          variables: {
-            _id: this.container._id
-          }
-        });
-      }
-      else {
-        await this.$apollo.mutate({
-          mutation: gql`
-            mutation($_id: String!) {
-              msg: deleteContainer(_id: $_id, permanently: false)
-            }
-          `,
-          variables: {
-            _id: this.container._id
-          }
-        });
-      } */
-      /* Or */
-      await this.$apollo.mutate({
-          mutation: gql`
-            mutation($_id: String!) {
-              msg: deleteContainer(_id: $_id, permanently: ${this.container.deleted})
-            }
-          `,
-          variables: {
-            _id: this.container._id
-          }
+      const ok = await this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'danger'
       });
-      this.loading = false;
-      this.$message.success("Container Deleted");
-      await this.$emit("deleted", null);
+      if(ok) {
+        this.loading = true;
+        await this.$apollo.mutate({
+            mutation: gql`
+              mutation($_id: String!, $permanently: Boolean!) {
+                msg: deleteContainer(_id: $_id, permanently: $permanently)
+              }
+            `,
+            variables: {
+              _id: this.container._id,
+              permanently: this.container.deleted
+            }
+        });
+        this.loading = false;
+        this.$message.success("Container Deleted");
+        await this.$emit("deleted", null);
+      }
     },
     openContainer() {
       window.open("http://guthib.com/",'_blank');
