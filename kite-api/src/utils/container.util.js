@@ -11,7 +11,7 @@ const docker = new Docker(config.dockerConfig);
 const containers = {};
 
 //This function fixes the ObjectId of mongoose query responses from appearing as a BSON object
-const standardize = obj => ({...obj.toObject(), _id: obj._id.toString()});
+const objectify = obj => ({...obj.toObject(), _id: obj._id.toString()});
 
 async function createContainer(options) {
   if (!fs.existsSync(config.userFolderPath))
@@ -61,7 +61,7 @@ async function createContainer(options) {
   }
   let saved = await c.save();
   return {
-    ...saved.toObject(),
+    return objectify(saved);
     _id: saved._id.toString()
   };
 }
@@ -76,12 +76,12 @@ async function getContainer(container_id) {
   )
   .populate("owner")
   .exec();
-  return standardize(container);
+  return objectify(container);
 }
 
 const getContainers = async _id => {
   let user_containers = await Container.find({owner: { _id }}).populate('owner').exec();
-  return user_containers.map(c=>standardize(c));
+  return user_containers.map(c=>objectify(c));
 };
 
 async function deleteContainer(_id, owner, permanently = false) {
