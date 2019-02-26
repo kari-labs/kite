@@ -11,64 +11,77 @@ const docker = new Docker(config.dockerConfig);
 const containers = {};
 
 //This function fixes the ObjectId of mongoose query responses from appearing as a BSON object
-const standardize = obj => ({...obj.toObject(), _id: obj._id.toString()});
+const objectify = obj => ({...obj.toObject(), _id: obj._id.toString()});
 
 async function createContainer(options) {
-  if (!fs.existsSync(config.userFolderPath))
-    fs.mkdirSync(config.userFolderPath);
-  if (!fs.existsSync(path.join(config.userFolderPath, options.userid)))
-    fs.mkdirSync(path.join(config.userFolderPath, options.userid));
-  if (!fs.existsSync(path.join(config.userFolderPath, options.userid, options.nickname)))
-    fs.mkdirSync(path.join(config.userFolderPath, options.userid, options.nickname));
-    
-  await docker.pull(config.phpServerImage);
+  /* If it follows the guidelines, then check for illegal characters */
+  if(options.nickname.match(/^([aA-zZ0-9-]+)$/)) {
+    await docker.pull(config.phpServerImage);
 
-  let dockerContainerName = options.userid+"_" + options.nickname.replace(/[\s]/g, "_");
+    let dockerContainerName = options.userid+"_" + options.nickname.replace(/[\s]/g, "-");
 
-  let container = await docker.createContainer({
-    name: dockerContainerName,
-    image: config.phpServerImage,
-    HostConfig: {
-      RestartPolicy: config.dockerConfig.RestartPolicy,
-      NetworkMode: config.networkName,
-      Binds: [
-        `${path.join(config.userFolderPath, options.userid, options.nickname)}:/app/htdocs/`
-      ],
-    },
-  });
-
-  await container.start();
-  containers[dockerContainerName] = container;
-
-  let info = await container.inspect();
-  let c;
-  if(container){
-    c = new Container(
-      {
-        nickname: options.nickname,
-        owner: ObjectId(options.owner),
-        container_id: info.Id,
-        status: info.State.Status,
-        image: info.Config.Image,
-        deleted: false,
+    let container = await docker.createContainer({
+      name: dockerContainerName,
+      image: config.phpServerImage,
+      HostConfig: {
+        RestartPolicy: config.dockerConfig.RestartPolicy,
+        NetworkMode: config.networkName,
+        Binds: [
+          `${path.join(config.userFolderPath, options.userid, options.nickname)}:/app/htdocs/`
+        ],
+      },
+    });
+    // Start the container through docker
+    await container.start();
+    // Add it to an array of containers, for some reason
+    // This was pre-db code
+    containers[dockerContainerName] = container;
+    // Get more information about the new container
+    let info = await container.inspect();
+    // Instantiate a variable to hold the mongo-container object
+    let c;
+    // If docker successfully created the container
+    if(container){
+      // Create the container object in good 'ol mongo
+      c = new Container(
+        {
+          nickname: options.nickname,
+          owner: ObjectId(options.owner),
+          container_id: info.Id,
+          status: info.State.Status,
+          image: info.Config.Image,
+          deleted: false,
+        }
+      );
+      // If mongoose successfully creates the container in the DB
+      if(c){
+        // Add the container to the user's `containers` property
+        await User.findByIdAndUpdate({_id: ObjectId(options.owner)}, { $push: { "containers": c._id.toString() } }, { new: true }).exec();
+        // If the user folder holder folder does not exist, create it
+        if (!fs.existsSync(config.userFolderPath))
+          fs.mkdirSync(config.userFolderPath);
+        //If the user folder does not exist, create it
+        if (!fs.existsSync(path.join(config.userFolderPath, options.userid)))
+          fs.mkdirSync(path.join(config.userFolderPath, options.userid));
+        //If the container folder doesn't exist, create it
+        if (!fs.existsSync(path.join(config.userFolderPath, options.userid, options.nickname)))
+          fs.mkdirSync(path.join(config.userFolderPath, options.userid, options.nickname));
       }
-    );
-    if(c){
-      await User.findByIdAndUpdate({_id: ObjectId(options.owner)}, { $push: { "containers": c._id.toString() } }, { new: true }).exec();
+    }else{
+      // 🤷‍
+      throw new Error("Docker: Docker could not create the container");
     }
-  }else{
-    throw new Error("Docker: Docker could not create the container");
-  }
-  let saved = await c.save();
-  return {
-    ...saved.toObject(),
-    _id: saved._id.toString()
-  };
+    // Save the container
+    let saved = await c.save();
+    // Return the container
+    return objectify(saved);
+  }else throw new Error("Docker: Container name must match ^([aA-zZ0-9-_]+)$");
 }
 
 async function getContainer(container_id) {
   let container = await Container.findOne(
     {
+      // Change this to use the full ID
       container_id: {
         $regex: `^(${container_id}\\w*)$`
       }
@@ -76,12 +89,12 @@ async function getContainer(container_id) {
   )
   .populate("owner")
   .exec();
-  return standardize(container);
+  return objectify(container);
 }
 
 const getContainers = async _id => {
   let user_containers = await Container.find({owner: { _id }}).populate('owner').exec();
-  return user_containers.map(c=>standardize(c));
+  return user_containers.map(c=>objectify(c));
 };
 
 async function deleteContainer(_id, owner, permanently = false) {
