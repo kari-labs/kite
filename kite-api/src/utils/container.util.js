@@ -109,6 +109,8 @@ async function deleteContainer(_id, owner, permanently = false) {
     c = await Container.findByIdAndUpdate(_id, {$set: { "deleted": true }});
     let container = docker.getContainer(c.container_id);
     await container.stop();
+    let info = await container.inspect();
+    c = await Container.findByIdAndUpdate(_id, {$set: { "status": info.State.Status }});
   }
   return c;
 }
