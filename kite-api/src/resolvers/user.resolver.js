@@ -59,8 +59,11 @@ const UserResolvers = {
     else return 'Error signing user out.'
   },
   updateUser: async({ userid: userIdToUpdate, user: userNewInfo }) => {
-    const updatedUser = updateUser(userIdToUpdate, userNewInfo);
-    return updatedUser;
+    const updatedUser = await updateUser(userIdToUpdate, userNewInfo);
+    return {
+      ...updatedUser.toObject(),
+      _id: updatedUser._id.toString()
+    }
   }
 }
 
