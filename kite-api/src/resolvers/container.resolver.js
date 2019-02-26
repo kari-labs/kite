@@ -26,22 +26,23 @@ const ContainerResolvers = {
       throw err;
     }
   },
-  getContainers: async (_, req) => {
+  getContainers: async ({deleted}, req) => {
     let c;
     try {
       let user = req.session.userStore;
       if(user) c = await getContainers(user._id);
       else throw new Error("User not logged in");
-      return c;
-    } catch (err) {
+      return ((deleted != null) ? c.filter(cn => cn.deleted === deleted) : c);
+    } 
+    catch (err) {
       throw err;
     }
   },
-  deleteContainer: async ({ _id }, req) => {
+  deleteContainer: async ({ _id, permanently = false }, req) => {
     try {
       let user = req.session.userStore;
       if(user) {
-        await deleteContainer(_id);
+        await deleteContainer(_id, permanently);
       }
       else throw new Error("User not logged in");
       return `Successfully deleted container ${_id}`;
