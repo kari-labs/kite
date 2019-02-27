@@ -75,7 +75,7 @@
             size="mini"
             @click="warning(scope.$index, usersTable)"
           >
-            Delete
+            Del
           </el-button>
         </template>
         <!-- Operations Closed -->
