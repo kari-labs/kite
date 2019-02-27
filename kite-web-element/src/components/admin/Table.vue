@@ -75,7 +75,12 @@
             size="mini"
             @click="warning(scope.$index, usersTable)"
           >
-            Remove
+            <div
+              v-if="$store.state.auth.user.userid != usersTable[scope.$index].userid"
+              style="float-left;"
+            >
+              Delete
+            </div>
           </el-button>
         </template>
         <!-- Operations Closed -->
