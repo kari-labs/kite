@@ -1,4 +1,4 @@
-const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers } = require('../utils/container.util');
+const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers, restoreContainer } = require('../utils/container.util');
 
 const ContainerResolvers = {
   createContainer: async ({ nickname }, req) => {
@@ -39,10 +39,11 @@ const ContainerResolvers = {
     }
   },
   deleteContainer: async ({ _id, permanently = false }, req) => {
+    console.log(permanently);
     try {
       let user = req.session.userStore;
       if(user) {
-        await deleteContainer(_id, permanently);
+        await deleteContainer(_id, user._id, permanently);
       }
       else throw new Error("User not logged in");
       return `Successfully deleted container ${_id}`;
@@ -63,7 +64,15 @@ const ContainerResolvers = {
       console.log(err);
       throw new Error(err);
     }
-  }
+  },
+  restoreContainer: async ({_id}, req) => {
+    if(req.session.userStore) {
+      await restoreContainer(_id);
+      return true;
+    }else {
+      throw new Error("User not logged in");
+    }
+  },
 };
 
 module.exports = { ContainerResolvers };
