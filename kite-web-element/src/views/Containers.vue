@@ -8,6 +8,7 @@
           :container="c"
           @openFiles="openFiles"
           @deleted="triggerMyQuery"
+          @restored="triggerMyQuery"
         />
         <k-create-container
           tabindex="0"
@@ -15,6 +16,7 @@
           data-v-step="1"
           ref="createContainer"
           @click="$tours['tutorial'].nextStep()"
+          v-if="$route.name !== 'trash'"
         />
       </k-grid>
       <v-tour
