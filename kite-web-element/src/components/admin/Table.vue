@@ -65,7 +65,7 @@
           <el-button
             size="mini"
             type="text"
-            @click="edit(scope.$index, usersTable, form)"
+            @click="edit(scope.$index, usersTable, form, currentIndex)"
           >
             Edit
           </el-button>
@@ -162,7 +162,7 @@
         </el-button>
         <el-button
           type="primary"
-          @click="update(userid, updatedUser)"
+          @click="update(currentIndex, usersTable, form, updatedUser)"
         >
           Confirm
         </el-button>
@@ -210,27 +210,31 @@ export default {
           }`
       },
     //Edit Button Function--------------------------------------------------------->
-    edit(index, data, form, updatedUser) {
+    edit(index, data, form, currentIndex) {
       this.dialogFormVisible = true;
       form.userid = data[index].userid;
       form.name = data[index].name;
       form.type = data[index].scope;
-      updatedUser.userid = data[index].userid;
+      this.currentIndex = index;
+      },
+    //Called in edit.
+    update(currentIndex, data, form, updatedUser) {
       updatedUser.name = form.name;
       updatedUser.scope = form.type;
       updatedUser.password = form.pass;
-      },
-    //Called in edit.
-    update(updatedUser) {
+      const updatedUserId = data[currentIndex].userid;
       try{
-        updateUser(updatedUser.userid, updatedUser)
+        updateUser(updatedUserId, updatedUser)
         this.dialogFormVisible = false;
         this.$message({
           type: 'success',
           message: 'Update Completed'
       });
       }catch(err){
-        console.log(err);
+        this.$message({
+          type: 'danger',
+          message: err
+        });
       }
     },
     //Selector Function------------------------------------------------------------>
@@ -275,6 +279,8 @@ export default {
     const validatorPass = (rule, value, callBack) => {
       if (value === "") {
         callBack(new Error("Please input the password"));
+      } else if(value.length() < 6){
+        callBack(new Error("Minimum password length is 6 characters"))
       } else {
         if (this.form.checkPass !== "") {
           this.$refs.userForm.validateField("checkPass");
@@ -287,13 +293,15 @@ export default {
         callBack(new Error("Please input the password"));
       } else if (value !== this.form.pass) {
         callBack(new Error("The passwords don't match!"));
-      } else {
+      } else if(value.length() < 6) {
+        callBack(new Error("Minimum password length is 6 characters"))
+      }else {
         callBack();
       }
     };
     return {
+      currentIndex: '',
         updatedUser: {
-          userid: '',
           name: '',
           scope: [],
           password: ''
