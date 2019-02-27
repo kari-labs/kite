@@ -4,8 +4,8 @@
       ref="adminTable"
       :data="usersTable.filter(
         data => !search ||
-        data.name.toLowerCase().includes(search.toLowerCase()) || 
-        data.userid.toLowerCase().includes(search.toLowerCase())
+          data.name.toLowerCase().includes(search.toLowerCase()) || 
+          data.userid.toLowerCase().includes(search.toLowerCase())
       )"
       class="table"
       @selection-change="handleSelectionChange"
@@ -162,7 +162,7 @@
         </el-button>
         <el-button
           type="primary"
-          @click="update()"
+          @click="update(userid, updatedUser)"
         >
           Confirm
         </el-button>
@@ -173,7 +173,7 @@
 </template>
 
 <script>
-
+import { updateUser } from "@/utils/auth.util.js";
 export default {
   name: "KATable",
   methods: {
@@ -208,21 +208,30 @@ export default {
             userid
             }
           }`
-    },
+      },
     //Edit Button Function--------------------------------------------------------->
-    edit(index, data, form) {
+    edit(index, data, form, updatedUser) {
       this.dialogFormVisible = true;
       form.userid = data[index].userid;
       form.name = data[index].name;
       form.type = data[index].scope;
-    },
+      updatedUser.userid = data[index].userid;
+      updatedUser.name = form.name;
+      updatedUser.scope = form.type;
+      updatedUser.password = form.pass;
+      },
     //Called in edit.
-    update() {
-      this.dialogFormVisible = false;
-      this.$message({
+    update(updatedUser) {
+      try{
+        updateUser(updatedUser.userid, updatedUser)
+        this.dialogFormVisible = false;
+        this.$message({
           type: 'success',
           message: 'Update Completed'
       });
+      }catch(err){
+        console.log(err);
+      }
     },
     //Selector Function------------------------------------------------------------>
     toggleSelection(rows){
@@ -283,7 +292,12 @@ export default {
       }
     };
     return {
-
+        updatedUser: {
+          userid: '',
+          name: '',
+          scope: [],
+          password: ''
+        },
         scopes: {
           "containers": "Containers",
           "createAdmin": "Create Admin",
