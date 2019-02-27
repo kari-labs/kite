@@ -175,7 +175,6 @@
 <script>
 
 export default {
-  
   name: "KATable",
   methods: {
     dataManip(usersData) {
@@ -253,7 +252,9 @@ export default {
                 userid,
                 name,
                 scope,
-                containers,
+                containers {
+                  nickname
+                },
             }
           }
         `).data.users;

@@ -15,7 +15,9 @@ export const loginUser = async (userid, password) => {
           logins
           forceReset
           name
-          containers
+          containers {
+            nickname
+          }
           preferences {
             theme
           }
@@ -56,7 +58,9 @@ export const updateUser = async (userid, newUser) => {
           logins
           forceReset
           name
-          containers
+          containers {
+            nickname
+          }
           preferences {
             theme
           }
