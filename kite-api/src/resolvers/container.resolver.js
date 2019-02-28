@@ -39,7 +39,6 @@ const ContainerResolvers = {
     }
   },
   deleteContainer: async ({ _id, permanently = false }, req) => {
-    console.log(permanently);
     try {
       let user = req.session.userStore;
       if(user) {
@@ -48,7 +47,6 @@ const ContainerResolvers = {
       else throw new Error("User not logged in");
       return `Successfully deleted container ${_id}`;
     } catch (err) {
-      console.log(err);
       throw new Error(err);
     }
   },
@@ -61,7 +59,6 @@ const ContainerResolvers = {
       }
       else throw new Error("User not logged in");
     } catch (err) {
-      console.log(err);
       throw new Error(err);
     }
   },
