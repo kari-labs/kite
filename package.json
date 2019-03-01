@@ -47,7 +47,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged && build:docs"
+      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
