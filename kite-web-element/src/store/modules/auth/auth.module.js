@@ -1,4 +1,4 @@
-import { loginUser, signOutUser, getUser } from '@/utils/auth.util';
+import { loginUser, signOutUser } from '@/utils/auth.util';
 import router from '@/router.js';
 import * as types from './auth.types';
 import { Message } from 'element-ui';
@@ -56,23 +56,6 @@ export const authModule = {
         }
       } catch (error) {
         console.error('Logged Error:', error);
-      }
-    },
-    async [types.GET_USER] ({ commit }) {
-      const result = await getUser();
-
-      if(result.data.user !== null) {
-        commit({
-          type: types.STORE_USER,
-          user: result.data.user
-        });
-        localStorage.setItem('expiry', new Date(Date.now() + (3 * 60 * 60 * 1000)).toUTCString());
-      } else {
-        if(result.errors) {
-          result.errors.map(err => {
-            Message.error(err.message);
-          });
-        }
       }
     }
   }
