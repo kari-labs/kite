@@ -4,8 +4,8 @@
       ref="adminTable"
       :data="usersTable.filter(
         data => !search ||
-        data.name.toLowerCase().includes(search.toLowerCase()) || 
-        data.userid.toLowerCase().includes(search.toLowerCase())
+          data.name.toLowerCase().includes(search.toLowerCase()) || 
+          data.userid.toLowerCase().includes(search.toLowerCase())
       )"
       class="table"
       @selection-change="handleSelectionChange"
@@ -52,7 +52,7 @@
       >
         <template
           slot="header"
-          slot-scope="scope"
+          slot-scope="scope" 
         >
           <el-input
             v-model="search"
