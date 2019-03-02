@@ -1,4 +1,4 @@
-import { loginUser, signOutUser, getUser } from '@/utils/auth.util';
+import { loginUser, signOutUser, updateUser } from '@/utils/auth.util';
 import router from '@/router.js';
 import * as types from './auth.types';
 import { Message } from 'element-ui';
@@ -26,8 +26,9 @@ export const authModule = {
         });
         localStorage.setItem('expiry', new Date(Date.now() + (3 * 60 * 60 * 1000)).toUTCString());
         if(redirect) router.push(redirect);
-        // We should give the users the choice to chose a homepage and send them there by default
-        else router.push('/containers');
+        // We should give the users the ability to chose a homepage and send them there by default
+        else if (result.data.user.forceReset) router.push("/updatepassword");
+        else router.push("/containers");
       } else {
         if(result.errors) {
           result.errors.map(err => {
@@ -58,21 +59,16 @@ export const authModule = {
         console.error('Logged Error:', error);
       }
     },
-    async [types.GET_USER] ({ commit }) {
-      const result = await getUser();
-
-      if(result.data.user !== null) {
+    async [types.UPDATE_USER_PASSWORD] ({ commit }, { userid, newUser }) {
+      try {
+        const result = await updateUser(userid, newUser);
         commit({
           type: types.STORE_USER,
           user: result.data.user
         });
-        localStorage.setItem('expiry', new Date(Date.now() + (3 * 60 * 60 * 1000)).toUTCString());
-      } else {
-        if(result.errors) {
-          result.errors.map(err => {
-            Message.error(err.message);
-          });
-        }
+        router.push('/containers');
+      } catch (error) {
+        console.error('Logged Error:', error);
       }
     }
   }

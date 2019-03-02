@@ -64,7 +64,8 @@ const signOutUser = req => new Promise((resolve, reject) => {
 
 const updateUser = async (userIdToUpdate, userNewInfo) => {
   // Implement validation here
-  return await User.findOneAndUpdate({ userid: userIdToUpdate }, { ...userNewInfo }, { new: true }).exec();
+  if(userNewInfo.password) userNewInfo.password = await bcrypt.hash(userNewInfo.password, saltRounds);
+  return await User.findOneAndUpdate({ userid: userIdToUpdate }, { ...userNewInfo }, { new: true }).populate("containers").exec();
 }
 
 module.exports = { 

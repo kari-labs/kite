@@ -6,6 +6,7 @@ import FileManager from "@/views/FileManager.vue";
 import Help from "@/views/Help.vue";
 import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
+import UpdatePassword from "@/views/UpdatePassword.vue";
 import store from '@/store/store';
 import { SIGN_OUT_USER, GET_USER } from '@/store/modules/auth/auth.types';
 import { MessageBox } from 'element-ui';
@@ -23,9 +24,8 @@ const router = new Router({
       beforeEnter: (to, from, next) => {
         try {
           if(store.state.auth.user.scope.length > 0) {
-            next({
-              path: '/containers'
-            });
+            if(store.state.auth.user.forceReset) next('/updatepassword');
+            else next('/containers');
           } else {
             next();
           }
@@ -39,6 +39,41 @@ const router = new Router({
       },
     },
     {
+      path: "/updatepassword",
+      name: "updatepassword",
+      component: UpdatePassword,
+      beforeEnter: (to, from, next) => {
+        try {
+          const expiry = Date.parse(localStorage.getItem('expiry'));
+          const current = Date.parse(new Date(Date.now()).toUTCString());
+          if(current >= expiry) {
+            MessageBox.alert('Please log in again.', 'Session Expired', {
+              confirmButtonText: 'Back to Login',
+              callback: () => {
+                store.dispatch(SIGN_OUT_USER);
+              }
+            });
+          } else {
+            if(store.state.auth.user.forceReset) {
+              next();
+            } else {
+              next({
+                path: from.fullPath
+              });
+            }
+          }
+        } catch (error) {
+          next({
+            path: from.fullPath
+          });
+        }
+      },
+      meta: {
+        hideHeader: true,
+        requiresAuth: false,
+      }
+    },
+    {
       path: "/files",
       name: "files",
       // route level code-splitting
@@ -46,7 +81,10 @@ const router = new Router({
       // which is lazy-loaded when the route is visited.
       //component: () => import(/* webpackChunkName: "containers" */ "./views/Containers.vue")
       component: FileManager,
-      meta: { hideHeader: false }
+      meta: { 
+        hideHeader: false,
+        requiresAuth: true,
+      }
     },
     {
       path: "/containers",
@@ -126,10 +164,12 @@ function checkAuth(to, from, next) {
         }
       });
     } else {
-      const scope = store.state.auth.user.scope;
+      const user = store.state.auth.user;
       try {
-        if(scope.length > 0) next();
-        else {
+        if(user.scope.length > 0) {
+          if(user.forceReset) next('/updatepassword')
+          else next();
+        } else {
           next({
             path: '/',
             query: {

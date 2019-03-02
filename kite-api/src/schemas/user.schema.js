@@ -9,7 +9,7 @@ const userType = `
     forceReset: Boolean,
     logins: Int,
     name: String,
-    containers: [String],
+    containers: [Container],
     preferences: PreferencesConfig,
     scope: [String]
   }
@@ -19,6 +19,7 @@ const userType = `
   }
 
   input UserInput {
+    password: String,
     forceReset: Boolean,
     name: String,
     preferences: PreferencesConfigInput,

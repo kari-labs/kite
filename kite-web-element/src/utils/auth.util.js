@@ -1,3 +1,6 @@
+import { apolloClient } from '@/apollo.js';
+import gql from 'graphql-tag';
+
 export const loginUser = async (userid, password) => {
   let response = await fetch('https://localhost/api/graphql', {
     method: 'POST',
@@ -10,8 +13,11 @@ export const loginUser = async (userid, password) => {
           _id
           userid
           logins
+          forceReset
           name
-          containers
+          containers {
+            nickname
+          }
           preferences {
             theme
           }
@@ -67,4 +73,31 @@ export const signOutUser = async () => {
   });
   response = await response.json();
   return response;
+}
+
+export const updateUser = async (userid, newUser) => {
+  return await apolloClient.mutate({
+    mutation: gql`
+      mutation($userid: String!, $user: UserInput!) {
+        user: updateUser(userid: $userid, user: $user) {
+          _id
+          userid
+          logins
+          forceReset
+          name
+          containers {
+            nickname
+          }
+          preferences {
+            theme
+          }
+          scope
+        }
+      }
+    `,
+    variables: {
+      userid: userid,
+      user: newUser
+    }
+  });
 }
