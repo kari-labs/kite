@@ -10,7 +10,7 @@ const { saltRounds } = require('../../config/config');
  */
 const formatMongooseResponse = mongooseData => {
   if(Array.isArray(mongooseData)) {
-    mongooseData.map(obj => {
+    return mongooseData.map(obj => {
       return formatMongooseResponse(obj);
     });
   } else {
@@ -33,6 +33,7 @@ const formatMongooseResponse = mongooseData => {
 const UserResolvers = {
   /**
    * GrahphQL resolver which takes user information and creates a new user
+   * @async
    * @memberof UserResolvers
    * @method createUser
    * @param {Object} args - Arguments passed in by the user 
@@ -44,7 +45,7 @@ const UserResolvers = {
    * @param {Object} req.session - The requesting user's session, which contains information about them. We use this verify users have the required scope to perform the requested action.
    * @param {string} req.session.userObjectID - Requesting user's ObjectID. Used to verify scope.
    * @param {Object} [context] - GraphQL context object
-   * @returns {Object} - New user data
+   * @returns {Promise<Object>} - New user data
    */
   createUser: async ({ userid, password, name, scope }, { session: { userObjectID: requesterObjectID } }) => {
     if(requesterObjectID !== undefined) {
@@ -76,13 +77,14 @@ const UserResolvers = {
   
   /**
    * Resolver to delete a user by a specified user ID
+   * @async
    * @memberof UserResolvers
    * @method deleteUser
    * @param {Object} args - Arguments passed in by the user
    * @param {string} args.userid - User ID to search by
    * @param {Object} [req] - Express request object
    * @param {Object} [context] - GraphQL context object
-   * @returns {Object} - Deleted user's information
+   * @returns {Promise<Object>} - Deleted user's information
    */
   deleteUser: async ({ userid }, { session: { userObjectID: requesterObjectID } }) => {
     if(requesterObjectID !== undefined) {
@@ -101,6 +103,7 @@ const UserResolvers = {
 
   /**
    * GrahpQL resolver which takes a userid and password, and attempts to login the user
+   * @async
    * @memberof UserResolvers
    * @method loginUser
    * @param {Object} args - Arguments passed in by the user
@@ -109,7 +112,7 @@ const UserResolvers = {
    * @param {Object} req - Express request object
    * @param {Object} req.session - The requesting user's session. If login is successful, we store their ObjectID here for lookup later.
    * @param {Object} [context]- GrahpQL context object
-   * @returns {Object} - If successful, will return the logged in user.
+   * @returns {Promise<Object>} - If successful, will return the logged in user.
    */
   loginUser: async ({ userid, password }, { session }) => {
     const userFromDB = await User.findOne({ userid: userid }).exec();
@@ -127,6 +130,7 @@ const UserResolvers = {
 
   /**
    * Resolver which takes a userid and searches the database for a matching userid
+   * @async
    * @memberof UserResolvers
    * @method getAnyUser
    * @param {Object} args - Arguments pass in by the user
@@ -135,7 +139,7 @@ const UserResolvers = {
    * @param {Object} req.session - Contains stored user information
    * @param {string} req.session.userObjectID - ObjectID used to lookup requesting user in database
    * @param {Object} [context] - GraphQL context object
-   * @returns {Object} - The found user's information
+   * @returns {Promise<Object>} - The found user's information
    */
   getAnyUser: async ({ userid }, { session: { userObjectID: requesterObjectID } }) => {
     if(requesterObjectID !== undefined) {
@@ -154,6 +158,7 @@ const UserResolvers = {
 
   /**
    * Resolver which returns the currently logged in user's information
+   * @async
    * @memberof UserResolvers
    * @method getCurrentUser
    * @param {Object} [args] - Arguments passed in by the user, this resolver requires none
@@ -161,7 +166,7 @@ const UserResolvers = {
    * @param {Object} req.session - Contains stored user information
    * @param {string} req.session.userObjectID - Used to lookup currently logged in user in the database
    * @param {Object} [context] - GraphQL context object
-   * @returns {Object} - Currently logged in user with fresh information from the database
+   * @returns {Promise<Object>} - Currently logged in user with fresh information from the database
    */
   getCurrentUser: async (args, { session: { userObjectID: requesterObjectID } }) => {
     if(requesterObjectID !== undefined) {
@@ -174,6 +179,7 @@ const UserResolvers = {
 
   /**
    * Resolver which returns a listing of all users - We should paginate this response at some point
+   * @async
    * @memberof UserResolvers
    * @method getUsers
    * @param {Object} [args] - Arguments passed in by the user, this resolver requires none
@@ -181,7 +187,7 @@ const UserResolvers = {
    * @param {Object} req.session - Contains stored user information
    * @param {string} req.session.userObjectID - Used to lookup currently logged in user in the database
    * @param {Object} [context] - GraphQL context object
-   * @returns {Object[]} - List of all users
+   * @returns {Promise<Object[]>} - List of all users
    */
   getUsers: async (args, { session: { userObjectID: requesterObjectID } }) => {
     if(requesterObjectID !== undefined) {
@@ -200,25 +206,32 @@ const UserResolvers = {
 
   /**
    * Resolver which simply signs out the currently logged in user using the ObjectID stored in the session store
+   * @async
    * @memberof UserResolvers
    * @method signOutUser
    * @param {Object} [args] - Arguments passed in by the user, this resolver requires none
    * @param {Object} req - Express request object.
    * @param {Object} req.session - Currently logged in user's session
    * @param {Object} [context] - GraphQL context object
-   * @returns {string} - Status of the logout request
+   * @returns {Promise<boolean>} - Status of the logout request
    */
-  signOutUser: async(args, { session }) => {
+  signOutUser: async(args, { session }) => new Promise((resolve, reject) => {
     if(session.userObjectID !== undefined) {
-      session.destroy();
-      return 'Successfully signed out.';
+      session.destroy(err => {
+        if (err) {
+          reject(false);
+        } else {
+          resolve(true)
+        }
+      });
     } else {
       throw new Error("You need to login to perform this action");
     }
-  },
+  }),
 
   /**
    * Resolver which takes a userid to update, and an object containing the new user's information
+   * @async
    * @memberof UserResolvers
    * @method updateUser
    * @param {Object} args - Arguments passed in by the user
@@ -230,9 +243,11 @@ const UserResolvers = {
    * @param {Object} [args.user.preferences] - Object containing users new preferences
    * @param {string} [args.user.preferences.theme] - New theme preference
    * @param {string[]} [args.user.scope] - Updated scope
-   * @param {Object} [req] - Express request object
+   * @param {Object} req - Express request object
+   * @param {Object} req.session - Currently logged in user's session
+   * @param {string} req.session.userObjectID - Used to lookup currently logged in user in the database
    * @param {Object} [context] - GraphQL context object
-   * @returns {Object} - Updated user object
+   * @returns {Promise<Object>} - Updated user object
    */
   updateUser: async({ userid: userIdToUpdate, user: userNewInfo }, { session: { userObjectID: requesterObjectID } }) => {
     if(requesterObjectID !== undefined) {

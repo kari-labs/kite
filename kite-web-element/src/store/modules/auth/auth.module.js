@@ -41,7 +41,7 @@ export const authModule = {
       try {
         const result = await signOutUser();
         if(result.data.stats !== null) {
-          if(result.data.status === 'Successfully signed out.') {
+          if(result.data.status) {
             commit(types.REMOVE_USER);
             localStorage.removeItem('expiry');
             router.push('/');
