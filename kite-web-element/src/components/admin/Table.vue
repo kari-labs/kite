@@ -179,9 +179,21 @@
 
 <script>
 import { updateUser } from "@/utils/auth.util.js";
+import * as admin from "@/utils/admin.util.js";
 export default {
   name: "KATable",
   methods: {
+    dataManip(){admin.dataManip(usersData)},
+    warning(){admin.warning(index, data)},
+    deleteUser(){ admin.deleteUser(index, data)},
+    edit() {admin.edit(index, data, form, currentIndex)},
+    update() {admin.update(currentIndex, data, form, updatedUser)},
+    toggleSelection() {admin.toggleSelection(rows)},
+    handleSelectionChange() {admin.handleSelectionChange(val)},
+    filterScope() {admin.filterScope(value, row)},
+    filterHandler() {admin.filterHandler(value, row, column)},
+    fetchUsers() {admin.fetchUsers()},
+    /*
     dataManip(usersData) {
       return usersData.map(u => ({ ...u, containers: u.containers.length}));
     },
@@ -263,6 +275,7 @@ export default {
       const property = column['property'];
       return row[property] === value;
     },
+    */
     async fetchUsers() {
       this.usersData = (await this.$jraph`
         query{
@@ -276,9 +289,10 @@ export default {
             }
           }
         `).data.users;
-      this.usersTable = this.dataManip(this.usersData);
+      this.usersTable = admin.dataManip(this.usersData);
       this.loading = false;
     }
+    
   },
   data() {
     const validatorPass = (rule, value, callBack) => {
