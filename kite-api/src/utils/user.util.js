@@ -52,11 +52,15 @@ const getUser = req => {
   return {};
 }
 
-const signOutUser = req => {
-  req.session.destroy();
-  if(req.session === undefined) return true;
-  else return false;
-}
+const signOutUser = req => new Promise((resolve, reject) => {
+  req.session.destroy(err => {
+    if(err) {
+      reject(false);
+      return;
+    }
+    resolve(true);
+  });
+})
 
 const updateUser = async (userIdToUpdate, userNewInfo) => {
   // Implement validation here

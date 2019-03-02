@@ -3,12 +3,9 @@ const express = require('express');
 const session = require('express-session');
 
 const { ApolloServer, gql } = require('apollo-server-express');
-const { graphqlUploadExpress } = require('graphql-upload');
-const { buildSchema } = require('graphql');
 
 const redis = require('redis').createClient(6379, 'kiteredis');
 const RedisStore = require('connect-redis')(session);
-const cors = require('cors');
 
 const { dbConnect, createDefaultAdmin } = require('./utils/mongo.util');
 
@@ -93,6 +90,11 @@ apollo.applyMiddleware({
   app,
   path: '/api/graphql',
   cors: corsOptions,
+  playground: {
+    settings: {
+      'request.credentials': 'include',
+    },
+  },
 });
 //apollo.installSubscriptionHandlers(app);
 
