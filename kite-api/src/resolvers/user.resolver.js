@@ -9,15 +9,20 @@ const { saltRounds } = require('../../config/config');
  * @returns {Object} - Formatted response
  */
 const formatMongooseResponse = mongooseData => {
-  // Working here on making this work for the "getUsers" resolver
-  const formattedContainers = mongooseData.containers.map(container => ({
-    ...container.toObject(),
-    _id: container._id.toString(),
-  }));
-  return {
-    ...mongooseData.toObject(),
-    containers: formattedContainers,
-    _id: mongooseData._id.toString(),
+  if(Array.isArray(mongooseData)) {
+    mongooseData.map(obj => {
+      return formatMongooseResponse(obj);
+    });
+  } else {
+    const formattedContainers = mongooseData.containers.map(container => ({
+      ...container.toObject(),
+      _id: container._id.toString(),
+    }));
+    return {
+      ...mongooseData.toObject(),
+      containers: formattedContainers,
+      _id: mongooseData._id.toString(),
+    }
   }
 }
 
@@ -47,7 +52,7 @@ const UserResolvers = {
 
       if(requestingUser.scope.includes("admin") || requestingUser.scope.includes("createAdmin")) {
         const hash = await bcrypt.hash(password, saltRounds);
-        const createdUser = new User({
+        const createdUser = await new User({
           _id: mongoose.Types.ObjectId(),
           userid: userid,
           password: hash,
@@ -81,8 +86,8 @@ const UserResolvers = {
    */
   deleteUser: async ({ userid }, { session: { userObjectID: requesterObjectID } }) => {
     if(requesterObjectID !== undefined) {
-      const requestingUser = User.findById(requesterObjectID).exec();
-  
+      const requestingUser = await User.findById(requesterObjectID).exec();
+      
       if(requestingUser.scope.includes("admin") || requestingUser.scope.includes("createAdmin")) {
         const deletedUser = await User.findOneAndDelete({ userid: userid }).exec();
         return formatMongooseResponse(deletedUser);
