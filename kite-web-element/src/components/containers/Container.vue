@@ -3,6 +3,7 @@
     v-loading="loading" 
     ref="card" 
     tabindex="0"
+    shadow="hover"
   >
     <div
       slot="header"
@@ -21,14 +22,14 @@
       </span>
     </div>
     <div id="belt">
-      <template v-for="tool in tools">
+      <template v-for="tool in tools" v-if="tool.if">
         <el-tooltip
           effect="dark"
           :content="tool.text"
           placement="bottom"
           :key="tool.text"
         >
-          <el-button @click="tool.action">
+          <el-button @click="tool.action" plain :type="tool.type">
             <fa-icon
               :icon="tool.icon"
               :style="(tool.style || {})"
@@ -42,6 +43,7 @@
 </template>
 
 <script>
+import gql from "graphql-tag";
 
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms*1000));
@@ -59,6 +61,7 @@ export default {
         container_id: "",
         status: "",
         image: "",
+        deleted: false,
       })
     },
   },
@@ -69,19 +72,29 @@ export default {
           text: "Open Container URL",
           icon: "external-link-square-alt",
           action: this.openContainer,
+          type: "primary",
+          if: !this.container.deleted,
         },
         {
-          text: "Open File Manager",
+          text: "File Manager",
           icon: "folder",
           action: this.fileManager,
+          type: "info",
+          if: !this.container.deleted,
         },
         {
           text: "Delete Container",
           icon: "trash",
           action: this.deleteContainer,
-          style: {
-            color: "#F56C6C",
-          },
+          type: "danger",
+          if: true,
+        },
+        {
+          text: "Restore Container",
+          icon: "undo",
+          action: this.restoreContainer,
+          type: "success",
+          if: this.container.deleted,
         },
       ],
       loading: false,
@@ -89,28 +102,62 @@ export default {
   },
   methods: {
     async deleteContainer() {
-      this.loading = true;
-      this.$refs.card.$el.classList.toggle("littleHang");
-      
-      await this.$jraph`
-        mutation {
-          msg: deleteContainer(_id: "${this.container._id}")
+      const ok = await this.$confirm((this.container.deleted ? 'This will permanently delete the file. Continue?' : 'This will move your container to the trash. Continue?'), 'Danger', {
+        confirmButtonText: 'I Understand',
+        cancelButtonText: 'Nope.',
+        type: 'error',
+        confirmButtonClass: "bg-danger",
+      });
+      if(ok) {
+        this.loading = true;
+        try{
+          await this.$apollo.mutate({
+            mutation: gql`
+              mutation($_id: String!, $permanently: Boolean!) {
+                msg: deleteContainer(_id: $_id, permanently: $permanently)
+              }
+            `,
+            variables: {
+              _id: this.container._id,
+              permanently: this.container.deleted
+            }
+          });
+          this.$message.success("Container Deleted");
+          await this.$emit("deleted", null);
+        }catch(err) {
+          this.loading = false;
+          this.$message.error("Container deletion failed: "+err);
         }
-      `
-      this.$refs.card.$el.classList.toggle("littleHang");
-      this.$refs.card.$el.style["transform"] = "rotate(45deg)";
-      this.$refs.card.$el.style["transform-origin"] = "top left";
-      this.$refs.card.$el.classList.add("drop");
-      await sleep(1);
-      this.loading = false;
-      this.$message.success("Container Deleted");
-      await this.$emit("deleted", null);
+      }
     },
     openContainer() {
       window.open("http://guthib.com/",'_blank');
     },
     fileManager() {
-      this.$emit('openFiles', this.container.nickname)
+      this.$emit('openFiles', this.container.nickname);
+    },
+    async restoreContainer() {
+      try {
+        this.loading = true;
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation($_id: String!) {
+              restoreContainer(_id: $_id)
+            }
+          `,
+          variables: {
+            _id: this.container._id,
+          },
+        });
+        this.loading = false;
+        this.$emit("restored", null);
+        this.$notify.success({
+          title: 'Restored',
+          message: 'Container Restored Succesfully'
+        });
+      }catch(e) {
+        this.$message.error("Failed to restore container: "+ e);
+      }
     },
   },
 };
@@ -122,6 +169,7 @@ export default {
   --transform-angle-one: -45deg;
   --transform-angle-two: -90deg;
   --transform-angle-three: -45deg;
+  --color-danger: #F56C6C;
 }
 
 .drop {
@@ -174,5 +222,14 @@ export default {
     transform-origin: var(--transform-origin);
     visibility: hidden;
   }
+}
+.bg-danger {
+  background-color: var(--color-danger) !important;
+  border-color: var(--color-danger) !important;
+  transition: 1s background-color 1s border-color;
+}
+.bg-danger:hover {
+  background-color: #F68686 !important;
+  border-color: #F68686 !important;
 }
 </style>

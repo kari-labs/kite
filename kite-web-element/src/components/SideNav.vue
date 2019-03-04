@@ -24,19 +24,31 @@
       </span>
     </el-menu-item>
     <k-nav-item
-      to="containers"
-      index="2"
-      title="Containers"
-    >
-      <i
-        class="el-icon"
-        slot="icon"
+        to="/containers"
+        index="2-1"
+        title="Containers"
       >
-        <fa-icon icon="cube" />
-      </i>
+        <i
+          class="el-icon"
+          slot="icon"
+        >
+          <fa-icon icon="cube" />
+        </i>
+      </k-nav-item>
+    <k-nav-item
+        to="/containers/trash"
+        index="2-2"
+        title="Trash"
+      >
+        <i
+          class="el-icon"
+          slot="icon"
+        >
+          <fa-icon icon="trash" />
+        </i>
     </k-nav-item>
     <k-nav-item
-      to="files"
+      to="/files"
       index="3"
       title="File Manager"
     >
@@ -48,7 +60,7 @@
       </i>
     </k-nav-item>
     <k-nav-item
-      to="help"
+      to="/help"
       index="4"
       title="Help"
     >
@@ -60,7 +72,7 @@
       </i>
     </k-nav-item>
     <k-nav-item
-      to="admin"
+      to="/admin"
       index="5"
       title="Admin"
       v-if="$store.state.auth.user.scope.includes('admin')"
@@ -130,6 +142,8 @@ export default {
   },
   components: {
     KNavItem,
+  },
+  mounted() {
   },
 };
 </script>
