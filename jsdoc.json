@@ -1,0 +1,25 @@
+{
+  "plugins": [
+    "plugins/markdown",
+    "plugins/summarize"
+  ],
+  "recurseDepth": 10,
+  "source": {
+      "includePattern": ".+\\.js(doc|x)?$",
+      "exclude": [
+        "./node_modules",
+        "./kite-api/node_modules",
+        "./kite-web-element/node_modules",
+        "./kite-nginx/dist"
+      ]
+  },
+  "sourceType": "module",
+  "tags": {
+      "allowUnknownTags": true,
+      "dictionaries": ["jsdoc","closure"]
+  },
+  "templates": {
+      "cleverLinks": false,
+      "monospaceLinks": false
+  }
+}

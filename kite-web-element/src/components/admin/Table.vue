@@ -52,7 +52,7 @@
       >
         <template
           slot="header"
-          slot-scope="scope"
+          slot-scope="scope" 
         >
           <el-input
             v-model="search"

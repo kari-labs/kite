@@ -46,5 +46,9 @@
     {
         "name": "faSyncAlt",
         "reason": "Reload icon"
+    },
+    {
+        "name": "faUndo",
+        "reason": "Restore Container"
     }
 ]

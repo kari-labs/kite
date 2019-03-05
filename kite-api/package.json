@@ -25,6 +25,7 @@
     "graphql": "^14.0.2",
     "graphql-upload": "^8.0.4",
     "mongoose": "^5.4.7",
-    "redis": "^2.8.0"
+    "redis": "^2.8.0",
+    "rimraf": "^2.6.3"
   }
 }

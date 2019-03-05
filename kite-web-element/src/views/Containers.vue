@@ -1,20 +1,22 @@
 <template>
   <div class="split">
     <div data-v-step="0">
-      <k-grid>
+      <k-grid v-loading="$apollo.loading">
         <k-card 
-          v-for="c in containers" 
+          v-for="c in containers.filter(c => $route.name === 'trash' ? c.deleted : !c.deleted)"
           :key="c._id"
           :container="c"
           @openFiles="openFiles"
-          @deleted="fetchContainers"
+          @deleted="triggerMyQuery"
+          @restored="triggerMyQuery"
         />
         <k-create-container
           tabindex="0"
-          @created="fetchContainers"
+          @created:container="triggerMyQuery"
           data-v-step="1"
           ref="createContainer"
           @click="$tours['tutorial'].nextStep()"
+          v-if="$route.name !== 'trash'"
         />
       </k-grid>
       <v-tour
@@ -38,6 +40,7 @@ import KFileManager from "@/components/filesys/FileManager.vue";
 import KGrid from "@/components/containers/Grid.vue";
 import KCard from "@/components/containers/Container.vue";
 import KCreateContainer from "@/components/containers/CreateContainer.vue";
+import gql from "graphql-tag";
 
 export default {
   data(){
@@ -92,22 +95,8 @@ export default {
     ...mapState({user: state => state.auth.user})
   },
   methods: {
-    async fetchContainers(){
-      const res = await this.$jraph`
-        query{
-          containers: getContainers{
-            _id
-            nickname
-            image
-            status
-          }
-        }
-      `;
-      if(res.errors){
-        this.$message.error('An error occured');
-      }else{
-        this.containers = res.data.containers;
-      }
+    triggerMyQuery () {
+      this.$apollo.queries.containers.refetch();
     },
     openFiles(containerName) {
       console.log('open', containerName)
@@ -128,9 +117,23 @@ export default {
       }
     },
   },
-  async mounted() {
-    await this.fetchContainers();
-    //This code only shows the tour when the user visits for the first time
+  apollo: {
+    containers: {
+      query: gql`
+        {
+          containers: getContainers{
+            _id
+            nickname
+            image
+            status
+            deleted
+          }
+        }`,
+        skip: false,
+    }
+  },
+  mounted() {
+    console.log(this.containers)
     if(this.$store.state.auth.user.logins === 1) {
       this.$tours['tutorial'].start();
     }
