@@ -1,5 +1,7 @@
 const User = require('../models/user.model');
 const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers, restoreContainer } = require('../utils/container.util');
+const { pubsub, UPDATE_CONTAINER } = require('./pubsub');
+const { withFilter } = require('graphql-subscriptions');
 
 const ContainerResolvers = {
   Query: {
@@ -96,7 +98,18 @@ const ContainerResolvers = {
     },
   },
   Subscription: {
-    
+    updateContainer: {
+      subscribe: withFilter(
+        () => pubsub.asyncIterator(UPDATE_CONTAINER),
+        (payload, {userid}) => {
+          console.log('subscription pl', payload)
+          return payload.owner == userid;
+        },
+      ),
+      resolve: (payload) => {
+        return payload.container
+      }
+    }
   },
 };
 
