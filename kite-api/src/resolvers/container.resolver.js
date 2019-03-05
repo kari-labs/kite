@@ -95,7 +95,9 @@ const ContainerResolvers = {
       }
     },
   },
-  Subscription: {},
+  Subscription: {
+    
+  },
 };
 
 module.exports = { ContainerResolvers };
