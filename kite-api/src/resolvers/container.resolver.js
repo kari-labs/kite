@@ -47,12 +47,12 @@ const ContainerResolvers = {
       throw new Error("You need to login to perform this action");
     }
   },
-  deleteContainer: async ({ _id }, { session: { userObjectID: requesterObjectID } }) => {
+  deleteContainer: async ({ _id, permanently = false }, { session: { userObjectID: requesterObjectID } }) => {
     if(requesterObjectID !== undefined) {
       const requestingUser = await User.findById(requesterObjectID).exec();
 
       if(requestingUser.scope.includes("containers")) {
-        await deleteContainer(_id);
+        await deleteContainer(_id, requesterObjectID, permanently);
 
         return `Successfully deleted container ${_id}`;
       } else {
@@ -70,6 +70,20 @@ const ContainerResolvers = {
         const containers = await deleteAllContainers(requestingUser._id);
 
         return containers;
+      } else {
+        throw new Error("You do not have the required permissions to complete this action");
+      }
+    } else {
+      throw new Error("You need to login to perform this action");
+    }
+  },
+  restoreContainer: async ({ _id }, req) => {
+    if(requesterObjectID !== undefined) {
+      const requestingUser = await User.findById(requesterObjectID).exec();
+
+      if(requestingUser.scope.includes("containers")) {
+        await restoreContainer(_id);
+        return true;
       } else {
         throw new Error("You do not have the required permissions to complete this action");
       }

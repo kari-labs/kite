@@ -19,8 +19,13 @@ Vue.use(require('vue-shortkey'));
 Vue.use(FileManager, {
   api_url: 'https://localhost/'
 });
-
 Vue.use(VueTour);
+
+Vue.filter('capitalize', function (value) {
+  if (!value) return '';
+  value = value.toString();
+  return value.charAt(0).toUpperCase() + value.slice(1);
+});
 
 Vue.config.productionTip = false;
 

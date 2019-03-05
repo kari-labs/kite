@@ -29,7 +29,9 @@ export default class FileManager {
 		let json = await res.json();
 		
 		if(!json.data) {
-			throw new Error(json.errors);
+			for(let err of json.errors){
+				throw err;
+			}
 		}
 
 		return json.data.getDirContents.files;

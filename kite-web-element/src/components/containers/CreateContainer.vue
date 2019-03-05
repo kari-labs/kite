@@ -77,8 +77,17 @@
 </template>
 
 <script>
+import gql from "graphql-tag";
+
 export default {
   data() {
+    const validateContainerName = (rule, value, cb) => {
+      if (!value.match(/^([aA-zZ0-9-]+)$/)) {
+        cb(new Error('Use only the characters a-z, 0-9, a hyphen (-), or underscore(_) in the name.'));
+      } else {
+        cb();
+      }
+    };
     return {
       dialogVisible: false,
       form: {
@@ -88,14 +97,15 @@ export default {
       formLabelWidth: "140px",
       loading: false,
       rules: {
-          nickname: [
-            { required: true, message: 'Please name your container', trigger: 'change' },
-            { min: 3, message: 'Please give it a name longer than three characters', trigger: 'change' }
-          ],
-          image: [
-            { required: true, message: "Please select an image for your container-baby, or they'll die!", trigger: 'change' }
-          ],
-        }
+        nickname: [
+          { required: true, message: 'Please name your container', trigger: 'change' },
+          { min: 3, message: 'Please give it a name longer than three characters', trigger: 'change' },
+          { validator: validateContainerName, trigger: 'change' },
+        ],
+        image: [
+          { required: true, message: "Please select an image for your container-baby, or they'll die!", trigger: 'change' }
+        ],
+      }
     };
   },
   methods: {
@@ -103,31 +113,34 @@ export default {
       this.$tours['tutorial'].stop();
       await this.$refs.createContainer.validate( async valid => {
         if (valid) {
-          this.loading = true;
-          const res = await this.$jraph`
-            mutation{
-              container: createContainer(
-                nickname: "${this.form.nickname}"
-              ){
-                nickname
-                container_id
-                image
-                status
-              }
-            }
-          `;
-          if(res.errors){
+          try {
+            this.loading = true;
+            await this.$apollo.mutate({
+              mutation: gql`
+                mutation($nickname: String!){
+                  container: createContainer(
+                    nickname: $nickname
+                  ){
+                    nickname
+                    container_id
+                    image
+                    status
+                  }
+                }
+              `,
+              variables: {
+                nickname: this.form.nickname
+              },
+            });
             this.loading = false;
-            console.log(res.errors);
-            if(res.errors.length == 1){
-              this.$message.error(res.errors[0].message);
-            }else{
-              res.errors.map( e => { this.$message.error(e.message); } )
-            }
-          }else{
-            this.loading = false;
-            this.$emit("created", null);
             this.dialogVisible = false;
+            this.$emit("created:container", null);
+          } catch (error) {
+            console.dir(error.graphQLErrors);
+            this.loading = false;
+            this.$message.error({
+              message: error.graphQLErrors[0].message.split(": ")[1],
+            });
           }
         } else {
           this.$message.error('Please fill out the form correctly');
@@ -136,7 +149,7 @@ export default {
         }
       } );
     },
-  }
+  },
 };
 </script>
 

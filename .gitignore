@@ -85,3 +85,5 @@ typings/
 
 # Kite-specific ignores
 kite-nginx/dist
+# Nodemon
+nodemon.json
