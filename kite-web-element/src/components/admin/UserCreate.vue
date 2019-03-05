@@ -70,6 +70,9 @@
 </template>
 
 <script>
+import * as admin from "@/utils/admin.util.js";
+import { apolloClient } from '@/apollo.js';
+import gql from 'graphql-tag';
 export default {
   name: "KACreate",
   data() {
@@ -124,26 +127,28 @@ export default {
     //Submits User info for creation
     submitForm(formName) {
       this.$emit('created:user', null);
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.$jraph`
-                    mutation{
-                    createUser(
-                        userid: "${this.form.userid}", 
-                        name: "${this.form.name}", 
-                        password: "${this.form.pass}", 
-                        scope: ${JSON.stringify(this.form.scope)}
-                        ){
-                        userid,name,scope
-                        }
-                    }
-                `;
-          this.$message({
-            type: 'success',
-            message: 'User Created'
-          });
-        }
-      });
+    this.$refs[formName].validate(valid => {
+      if (valid) {
+        apolloClient.mutate({
+          mutation: gql`
+          mutation{
+          createUser(
+              userid: "${this.form.userid}", 
+              name: "${this.form.name}", 
+              password: "${this.form.pass}", 
+              scope: ${JSON.stringify(this.form.scope)}
+              ){
+              userid,name,scope
+              }
+          }
+      `})
+        ;
+        this.$message({
+          type: 'success',
+          message: 'User Created'
+        });
+      }
+    });
       
     },
     resetForm(formName) {

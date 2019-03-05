@@ -178,7 +178,8 @@
 </template>
 
 <script>
-import { updateUser } from "@/utils/auth.util.js";
+import { apolloClient } from '@/apollo.js';
+import gql from 'graphql-tag';
 import * as admin from "@/utils/admin.util.js";
 export default {
   name: "KATable",
@@ -192,92 +193,9 @@ export default {
     handleSelectionChange() {admin.handleSelectionChange(val)},
     filterScope() {admin.filterScope(value, row)},
     filterHandler() {admin.filterHandler(value, row, column)},
-    fetchUsers() {admin.fetchUsers()},
-    /*
-    dataManip(usersData) {
-      return usersData.map(u => ({ ...u, containers: u.containers.length}));
-    },
-    //Delete Button Function--------------------------------------------------------->
-    warning(index, data) {
-      this.$confirm('This will permanently delete this user. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type:'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: 'Delete Completed'
-        });
-        this.deleteUser(index, data);
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: 'Delete Canceled'
-        })
-      })
-    },
-    //Called in warning.
-    deleteUser(index, data) {
-      data[index].userid
-      this.$jraph`
-        mutation{
-          deleteUser(userid: "${data[index].userid}"){
-            userid
-            }
-          }`
-      },
-    //Edit Button Function--------------------------------------------------------->
-    edit(index, data, form, currentIndex) {
-      this.dialogFormVisible = true;
-      form.userid = data[index].userid;
-      form.name = data[index].name;
-      form.type = data[index].scope;
-      this.currentIndex = index;
-      },
-    //Called in edit.
-    update(currentIndex, data, form, updatedUser) {
-      updatedUser.name = form.name;
-      updatedUser.scope = form.type;
-      updatedUser.password = form.pass;
-      const updatedUserId = data[currentIndex].userid;
-      try{
-        updateUser(updatedUserId, updatedUser)
-        this.dialogFormVisible = false;
-        this.$message({
-          type: 'success',
-          message: 'Update Completed'
-      });
-      }catch(err){
-        this.$message({
-          type: 'danger',
-          message: err
-        });
-      }
-    },
-    //Selector Function------------------------------------------------------------>
-    toggleSelection(rows){
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.adminTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.adminTable.clearSelection();
-      }
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    //Filtering Scope-------------------------------------------------------------->
-    filterScope(value, row) {
-      return row.scope.includes(value);
-    },
-    filterHandler(value, row, column) {
-      const property = column['property'];
-      return row[property] === value;
-    },
-    */
     async fetchUsers() {
-      this.usersData = (await this.$jraph`
+      this.usersData = (await apolloClient.query({
+        query: gql  `
         query{
             users: getUsers{
                 userid,
@@ -288,7 +206,8 @@ export default {
                 },
             }
           }
-        `).data.users;
+        `
+      })).data.users;
       this.usersTable = admin.dataManip(this.usersData);
       this.loading = false;
     }
