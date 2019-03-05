@@ -1,5 +1,5 @@
 const User = require('../models/user.model');
-const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers } = require('../utils/container.util');
+const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers, restoreContainer } = require('../utils/container.util');
 
 const ContainerResolvers = {
   createContainer: async ({ nickname }, { session: { userObjectID: requesterObjectID } }) => {
@@ -77,7 +77,7 @@ const ContainerResolvers = {
       throw new Error("You need to login to perform this action");
     }
   },
-  restoreContainer: async ({ _id }, req) => {
+  restoreContainer: async ({ _id }, { session: { userObjectID: requesterObjectID } }) => {
     if(requesterObjectID !== undefined) {
       const requestingUser = await User.findById(requesterObjectID).exec();
 
