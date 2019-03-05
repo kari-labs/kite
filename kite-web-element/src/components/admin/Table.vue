@@ -179,6 +179,8 @@
 
 <script>
 import { updateUser } from "@/utils/auth.util.js";
+import { apolloClient } from '@/apollo.js';
+import gql from 'graphql-tag';
 export default {
   name: "KATable",
   methods: {
@@ -207,12 +209,14 @@ export default {
     //Called in warning.
     deleteUser(index, data) {
       data[index].userid
-      this.$jraph`
+      apolloClient.mutate({
+        mutation: gql`
         mutation{
           deleteUser(userid: "${data[index].userid}"){
             userid
             }
           }`
+      })
       },
     //Edit Button Function--------------------------------------------------------->
     edit(index, data, form, currentIndex) {
@@ -264,7 +268,8 @@ export default {
       return row[property] === value;
     },
     async fetchUsers() {
-      this.usersData = (await this.$jraph`
+      this.usersData = (await apolloClient.query({
+        query: gql`
         query{
             users: getUsers{
                 userid,
@@ -275,7 +280,8 @@ export default {
                 },
             }
           }
-        `).data.users;
+        `
+      })).data.users;
       this.usersTable = this.dataManip(this.usersData);
       this.loading = false;
     }
