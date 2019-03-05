@@ -31,33 +31,6 @@ export const loginUser = async (userid, password) => {
   return response;
 }
 
-export const getUser = async () => {
-  let response = await fetch('https://localhost/api/graphql', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      query: `query {
-        user: getUser {
-          _id
-          userid
-          logins
-          name
-          containers
-          preferences {
-            theme
-          }
-          scope
-        }
-      }`
-    }),
-    credentials: 'include',
-  });
-  response = await response.json();
-  return response;
-}
-
 export const signOutUser = async () => {
   let response = await fetch('https://localhost/api/graphql', {
     method: 'POST',

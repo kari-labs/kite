@@ -7,7 +7,8 @@ const queryType = `
         getFileSize(path: String!): String!
         getDirSize(path: String!): String!
         getUsers:[User!]!
-        getUser: User!
+        getAnyUser(userid: String!): User!
+        getCurrentUser: User!
     }
 `;
 

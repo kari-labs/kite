@@ -8,7 +8,7 @@ import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
 import UpdatePassword from "@/views/UpdatePassword.vue";
 import store from '@/store/store';
-import { SIGN_OUT_USER, GET_USER } from '@/store/modules/auth/auth.types';
+import { SIGN_OUT_USER } from '@/store/modules/auth/auth.types';
 import { MessageBox } from 'element-ui';
 
 Vue.use(Router);
@@ -198,10 +198,5 @@ function checkAuth(to, from, next) {
 router.beforeEach((to, from, next) => {
   checkAuth(to, from, next);
 });
-
-router.afterEach(() => {
-  store.dispatch(GET_USER);
-});
-
 
 export default router;
