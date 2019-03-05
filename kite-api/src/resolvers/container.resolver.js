@@ -1,73 +1,94 @@
-const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers, restoreContainer } = require('../utils/container.util');
+const User = require('../models/user.model');
+const { createContainer, deleteContainer, getContainer, getContainers, deleteAllContainers } = require('../utils/container.util');
 
 const ContainerResolvers = {
-  createContainer: async ({ nickname }, req) => {
-    let containers;
-    try {
-      let user = req.session.userStore;
-      if(user) {
-        containers = await createContainer({ owner: user._id, userid: user.userid, nickname });
+  createContainer: async ({ nickname }, { session: { userObjectID: requesterObjectID } }) => {
+    if(requesterObjectID !== undefined) {
+      const requestingUser = await User.findById(requesterObjectID).exec();
+
+      if(requestingUser.scope.includes("containers")) {
+        const container = await createContainer({ owner: requestingUser._id, userid: requestingUser.userid, nickname});
+
+        return container;
+      } else {
+        throw new Error("You do not have the required permissions to complete this action");
       }
-      else throw new Error("User not logged in");
-      return containers;
-    } catch (err) {
-      console.error(err);
-      throw new Error(err);
+    } else {
+      throw new Error("You need to login to perform this action");
     }
   },
-  getContainer: async ({ container_id }, req) => {
-    let containers;
-    try {
-      const user = req.session.userStore;
-      if(user) containers = await getContainer(container_id);
-      else throw new Error("User not logged in");
-      return containers;
-    } catch (err) {
-      throw err;
-    }
-  },
-  getContainers: async (_, req) => {
-    let containers;
-    try {
-      let user = req.session.userStore;
-      if(user) containers = await getContainers(user._id);
-      else throw new Error("User not logged in");
-      return containers;
-    } 
-    catch (err) {
-      throw err;
-    }
-  },
-  deleteContainer: async ({ _id, permanently = false }, req) => {
-    try {
-      let user = req.session.userStore;
-      if(user) {
-        await deleteContainer(_id, user._id, permanently);
+  getContainer: async ({ container_id }, { session: { userObjectID: requesterObjectID } }) => {
+    if(requesterObjectID !== undefined) {
+      const requestingUser = await User.findById(requesterObjectID).exec();
+
+      if(requestingUser.scope.includes("containers")) {
+        const container = await getContainer(container_id);
+
+        return container;
+      } else {
+        throw new Error("You do not have the required permissions to complete this action");
       }
-      else throw new Error("User not logged in");
-      return `Successfully deleted container ${_id}`;
-    } catch (err) {
-      throw new Error(err);
+    } else {
+      throw new Error("You need to login to perform this action");
     }
   },
-  deleteAllContainers: async (_, req) => {
-    try {
-      let user = req.session.userStore;
-      if(user) {
-        let containers = await deleteAllContainers(user._id);
+  getContainers: async (_, { session: { userObjectID: requesterObjectID } }) => {
+    if(requesterObjectID !== undefined) {
+      const requestingUser = await User.findById(requesterObjectID).exec();
+
+      if(requestingUser.scope.includes("containers")) {
+        const containers = await getContainers(requestingUser._id);
+
         return containers;
+      } else {
+        throw new Error("You do not have the required permissions to complete this action");
       }
-      else throw new Error("User not logged in");
-    } catch (err) {
-      throw new Error(err);
+    } else {
+      throw new Error("You need to login to perform this action");
     }
   },
-  restoreContainer: async ({_id}, req) => {
-    if(req.session.userStore) {
-      await restoreContainer(_id);
-      return true;
-    }else {
-      throw new Error("User not logged in");
+  deleteContainer: async ({ _id, permanently = false }, { session: { userObjectID: requesterObjectID } }) => {
+    if(requesterObjectID !== undefined) {
+      const requestingUser = await User.findById(requesterObjectID).exec();
+
+      if(requestingUser.scope.includes("containers")) {
+        await deleteContainer(_id, requesterObjectID, permanently);
+
+        return `Successfully deleted container ${_id}`;
+      } else {
+        throw new Error("You do not have the required permissions to complete this action");
+      }
+    } else {
+      throw new Error("You need to login to perform this action");
+    }
+  },
+  deleteAllContainers: async (_, { session: { userObjectID: requesterObjectID } }) => {
+    if(requesterObjectID !== undefined) {
+      const requestingUser = await User.findById(requesterObjectID).exec();
+
+      if(requestingUser.scope.includes("containers")) {
+        const containers = await deleteAllContainers(requestingUser._id);
+
+        return containers;
+      } else {
+        throw new Error("You do not have the required permissions to complete this action");
+      }
+    } else {
+      throw new Error("You need to login to perform this action");
+    }
+  },
+  restoreContainer: async ({ _id }, req) => {
+    if(requesterObjectID !== undefined) {
+      const requestingUser = await User.findById(requesterObjectID).exec();
+
+      if(requestingUser.scope.includes("containers")) {
+        await restoreContainer(_id);
+        return true;
+      } else {
+        throw new Error("You do not have the required permissions to complete this action");
+      }
+    } else {
+      throw new Error("You need to login to perform this action");
     }
   },
 };
