@@ -9,7 +9,8 @@ const containerSchema = new Schema({
   container_id: String,
   status: String,
   nickname: String,
-  image: String
+  image: String,
+  deleted: Boolean,
 });
 
 module.exports = mongoose.model('Container', containerSchema);

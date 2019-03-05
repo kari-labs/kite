@@ -1,13 +1,14 @@
 const queryType = `
     type Query {
         getContainer(container_id: String!): Container!
-        getContainers: [Container!]!
+        getContainers(deleted: Boolean): [Container!]!
         getFileInfo(userid: String!, path: String!): File!
         getDirContents(userid: String!, path: String!): Directory!
         getFileSize(path: String!): String!
         getDirSize(path: String!): String!
         getUsers:[User!]!
-        getUser: User!
+        getAnyUser(userid: String!): User!
+        getCurrentUser: User!
     }
 `;
 

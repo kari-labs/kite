@@ -97,7 +97,18 @@ const router = new Router({
       meta: { 
         hideHeader: false,
         requiresAuth: true,
-      }
+      },
+      children: [
+        {
+          path: "/containers/trash",
+          component: Containers,
+          name: "trash",
+          meta: {
+            hideHeader: false,
+            requiresAuth: true,
+          },
+        },
+      ],
     },
     {
       path: "/help",
@@ -141,11 +152,7 @@ const router = new Router({
   ]
 });
 
-// Runs auth on all routes by default
-// (to) - page the user is requesting to go to
-// (from) - page the user is coming from
-// (next) - lets user proceed to page
-router.beforeEach((to, from, next) => {
+function checkAuth(to, from, next) {
   if(to.matched.some(record => record.meta.requiresAuth)) {
     const expiry = Date.parse(localStorage.getItem('expiry'));
     const current = Date.parse(new Date(Date.now()).toUTCString());
@@ -182,6 +189,14 @@ router.beforeEach((to, from, next) => {
   } else {
     next();
   }
+}
+
+// Runs auth on all routes by default
+// (to) - page the user is requesting to go to
+// (from) - page the user is coming from
+// (next) - lets user proceed to page
+router.beforeEach((to, from, next) => {
+  checkAuth(to, from, next);
 });
 
 export default router;
