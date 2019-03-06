@@ -2,7 +2,7 @@
   <el-card class="box-card">
     <el-table
       ref="adminTable"
-      :data="usersTable.filter(
+      :data="this.$store.getters.dataManip.filter(
         data => !search ||
           data.name.toLowerCase().includes(search.toLowerCase()) || 
           data.userid.toLowerCase().includes(search.toLowerCase())
@@ -181,10 +181,15 @@
 import { apolloClient } from '@/apollo.js';
 import gql from 'graphql-tag';
 import * as admin from "@/utils/admin.util.js";
+
 export default {
+  mounted(){
+    this.$store.dispatch({
+      type: 'populateUsers',
+    });
+  },
   name: "KATable",
   methods: {
-    dataManip(){admin.dataManip(usersData)},
     warning(){admin.warning(index, data)},
     deleteUser(){ admin.deleteUser(index, data)},
     edit() {admin.edit(index, data, form, currentIndex)},
@@ -193,24 +198,6 @@ export default {
     handleSelectionChange() {admin.handleSelectionChange(val)},
     filterScope() {admin.filterScope(value, row)},
     filterHandler() {admin.filterHandler(value, row, column)},
-    async fetchUsers() {
-      this.usersData = (await apolloClient.query({
-        query: gql  `
-        query{
-            users: getUsers{
-                userid,
-                name,
-                scope,
-                containers {
-                  nickname
-                },
-            }
-          }
-        `
-      })).data.users;
-      this.usersTable = admin.dataManip(this.usersData);
-      this.loading = false;
-    }
     
   },
   data() {
@@ -238,6 +225,7 @@ export default {
       }
     };
     return {
+      usersTable: [],
       currentIndex: '',
         updatedUser: {
           name: '',
@@ -255,7 +243,6 @@ export default {
           { text: 'Create Admin', value: 'createAdmin'}
         ],
         multipleSelection: [],
-        usersTable: [],
         dialogFormVisible: false,
         form: {
           name: '',
@@ -280,14 +267,11 @@ export default {
         },
         {
           value: "createAdmin",
-          label: "Super Admin"
+          label: "Create Admin"
         }],
         formLabelWidth: '120px'
     };
   },
-  async mounted() {
-    await this.fetchUsers();
-  }
 };
 </script>
 

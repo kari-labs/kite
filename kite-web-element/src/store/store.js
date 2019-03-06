@@ -4,12 +4,14 @@ import createPersistedState from 'vuex-persistedstate';
 
 // Module Imports
 import { authModule } from "@/store/modules/auth/auth.module";
+import { adminModule } from "@/store/modules/admin/admin.module";
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
-    auth: authModule
+    auth: authModule,
+    admin: adminModule
   },
   plugins: [
     createPersistedState({

@@ -84,3 +84,20 @@ export const filterHandler = (value, row, column) => {
     const property = column['property'];
     return row[property] === value;
   }
+export const fetchUsers = async () => {
+  const query = await apolloClient.query({
+    query: gql  `
+    query{
+        users: getUsers{
+            userid,
+            name,
+            scope,
+            containers {
+              nickname
+            },
+        }
+      }
+    `
+  });
+  return query.data.users;
+  }
