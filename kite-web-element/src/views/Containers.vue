@@ -29,7 +29,7 @@
       v-show="selectedContainer != ''"
       style="flex: 0.5;"
     >
-      <k-file-manager :root="user.userid + '/' + selectedContainer" />
+      <k-file-manager :root="selectedContainer" />
     </div>
   </div>
 </template>
@@ -137,6 +137,7 @@ export default {
     if(this.$store.state.auth.user.logins === 1) {
       this.$tours['tutorial'].start();
     }
+    this.triggerMyQuery();
   },
   components: {
     KGrid,
