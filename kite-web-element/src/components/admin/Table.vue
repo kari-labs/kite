@@ -12,6 +12,7 @@
     >
       <el-table-column
         type="selection"
+        @click="bulkEdit()"
       />
       <el-table-column
         fixed
@@ -218,6 +219,9 @@ export default {
           }`
       })
       },
+    bulkEdit(){
+      
+    },
     //Edit Button Function--------------------------------------------------------->
     edit(index, data, form, currentIndex) {
       this.dialogFormVisible = true;
@@ -311,6 +315,7 @@ export default {
       }
     };
     return {
+      selectedIndices: [],
       currentIndex: '',
         updatedUser: {
           name: '',
