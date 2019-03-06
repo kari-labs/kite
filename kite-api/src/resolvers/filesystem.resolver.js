@@ -2,39 +2,44 @@ const { getFileInfoHandler, getDirContents, getFileSizeInBytes, getDirSizeInByte
 const { GraphQLUpload } = require('graphql-upload');
 
 const FilesystemResolvers = {
-  getFileInfo: async ({userid, path}) => getFileInfoHandler(userid, path),
-  getDirContents: async ({userid, path}) => {
-    return await getDirContents(userid, path);
+  Query: {
+    getFileInfo: async (root, {userid, path}) => getFileInfoHandler(userid, path),
+    getDirContents: async (root, {userid, path}) => {
+      return await getDirContents(userid, path);
+    },
+    getFileSize: async (root, {path}) => {
+      try {
+        const size = await getFileSizeInBytes(path);
+        return size;
+      } catch (err) {
+        return `${err}`;
+      }
+    },
+    getDirSize: async (root, {path}) => {
+      try {
+        const size = await getDirSizeInBytesHandler(path)
+        return `${size[0]}`;
+      } catch (err) {
+        return `${err}`;
+      }
+    },
   },
-  renameFile: async ({userid, path, newPath}) => {
-    return await renameFile(userid, path, newPath);
+  Mutation: {
+    renameFile: async (root, {userid, path, newPath}) => {
+      return await renameFile(userid, path, newPath);
+    },
+    singleUpload: async (root, { userid, file }) => processUpload(userid, file),
+    multipleUpload: async (root, {userid, files }) => {
+      console.log(files);
+      const result = await Promise.all(
+        files.map(file => processUpload(userid, file))
+      )
+      console.log(result);
+      return result
+    },
   },
-  getFileSize: async ({path}) => {
-    try {
-      const size = await getFileSizeInBytes(path);
-      return size;
-    } catch (err) {
-      return `${err}`;
-    }
-  },
-  getDirSize: async ({path}) => {
-    try {
-      const size = await getDirSizeInBytesHandler(path)
-      return `${size[0]}`;
-    } catch (err) {
-      return `${err}`;
-    }
-  },
+  Subscription: {},
   Upload: GraphQLUpload,
-  singleUpload: async ({ userid, file }) => processUpload(userid, file),
-  multipleUpload: async ({userid, files }) => {
-    console.log(files);
-    const result = await Promise.all(
-      files.map(file => processUpload(userid, file))
-    )
-    console.log(result);
-    return result
-  }
-}
+};
 
 module.exports = { FilesystemResolvers };
