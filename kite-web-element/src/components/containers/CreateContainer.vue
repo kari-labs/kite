@@ -103,7 +103,7 @@ export default {
           { validator: validateContainerName, trigger: 'change' },
         ],
         image: [
-          { required: true, message: "Please select an image for your container-baby, or they'll die!", trigger: 'change' }
+          { required: true, message: "Please select an image for your container", trigger: 'change' }
         ],
       }
     };

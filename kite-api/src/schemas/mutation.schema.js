@@ -9,7 +9,7 @@ const mutationType = `
         createUser(userid: String!, password: String!, name: String! scope: [String!]): User
         deleteUser(userid: String!): User
         loginUser(userid: String!, password: String!): User
-        signOutUser: String!
+        signOutUser: Boolean!
         renameFile(userid: String!, path: String!, newPath: String!): File!
         updateUser(userid: String!, user: UserInput!): User
     }

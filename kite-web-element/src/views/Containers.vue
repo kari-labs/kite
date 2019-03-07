@@ -7,12 +7,12 @@
           :key="c._id"
           :container="c"
           @openFiles="openFiles"
-          @deleted="triggerMyQuery"
-          @restored="triggerMyQuery"
+          @deleted="fetchContainers"
+          @restored="fetchContainers"
         />
         <k-create-container
           tabindex="0"
-          @created:container="triggerMyQuery"
+          @created:container="fetchContainers"
           data-v-step="1"
           ref="createContainer"
           @click="$tours['tutorial'].nextStep()"
@@ -95,7 +95,7 @@ export default {
     ...mapState({user: state => state.auth.user})
   },
   methods: {
-    triggerMyQuery () {
+    fetchContainers () {
       this.$apollo.queries.containers.refetch();
     },
     openFiles(containerName) {

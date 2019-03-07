@@ -10,7 +10,7 @@ Vue.use(VueApollo);
 const link = new HttpLink({
   // You should use an absolute URL here
   uri: "https://localhost/api/graphql",
-  credentials: 'include',
+  credentials: "include",
 });
 
 // Cache implementation

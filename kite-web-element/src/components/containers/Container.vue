@@ -39,15 +39,45 @@
         </el-tooltip>
       </template>
     </div>
+    <el-dialog title="Delete Container" :visible.sync="showDeleteDialog" width="35%">
+      <el-container>
+        <article>
+          <p v-html="dialogMessage">{{dialogMessage}}</p>
+          <el-form 
+            :model="form"
+            :rules="rules"
+            ref="deleteContainer"
+          >
+            <el-form-item label="" prop="name">
+              <el-input v-model="form.name" placeholder="container name"/>
+            </el-form-item>
+          </el-form>
+        </article>
+      </el-container>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showDeleteDialog = false">Cancel</el-button>
+        <el-button 
+          type="warning"
+          @click="()=>deleteContainer(false)"
+          v-if="!container.deleted"
+        >
+        Move to Trash
+        </el-button>
+        <el-button 
+          type="danger" 
+          @click="()=>deleteContainer(true)"
+          :disabled="dialogConfirmDisabled"
+        >
+        Delete Permanently
+        </el-button>
+      </span>
+    </el-dialog>
   </el-card>
 </template>
 
 <script>
 import gql from "graphql-tag";
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms*1000));
-}
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {
   name: "KCard",
@@ -66,6 +96,15 @@ export default {
     },
   },
   data() {
+    const validateContainerName = async (rule, value, cb) => {
+      if (value === this.container.nickname) {
+        this.dialogConfirmDisabled = false;
+        cb();
+      } else {
+        this.dialogConfirmDisabled = true;
+        cb(new Error('The name you supplied does not match the name of the container'));
+      }
+    };
     return {
       tools: [
         {
@@ -85,7 +124,7 @@ export default {
         {
           text: "Delete Container",
           icon: "trash",
-          action: this.deleteContainer,
+          action: ()=>{this.showDeleteDialog = true},
           type: "danger",
           if: true,
         },
@@ -98,36 +137,45 @@ export default {
         },
       ],
       loading: false,
+      showDeleteDialog: false,
+      rules: {
+        name: [
+          { validator: validateContainerName, trigger: 'change' },
+        ],
+      },
+      form: {
+        name: "",
+      },
+      dialogConfirmDisabled: true,
     };
   },
   methods: {
-    async deleteContainer() {
-      const ok = await this.$confirm((this.container.deleted ? 'This will permanently delete the file. Continue?' : 'This will move your container to the trash. Continue?'), 'Danger', {
-        confirmButtonText: 'I Understand',
-        cancelButtonText: 'Nope.',
-        type: 'error',
-        confirmButtonClass: "bg-danger",
-      });
-      if(ok) {
-        this.loading = true;
-        try{
-          await this.$apollo.mutate({
-            mutation: gql`
-              mutation($_id: String!, $permanently: Boolean!) {
-                msg: deleteContainer(_id: $_id, permanently: $permanently)
-              }
-            `,
-            variables: {
-              _id: this.container._id,
-              permanently: this.container.deleted
+    async deleteContainer(permanently) {
+      this.showDeleteDialog = false;
+      this.loading = true;
+      this.dialogConfirmDisabled = false;
+      try{
+        await this.$apollo.mutate({
+          mutation: gql`
+            mutation($_id: String!, $permanently: Boolean!) {
+              msg: deleteContainer(_id: $_id, permanently: $permanently)
             }
-          });
-          this.$message.success("Container Deleted");
-          await this.$emit("deleted", null);
-        }catch(err) {
-          this.loading = false;
-          this.$message.error("Container deletion failed: "+err);
-        }
+          `,
+          variables: {
+            _id: this.container._id,
+            permanently: permanently,
+          },
+        });
+        this.$notify({
+          title: "Success",
+          message: "Container moved to trash",
+          iconClass: "el-icon-delete",
+          type: "error",
+        });
+        await this.$emit("deleted", null);
+      }catch(err) {
+        this.loading = false;
+        this.$message.error("Container deletion failed: "+err);
       }
     },
     openContainer() {
@@ -157,6 +205,17 @@ export default {
         });
       }catch(e) {
         this.$message.error("Failed to restore container: "+ e);
+      }
+    },
+  },
+  computed: {
+    dialogMessage() {
+      if(this.container.deleted) {
+        return `You are about to <b>permanently delete</b> the container <b>${this.container.nickname}</b>, an action that <i>cannot be undone</i>. If you are sure this is what you want to do, enter the name of the container below.`;
+      }else {
+        return `If you would like to move your container to the trash, please click <b>Move to Trash</b>. 
+        If you would like to <i>permanently delete</i> the container <b>${this.container.nickname}</b>, 
+        type the name of the container into the input field below, and click <b>Delete Permanently</b>`
       }
     },
   },
@@ -223,13 +282,7 @@ export default {
     visibility: hidden;
   }
 }
-.bg-danger {
-  background-color: var(--color-danger) !important;
-  border-color: var(--color-danger) !important;
-  transition: 1s background-color 1s border-color;
-}
-.bg-danger:hover {
-  background-color: #F68686 !important;
-  border-color: #F68686 !important;
+.deleteMessage {
+  text-align: center;
 }
 </style>
