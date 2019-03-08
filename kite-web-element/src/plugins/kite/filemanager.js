@@ -1,6 +1,5 @@
 import { apolloClient as $apollo } from '@/apollo.js';
 import gql from "graphql-tag";
-import { rename } from 'fs';
 
 export default class FileManager {
 	constructor() { }
@@ -9,26 +8,7 @@ export default class FileManager {
 		this.api_url = config.api_url || '';
 	}
 
-	async getFiles(userid, filepath) {    
-		/* let res = await fetch(`${this.api_url}api/graphql`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				query: `
-					query {
-						getDirContents(userid: "${userid}", path: "${filepath}") {
-							files {
-								name,
-								isdirectory,
-								modified,
-								created,
-								size
-							}
-						}
-					}
-				`
-			}),
-		}); */
+	async getFiles(userid, filepath) {
 		let { data: { getDirContents } } = await $apollo.query({
 			query: gql`
 				{
@@ -48,25 +28,7 @@ export default class FileManager {
 		return getDirContents.files;
 	}
 
-	async renameFile(userid, filepath, newFilepath) {    
-		/* let res = await fetch(`${this.api_url}api/graphql`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				query: `
-					mutation {
-						renameFile(userid: "${userid}", path: "${filepath}", newPath: "${newFilepath}") {
-							name
-							isdirectory
-							modified
-							created
-							size
-						}
-					}
-				`
-			}),
-		}); */
-
+	async renameFile(userid, filepath, newFilepath) {
 		let { data : { renameFile } } = await $apollo.mutate({
 			mutation: gql`
 				mutation($userid: String!, $filepath: String!, $newFilepath: String!) {
