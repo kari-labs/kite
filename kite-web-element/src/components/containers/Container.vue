@@ -77,7 +77,6 @@
 
 <script>
 import gql from "graphql-tag";
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {
   name: "KCard",

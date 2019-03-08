@@ -1,6 +1,12 @@
 <template>
   <div>
-    <h1>Help</h1>
+    <article>
+      <h1>Getting Started</h1>
+      <h2>Creating a container</h2>
+      <h2>Uploading files to a container</h2>
+      <h2>Deleting a container, forever</h2>
+    </article>
+
   </div>
 </template>
 
@@ -10,6 +16,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+div {
+  text-align: left;
+}
 </style>
