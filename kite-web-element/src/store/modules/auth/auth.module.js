@@ -40,14 +40,10 @@ export const authModule = {
     async [types.SIGN_OUT_USER] ({ commit }) {
       try {
         const result = await signOutUser();
-        if(result.data.stats !== null) {
-          if(result.data.status) {
-            commit(types.REMOVE_USER);
-            localStorage.removeItem('expiry');
-            router.push('/');
-          } else {
-            Message.error(result.data.status);
-          }
+        if(result) {
+          commit(types.REMOVE_USER);
+          localStorage.removeItem('expiry');
+          router.push('/');
         } else {
           if(result.errors) {
             result.errors.map(err => {
