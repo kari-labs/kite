@@ -152,7 +152,7 @@ const router = new Router({
   ]
 });
 
-function checkAuth(to, from, next) {
+const checkAuth = (to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
     const expiry = Date.parse(localStorage.getItem('expiry'));
     const current = Date.parse(new Date(Date.now()).toUTCString());
