@@ -137,7 +137,7 @@ export default {
     if(this.$store.state.auth.user.logins === 1) {
       this.$tours['tutorial'].start();
     }
-    this.triggerMyQuery();
+    this.fetchContainers();
   },
   components: {
     KGrid,
