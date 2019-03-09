@@ -39,7 +39,7 @@
         <el-breadcrumb separator="/">
           <el-breadcrumb-item />
           <el-breadcrumb-item
-            v-for="node in root.split('/')"
+            v-for="node in [user.userid, ...root.split('/')]"
             :key="node"
           >
             {{ node }}
@@ -67,8 +67,8 @@
         v-if="show"
         :props="treeProps"
         :load="loadFiles"
-        draggable
         @node-drop="handleDrop"
+        node-key="id"
         :allow-drop="allowDrop"
         lazy
         show-checkbox
@@ -84,7 +84,10 @@
               v-else
             />
           </i>
-          {{ data.name }}
+          <KEditableText 
+            :value="data.name"
+            @blur="(e)=>{handleRename(e, node, data)}"
+          />
         </span>
       </el-tree>
     </el-card>
@@ -92,7 +95,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import * as path from 'path';
+import KEditableText from "@/components/filesys/KEditableText.vue"
 
 function getFilePath(node) {
   let currentNode = node;
@@ -109,7 +114,8 @@ export default {
     return {
       treeProps: {
         label: 'name',
-        isLeaf: data => !data.isdirectory
+        isLeaf: data => !data.isdirectory,
+        children: []
       },
       uploadVisible: false,
       show: true,
@@ -118,28 +124,30 @@ export default {
   props: {
     root: {
       type: String,
-      default: '/'
+      default: ''
     }
   },
   watch: {
     root() {
       this.reload();
-    }
+    },
+  },
+  computed: {
+      ...mapState({user: state => state.auth.user})
   },
   methods: {
     async loadFiles(node, resolve) {
       if(node.level === 0) {
-        return resolve(await this.$fileManager.getFiles(this.root, ''))
+        console.log(node)
+        return resolve(await this.$fileManager.getFiles(this.user.userid, this.root));
       }
-
-      return resolve(await this.$fileManager.getFiles(this.root, getFilePath(node)))
-
+      return resolve(await this.$fileManager.getFiles(this.user.userid, path.join(this.root, getFilePath(node))))
     },
     abortUploads() {
 
     },
     async handleUpload(args) {
-      let req = await this.$fileManager.uploadFiles(this.root, [args.file]);
+      let req = await this.$fileManager.uploadFiles(path.join(this.user.userid, this.root), [args.file]);
       this.reload();
       if(req.data){
         this.$emit("success");
@@ -149,16 +157,31 @@ export default {
         this.$emit("error", args.file);
       }
     },
+    async handleRename(args, node, data) {
+      let [a, b] = "";
+      a = path.join( this.root, getFilePath(node) );
+      data.name = args.newValue;
+      b = path.join( this.root, getFilePath(node) );
+      try {
+        await this.$fileManager.renameFile(this.user.userid, a, b);
+      }catch(err){
+        this.$notify.error("An error occured while renaming that file");
+      }
+    },
     handleRemove() {
       console.log('handleRemove', [...arguments])
     },
-    handleDrop(draggingNode, dropNode, dropType) {
-      console.log(`Renaming ${getFilePath(draggingNode)} to ${path.join(getFilePath(dropNode), dropNode.data.name)}`)
-      console.log('tree drop: ', dropNode.label, dropType);
+    async handleDrop(draggingNode, dropNode, dropType) {
+      console.log(draggingNode, dropNode);
+      let oldFile = path.join(this.root, getFilePath(draggingNode) );
+      let newFile = dropType == 'inner' ? path.join(this.root,getFilePath(dropNode),oldFile) : path.join(this.root, path.dirname(getFilePath(dropNode)), oldFile);
+      console.log(oldFile, newFile);
+      await this.$fileManager.renameFile(this.user.userid, oldFile, newFile);
+      console.log('tree drop: ', dropNode, dropType);
     },
     allowDrop(draggingNode, dropNode, type) {
-      if(type=='next' || type=='prev') return false;
-      return false; // dropNode.data.isdirectory;
+      if(type=='next' || type=="prev") return false;
+      else return false //dropNode.data.isdirectory;
     },
     reload() {
       this.show = false;
@@ -166,7 +189,10 @@ export default {
           this.show = true
       })
     }
-  }
+  },
+  components: {
+    KEditableText,
+  },
 };
 </script>
 

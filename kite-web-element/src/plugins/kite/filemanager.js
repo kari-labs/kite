@@ -1,3 +1,6 @@
+import { apolloClient as $apollo } from '@/apollo.js';
+import gql from "graphql-tag";
+
 export default class FileManager {
 	constructor() { }
 
@@ -5,68 +8,47 @@ export default class FileManager {
 		this.api_url = config.api_url || '';
 	}
 
-	async getFiles(userid, filepath) {    
-		let res = await fetch(`${this.api_url}api/graphql`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				query: `
-					query {
-						getDirContents(userid: "${userid}", path: "${filepath}") {
-							files {
-								name,
-								isdirectory,
-								modified,
-								created,
-								size
-							}
+	async getFiles(userid, filepath) {
+		let { data: { getDirContents } } = await $apollo.query({
+			query: gql`
+				{
+					getDirContents(userid: "${userid}", path: "${filepath}") {
+						files {
+							name,
+							isdirectory,
+							modified,
+							created,
+							size
 						}
 					}
-				`
-			}),
+				}
+			`,
 		});
 
-		let json = await res.json();
-		
-		if(!json.data) {
-			for(let err of json.errors){
-				throw err;
-			}
-		}
-
-		return json.data.getDirContents.files;
-		//return files.json();
+		return getDirContents.files;
 	}
 
-	async renameFile(userid, filepath, newFilepath) {    
-		let res = await fetch(`${this.api_url}api/graphql`, {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({
-				query: `
-					mutation {
-						renameFile(userid: "${userid}", path: "${filepath}", newPath: "${newFilepath}") {
-							files {
-								name,
-								isdirectory,
-								modified,
-								created,
-								size
-							}
-						}
+	async renameFile(userid, filepath, newFilepath) {
+		let { data : { renameFile } } = await $apollo.mutate({
+			mutation: gql`
+				mutation($userid: String!, $filepath: String!, $newFilepath: String!) {
+					renameFile(userid: $userid, path: $filepath, newPath: $newFilepath) {
+						name
+						isdirectory
+						modified
+						created
+						size
 					}
-				`
-			}),
+				}
+			`,
+			variables: {
+				userid,
+				filepath,
+				newFilepath,
+			},
 		});
 
-		let json = await res.json();
-		
-		if(!json.data) {
-			throw new Error(json.errors);
-		}
-
-		return json.data.getDirContents.files;
-		//return files.json();
+		return renameFile;
 	}
 
 	downloadFile(file, filename) {
@@ -84,7 +66,6 @@ export default class FileManager {
 
 	uploadFiles(userid, files){
     let data = new FormData()
-
     data.append("operations", JSON.stringify({
       query: `
         mutation($files: [Upload!]!){
@@ -95,12 +76,12 @@ export default class FileManager {
         }
       `
     }));
-    
+    console.log(data);
     let map = {};
 		for(let i=0;i<files.length;i++) map[i] = [`variables.files.${i}`]; 
 		data.append("map", JSON.stringify(map));
 		for(let i=0;i<files.length;i++) data.append(`${i}`, files[i]); 
-
+		console.log(data);
 		return fetch(`${this.api_url}api/graphql`, {
 			method: 'POST',
 			body: data,

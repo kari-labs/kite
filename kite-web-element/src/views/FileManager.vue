@@ -1,11 +1,11 @@
 <template>
   <div>
-    <k-file-manager :root="user.userid" />
+    <k-file-manager />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import KEditableText from "@/components/filesys/KEditableText.vue"
 import KFileManager from "@/components/filesys/FileManager.vue";
 
 export default {
@@ -13,11 +13,9 @@ export default {
     return {
     };
   },
-  computed: {
-      ...mapState({user: state => state.auth.user})
-  },
   components: {
     KFileManager,
+    KEditableText,
   }
 };
 </script>
