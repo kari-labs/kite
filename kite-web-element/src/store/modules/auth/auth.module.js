@@ -1,4 +1,4 @@
-import { loginUser, signOutUser, updateUser } from '@/utils/auth.util';
+import { loginUser, signOutUser, updateUser, getCurrentUser } from '@/utils/auth.util';
 import router from '@/router.js';
 import * as types from './auth.types';
 import { Message } from 'element-ui';
@@ -55,7 +55,7 @@ export const authModule = {
         console.error('Logged Error:', error);
       }
     },
-    async [types.UPDATE_USER_PASSWORD] ({ commit }, { userid, newUser }) {
+    async [types.UPDATE_USER] ({ commit }, { userid, newUser }) {
       try {
         const result = await updateUser(userid, newUser);
         commit({
@@ -65,6 +65,19 @@ export const authModule = {
         router.push('/containers');
       } catch (error) {
         console.error('Logged Error:', error);
+      }
+    },
+    async [types.GET_CURRENT_USER] ({ commit }, { to }) {
+      try {
+        const result = await getCurrentUser();
+        if(result.data) {
+          commit({
+            type: types.STORE_USER,
+            user: result.data.user
+          });
+        }
+      } catch (error) {
+        if(to.path !== '/') console.error(error);
       }
     }
   }
