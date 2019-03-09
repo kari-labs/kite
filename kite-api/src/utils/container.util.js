@@ -21,7 +21,7 @@ async function createContainer(options) {
     if(mongoContainerNames.includes(options.nickname)) throw new Error("A container with that name already exists");
     await docker.pull(config.phpServerImage);
 
-    let dockerContainerName = options.userid+"_" + options.nickname.replace(/[\s]/g, "-");
+    let dockerContainerName = options.userid+"asdfasdf" + options.nickname.replace(/[\s]/g, "-");
 
     let container = await docker.createContainer({
       name: dockerContainerName,
