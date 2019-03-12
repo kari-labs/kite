@@ -1,7 +1,7 @@
 <template>
-  <el-card 
-    v-loading="loading" 
-    ref="card" 
+  <el-card
+    v-loading="loading"
+    ref="card"
     tabindex="0"
     shadow="hover"
   >
@@ -56,13 +56,13 @@
           <p v-html="dialogMessage">
             {{ dialogMessage }}
           </p>
-          <el-form 
+          <el-form
             :model="form"
             :rules="rules"
             ref="deleteContainer"
           >
             <el-form-item
-              label=""
+              label
               prop="name"
             >
               <el-input
@@ -80,15 +80,15 @@
         <el-button @click="showDeleteDialog = false">
           Cancel
         </el-button>
-        <el-button 
+        <el-button
           type="warning"
           @click="()=>deleteContainer(false)"
           v-if="!container.deleted"
         >
           Move to Trash
         </el-button>
-        <el-button 
-          type="danger" 
+        <el-button
+          type="danger"
           @click="()=>deleteContainer(true)"
           :disabled="dialogConfirmDisabled"
         >
@@ -102,7 +102,6 @@
 <script>
 import gql from "graphql-tag";
 import { mapState } from "vuex";
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {
   name: "KCard",
@@ -116,9 +115,9 @@ export default {
         container_id: "",
         status: "",
         image: "",
-        deleted: false,
+        deleted: false
       })
-    },
+    }
   },
   data() {
     const validateContainerName = async (rule, value, cb) => {
@@ -127,7 +126,11 @@ export default {
         cb();
       } else {
         this.dialogConfirmDisabled = true;
-        cb(new Error('The name you supplied does not match the name of the container'));
+        cb(
+          new Error(
+            "The name you supplied does not match the name of the container"
+          )
+        );
       }
     };
     return {
@@ -137,41 +140,41 @@ export default {
           icon: "external-link-square-alt",
           action: this.openContainer,
           type: "primary",
-          if: !this.container.deleted,
+          if: !this.container.deleted
         },
         {
           text: "File Manager",
           icon: "folder",
           action: this.fileManager,
           type: "info",
-          if: !this.container.deleted,
+          if: !this.container.deleted
         },
         {
           text: "Delete Container",
           icon: "trash",
-          action: ()=>{this.showDeleteDialog = true},
+          action: () => {
+            this.showDeleteDialog = true;
+          },
           type: "danger",
-          if: true,
+          if: true
         },
         {
           text: "Restore Container",
           icon: "undo",
           action: this.restoreContainer,
           type: "success",
-          if: this.container.deleted,
-        },
+          if: this.container.deleted
+        }
       ],
       loading: false,
       showDeleteDialog: false,
       rules: {
-        name: [
-          { validator: validateContainerName, trigger: 'change' },
-        ],
+        name: [{ validator: validateContainerName, trigger: "change" }]
       },
       form: {
-        name: "",
+        name: ""
       },
-      dialogConfirmDisabled: true,
+      dialogConfirmDisabled: true
     };
   },
   methods: {
@@ -179,7 +182,7 @@ export default {
       this.showDeleteDialog = false;
       this.loading = true;
       this.dialogConfirmDisabled = false;
-      try{
+      try {
         await this.$apollo.mutate({
           mutation: gql`
             mutation($_id: String!, $permanently: Boolean!) {
@@ -188,26 +191,29 @@ export default {
           `,
           variables: {
             _id: this.container._id,
-            permanently: permanently,
-          },
+            permanently: permanently
+          }
         });
         this.$notify({
           title: "Success",
           message: "Container moved to trash",
           iconClass: "el-icon-delete",
-          type: "error",
+          type: "error"
         });
         await this.$emit("deleted", null);
-      }catch(err) {
+      } catch (err) {
         this.loading = false;
-        this.$message.error("Container deletion failed: "+err);
+        this.$message.error("Container deletion failed: " + err);
       }
     },
     openContainer() {
-      window.open(`/c/${this.user.userid}/${this.container.nickname}/`,'_blank');
+      window.open(
+        `/c/${this.user.userid}/${this.container.nickname}/`,
+        "_blank"
+      );
     },
     fileManager() {
-      this.$emit('openFiles', this.container.nickname);
+      this.$emit("openFiles", this.container.nickname);
     },
     async restoreContainer() {
       try {
@@ -219,32 +225,36 @@ export default {
             }
           `,
           variables: {
-            _id: this.container._id,
-          },
+            _id: this.container._id
+          }
         });
         this.loading = false;
         this.$emit("restored", null);
         this.$notify.success({
-          title: 'Restored',
-          message: 'Container Restored Succesfully'
+          title: "Restored",
+          message: "Container Restored Succesfully"
         });
-      }catch(e) {
-        this.$message.error("Failed to restore container: "+ e);
+      } catch (e) {
+        this.$message.error("Failed to restore container: " + e);
       }
-    },
+    }
   },
   computed: {
-    ...mapState({user: state => state.auth.user}),
+    ...mapState({ user: state => state.auth.user }),
     dialogMessage() {
-      if(this.container.deleted) {
-        return `You are about to <b>permanently delete</b> the container <b>${this.container.nickname}</b>, an action that <i>cannot be undone</i>. If you are sure this is what you want to do, enter the name of the container below.`;
-      }else {
+      if (this.container.deleted) {
+        return `You are about to <b>permanently delete</b> the container <b>${
+          this.container.nickname
+        }</b>, an action that <i>cannot be undone</i>. If you are sure this is what you want to do, enter the name of the container below.`;
+      } else {
         return `If you would like to move your container to the trash, please click <b>Move to Trash</b>. 
-        If you would like to <i>permanently delete</i> the container <b>${this.container.nickname}</b>, 
-        type the name of the container into the input field below, and click <b>Delete Permanently</b>`
+        If you would like to <i>permanently delete</i> the container <b>${
+          this.container.nickname
+        }</b>, 
+        type the name of the container into the input field below, and click <b>Delete Permanently</b>`;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -254,7 +264,7 @@ export default {
   --transform-angle-one: -45deg;
   --transform-angle-two: -90deg;
   --transform-angle-three: -45deg;
-  --color-danger: #F56C6C;
+  --color-danger: #f56c6c;
 }
 
 .drop {
@@ -290,14 +300,13 @@ export default {
     transform: rotate(var(--transform-angle-two));
     transform-origin: var(--transform-origin);
   }
-  
+
   100% {
     transform: rotate(var(--transform-angle-one));
     transform-origin: var(--transform-origin);
   }
 }
 @keyframes drop {
-
   0% {
     transform: translateY(0) rotate(var(--transform-angle-three));
     transform-origin: var(--transform-origin);

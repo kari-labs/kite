@@ -10,9 +10,7 @@
       class="table"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column
-        type="selection"
-      />
+      <el-table-column type="selection" />
       <el-table-column
         fixed
         prop="userid"
@@ -32,8 +30,8 @@
       <el-table-column
         prop="scope"
         label="Scope"
-        :filters="scopeTags" 
-        :filter-method="filterScope" 
+        :filters="scopeTags"
+        :filter-method="filterScope"
         filter-placement="bottom-end"
         align="left"
       >
@@ -47,13 +45,9 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-      >
-        <template
-          slot="header"
-          slot-scope="scope" 
-        >
+      <el-table-column align="center">
+        <!-- eslint-disable-next-line -->
+        <template slot="header" slot-scope="scope">
           <el-input
             v-model="search"
             size="mini"
@@ -69,7 +63,7 @@
           >
             Edit
           </el-button>
-          
+
           <el-button
             type="text"
             size="mini"
@@ -116,7 +110,7 @@
             autocomplete="on"
           />
         </el-form-item>
-        <el-form-item 
+        <el-form-item
           label="Password"
           prop="pass"
           :label-width="formLabelWidth"
@@ -157,7 +151,9 @@
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="dialogFormVisible = false; $message({type: 'info', message: 'Update canceled'})">
+        <el-button
+          @click="dialogFormVisible = false; $message({type: 'info', message: 'Update canceled'})"
+        >
           Cancel
         </el-button>
         <el-button
@@ -173,59 +169,78 @@
 </template>
 
 <script>
+import { updateUser } from "@/utils/auth.util.js";
 
 export default {
   name: "KATable",
   methods: {
     dataManip(usersData) {
-      return usersData.map(u => ({ ...u, containers: u.containers.length}));
+      return usersData.map(u => ({ ...u, containers: u.containers.length }));
     },
     //Delete Button Function--------------------------------------------------------->
     warning(index, data) {
-      this.$confirm('This will permanently delete this user. Continue?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type:'warning'
-      }).then(() => {
-        this.$message({
-          type: 'success',
-          message: 'Delete Completed'
-        });
-        this.deleteUser(index, data);
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: 'Delete Canceled'
+      this.$confirm(
+        "This will permanently delete this user. Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "Delete Completed"
+          });
+          this.deleteUser(index, data);
         })
-      })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "Delete Canceled"
+          });
+        });
     },
-    //Called in warning.
+    // Called in warning.
     deleteUser(index, data) {
-      data[index].userid
+      data[index].userid;
       this.$jraph`
         mutation{
           deleteUser(userid: "${data[index].userid}"){
             userid
             }
-          }`
+          }`;
     },
-    //Edit Button Function--------------------------------------------------------->
+    // Edit Button Function--------------------------------------------------------->
     edit(index, data, form) {
       this.dialogFormVisible = true;
       form.userid = data[index].userid;
       form.name = data[index].name;
       form.type = data[index].scope;
-    },
-    //Called in edit.
-    update() {
-      this.dialogFormVisible = false;
-      this.$message({
-          type: 'success',
-          message: 'Update Completed'
-      });
+      this.currentIndex = index;
+    }, //Called in edit.
+    update(currentIndex, data, form, updatedUser) {
+      updatedUser.name = form.name;
+      updatedUser.scope = form.type;
+      updatedUser.password = form.pass;
+      const updatedUserId = data[currentIndex].userid;
+      try {
+        updateUser(updatedUserId, updatedUser);
+        this.dialogFormVisible = false;
+        this.$message({
+          type: "success",
+          message: "Update Completed"
+        });
+      } catch (err) {
+        this.$message({
+          type: "danger",
+          message: err
+        });
+      }
     },
     //Selector Function------------------------------------------------------------>
-    toggleSelection(rows){
+    toggleSelection(rows) {
       if (rows) {
         rows.forEach(row => {
           this.$refs.adminTable.toggleRowSelection(row);
@@ -242,7 +257,7 @@ export default {
       return row.scope.includes(value);
     },
     filterHandler(value, row, column) {
-      const property = column['property'];
+      const property = column["property"];
       return row[property] === value;
     },
     async fetchUsers() {
@@ -283,33 +298,33 @@ export default {
       }
     };
     return {
-
-        scopes: {
-          "containers": "Containers",
-          "createAdmin": "Create Admin",
-          "admin": "Admin"
-        },
-        scopeTags: [
-          { text: 'Containers', value: 'containers'},
-          { text: 'Admin', value: 'admin'},
-          { text: 'Create Admin', value: 'createAdmin'}
-        ],
-        multipleSelection: [],
-        usersTable: [],
-        dialogFormVisible: false,
-        form: {
-          name: '',
-          userid: '',
-          type: [],
-          pass: '',
-          checkPass: '',
-        },
-        rules: {
+      currentIndex: "",
+      scopes: {
+        containers: "Containers",
+        createAdmin: "Create Admin",
+        admin: "Admin"
+      },
+      scopeTags: [
+        { text: "Containers", value: "containers" },
+        { text: "Admin", value: "admin" },
+        { text: "Create Admin", value: "createAdmin" }
+      ],
+      multipleSelection: [],
+      usersTable: [],
+      dialogFormVisible: false,
+      form: {
+        name: "",
+        userid: "",
+        type: [],
+        pass: "",
+        checkPass: ""
+      },
+      rules: {
         pass: [{ validator: validatorPass, trigger: "blur" }],
         checkPass: [{ validator: validatorPassTwo, trigger: "blur" }]
-        },
-        search: '',
-        options: [
+      },
+      search: "",
+      options: [
         {
           value: "containers",
           label: "Containers"
@@ -321,8 +336,9 @@ export default {
         {
           value: "createAdmin",
           label: "Super Admin"
-        }],
-        formLabelWidth: '120px'
+        }
+      ],
+      formLabelWidth: "120px"
     };
   },
   async mounted() {
@@ -332,30 +348,30 @@ export default {
 </script>
 
 <style>
-  [class ^= cell ] {
-    font-weight: 500;
-    color: #000;
-  }
-  [class ^= el-table__header-wrapper]{
-    width: 100%;
-  }
-  .box-card {
-    height: max-content;
-    min-width: 600px;
-    margin-left: 4%;
-    margin-right: 4%;
-  }
-  .el-tag{
-    margin: 2px 1px;
-  }
-  .el-tag.tag-admin{
-    background-color: rgba(103, 194, 58, 0.1);
-    border-color: rgba(103, 194, 58, 0.2);
-    color: rgba(103, 194, 58);
-  }
-  .el-tag.tag-createAdmin{
-    background-color: rgba(255, 194, 58, 0.1);
-    border-color: rgba(255, 194, 58, 0.2);
-    color: rgba(255, 194, 58);
-  }
+[class^="cell"] {
+  font-weight: 500;
+  color: #000;
+}
+[class^="el-table__header-wrapper"] {
+  width: 100%;
+}
+.box-card {
+  height: max-content;
+  min-width: 600px;
+  margin-left: 4%;
+  margin-right: 4%;
+}
+.el-tag {
+  margin: 2px 1px;
+}
+.el-tag.tag-admin {
+  background-color: rgba(103, 194, 58, 0.1);
+  border-color: rgba(103, 194, 58, 0.2);
+  color: rgba(103, 194, 58);
+}
+.el-tag.tag-createAdmin {
+  background-color: rgba(255, 194, 58, 0.1);
+  border-color: rgba(255, 194, 58, 0.2);
+  color: rgba(255, 194, 58);
+}
 </style>

@@ -6,12 +6,12 @@
       @blur="handleBlur"
       @keypress.enter="editing = false"
       ref="input"
-    />
+    >
     <span 
       v-show="!editing"
       @dblclick="handleDBLClick"
     >
-      {{v}}
+      {{ v }}
     </span>
   </span>
 </template>

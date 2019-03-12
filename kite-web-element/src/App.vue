@@ -4,7 +4,7 @@
     <el-container>
       <el-header v-show="!$route.meta.hideHeader">
         <span class="h1 display">
-            {{$route.name | capitalize}}
+          {{ $route.name | capitalize }}
         </span>
       </el-header>
       <el-main>

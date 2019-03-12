@@ -24,28 +24,28 @@
       </span>
     </el-menu-item>
     <k-nav-item
-        to="/containers"
-        index="2-1"
-        title="Containers"
+      to="/containers"
+      index="2-1"
+      title="Containers"
+    >
+      <i
+        class="el-icon"
+        slot="icon"
       >
-        <i
-          class="el-icon"
-          slot="icon"
-        >
-          <fa-icon icon="cube" />
-        </i>
-      </k-nav-item>
+        <fa-icon icon="cube" />
+      </i>
+    </k-nav-item>
     <k-nav-item
-        to="/containers/trash"
-        index="2-2"
-        title="Trash"
+      to="/containers/trash"
+      index="2-2"
+      title="Trash"
+    >
+      <i
+        class="el-icon"
+        slot="icon"
       >
-        <i
-          class="el-icon"
-          slot="icon"
-        >
-          <fa-icon icon="trash" />
-        </i>
+        <fa-icon icon="trash" />
+      </i>
     </k-nav-item>
     <k-nav-item
       to="/files"
