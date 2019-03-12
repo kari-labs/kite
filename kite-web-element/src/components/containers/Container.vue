@@ -101,7 +101,6 @@
 <script>
 import gql from "graphql-tag";
 import { mapState } from "vuex";
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {
   name: "KCard",
@@ -248,6 +247,7 @@ export default {
     }
   },
 };
+
 </script>
 
 <style>
