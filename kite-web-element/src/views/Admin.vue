@@ -20,6 +20,7 @@
 <script>
 import KAdminTable from "@/components/admin/Table.vue";
 import KACreate from "@/components/admin/UserCreate.vue";
+import gql from 'graphql-tag';
 
 export default {
   components: {
@@ -28,7 +29,7 @@ export default {
   },
   methods: {
     async updateTable() {
-      /* You would call an apollo query */
+      location.reload();
     }
   }
 }

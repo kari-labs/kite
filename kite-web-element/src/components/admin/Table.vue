@@ -179,7 +179,6 @@
 
 <script>
 import { updateUser } from "@/utils/auth.util.js";
-import { apolloClient } from '@/apollo.js';
 import gql from 'graphql-tag';
 export default {
   name: "KATable",
@@ -209,25 +208,27 @@ export default {
     //Called in warning.
     deleteUser(index, data) {
       if(this.multipleSelection.length > 0){
-        this.multipleSelection.forEach(row => {
-          apolloClient.mutate({
-          mutation: gql`
-            mutation{
-            deleteUser(userid: "${row.userid}"){
-              userid
-              }
-           }`
+        this.multipleSelection.forEach(async row => {
+          await this.$apollo.mutate({
+            mutation: gql`
+              mutation{
+              deleteUser(userid: "${row.userid}"){
+                userid
+                }
+            }`
           })
+          this.$apollo.queries.users.refetch();
         })
       }else{
-        apolloClient.mutate({
-        mutation: gql`
-        mutation{
-          deleteUser(userid: "${data[index].userid}"){
-            userid
-            }
-          }`
+        this.$apollo.mutate({
+          mutation: gql`
+            mutation{
+              deleteUser(userid: "${data[index].userid}"){
+                userid
+              }
+            }`
         })
+        this.$apollo.queries.users.refetch();
       }
     },
     //Edit Button Function--------------------------------------------------------->
@@ -240,34 +241,26 @@ export default {
     },
     //Called in edit.
     update(currentIndex, data, form, updatedUser) {
-      updatedUser.name = form.name;
-      updatedUser.scope = form.type;
-      updatedUser.password = form.pass;
-      const updatedUserId = data[currentIndex].userid;
-      try{
-        updateUser(updatedUserId, updatedUser)
-        this.dialogFormVisible = false;
-        this.$message({
-          type: 'success',
-          message: 'Update Completed'
-      });
-      }catch(err){
-        this.$message({
-          type: 'danger',
-          message: err
+        updatedUser.name = form.name;
+        updatedUser.scope = form.type;
+        updatedUser.password = form.pass;
+        const updatedUserId = data[currentIndex].userid;
+        try{
+          updateUser(updatedUserId, updatedUser)
+          this.dialogFormVisible = false;
+          this.$message({
+            type: 'success',
+            message: 'Update Completed'
         });
+        this.$apollo.queries.users.refetch();
+        }catch(err){
+          this.$message({
+            type: 'danger',
+            message: err
+          });
       }
     },
     //Selector Function------------------------------------------------------------>
-    toggleSelection(rows){
-      if (rows) {
-        rows.forEach(row => {
-          this.$refs.adminTable.toggleRowSelection(row);
-        });
-      } else {
-        this.$refs.adminTable.clearSelection();
-      }
-    },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -280,22 +273,14 @@ export default {
       return row[property] === value;
     },
     async fetchUsers() {
-      this.usersData = (await this.$apollo.query({
-        query: gql`
-        query{
-            users: getUsers{
-                userid,
-                name,
-                scope,
-                containers {
-                  nickname
-                },
-            }
-          }
-        `
-      })).data.users;
-      this.usersTable = this.dataManip(this.usersData);
+      this.loading = true;
+      await this.$apollo.queries.users.refetch();
       this.loading = false;
+    }
+  },
+  computed: {
+    usersTable() {
+      return this.users.map(u => ({ ...u, containers: u.containers.length}));
     }
   },
   data() {
@@ -323,6 +308,7 @@ export default {
       }
     };
     return {
+      users: [],
       currentIndex: '',
         updatedUser: {
           name: '',
@@ -340,7 +326,7 @@ export default {
           { text: 'Create Admin', value: 'createAdmin'}
         ],
         multipleSelection: [],
-        usersTable: [],
+        //usersTable: [],
         dialogFormVisible: false,
         form: {
           name: '',
@@ -371,8 +357,24 @@ export default {
     };
   },
   async mounted() {
-    await this.fetchUsers();
-  }
+    await this.$apollo.queries.users.refetch();
+  },
+  apollo: {
+    users: {
+      query: gql`{
+        users: getUsers{
+          userid,
+          name,
+          scope,
+          containers {
+            nickname
+          },
+        }
+      }
+      `,
+      skip: false,
+    }
+  },
 };
 </script>
 

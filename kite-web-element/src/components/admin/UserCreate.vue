@@ -125,7 +125,6 @@ export default {
   methods: {
     //Submits User info for creation
     submitForm(formName) {
-      this.$emit('created:user', null);
       this.$refs[formName].validate(valid => {
         if (valid) {
           apolloClient.mutate({
@@ -146,6 +145,8 @@ export default {
             type: 'success',
             message: 'User Created'
           });
+          this.$emit('created:user', null);
+          
         }
       });
       
