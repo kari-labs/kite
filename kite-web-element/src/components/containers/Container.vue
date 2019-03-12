@@ -22,14 +22,21 @@
       </span>
     </div>
     <div id="belt">
-      <template v-for="tool in tools" v-if="tool.if">
+      <template
+        v-for="tool in tools"
+        v-if="tool.if"
+      >
         <el-tooltip
           effect="dark"
           :content="tool.text"
           placement="bottom"
           :key="tool.text"
         >
-          <el-button @click="tool.action" plain :type="tool.type">
+          <el-button
+            @click="tool.action"
+            plain
+            :type="tool.type"
+          >
             <fa-icon
               :icon="tool.icon"
               :style="(tool.style || {})"
@@ -39,36 +46,53 @@
         </el-tooltip>
       </template>
     </div>
-    <el-dialog title="Delete Container" :visible.sync="showDeleteDialog" width="35%">
+    <el-dialog
+      title="Delete Container"
+      :visible.sync="showDeleteDialog"
+      width="35%"
+    >
       <el-container>
         <article>
-          <p v-html="dialogMessage">{{dialogMessage}}</p>
+          <p v-html="dialogMessage">
+            {{ dialogMessage }}
+          </p>
           <el-form 
             :model="form"
             :rules="rules"
             ref="deleteContainer"
           >
-            <el-form-item label="" prop="name">
-              <el-input v-model="form.name" placeholder="container name"/>
+            <el-form-item
+              label=""
+              prop="name"
+            >
+              <el-input
+                v-model="form.name"
+                placeholder="container name"
+              />
             </el-form-item>
           </el-form>
         </article>
       </el-container>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="showDeleteDialog = false">Cancel</el-button>
+      <span
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="showDeleteDialog = false">
+          Cancel
+        </el-button>
         <el-button 
           type="warning"
           @click="()=>deleteContainer(false)"
           v-if="!container.deleted"
         >
-        Move to Trash
+          Move to Trash
         </el-button>
         <el-button 
           type="danger" 
           @click="()=>deleteContainer(true)"
           :disabled="dialogConfirmDisabled"
         >
-        Delete Permanently
+          Delete Permanently
         </el-button>
       </span>
     </el-dialog>
@@ -77,6 +101,8 @@
 
 <script>
 import gql from "graphql-tag";
+import { mapState } from "vuex";
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export default {
   name: "KCard",
@@ -178,7 +204,7 @@ export default {
       }
     },
     openContainer() {
-      window.open("http://guthib.com/",'_blank');
+      window.open(`/c/${this.user.userid}/${this.container.nickname}/`,'_blank');
     },
     fileManager() {
       this.$emit('openFiles', this.container.nickname);
@@ -208,6 +234,7 @@ export default {
     },
   },
   computed: {
+    ...mapState({user: state => state.auth.user}),
     dialogMessage() {
       if(this.container.deleted) {
         return `You are about to <b>permanently delete</b> the container <b>${this.container.nickname}</b>, an action that <i>cannot be undone</i>. If you are sure this is what you want to do, enter the name of the container below.`;
