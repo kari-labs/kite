@@ -62,10 +62,12 @@
       <h2 id="restoring-a-container">Restoring a container</h2>
       <ol>
         <li>Visit the trash page.</li>
-        <li>Select the container which you would like to restore, if it does
+        <li>
+          Select the container which you would like to restore, if it does
           <em>not</em> appear then I&#39;m afraid there is nothing more we can do for him doctor, it&#39;s time.
         </li>
-        <li>Click the green
+        <li>
+          Click the green
           <b style="color: #67C23A;">Restore Container</b> button.
         </li>
         <li>Patiently await your container&#39;s revival.</li>
@@ -93,6 +95,52 @@
         <li>Wait for the container to disappear.</li>
       </ol>
     </el-card>
+
+    <el-card>
+      <span slot="header">
+        <h1>Keyboard Shortcuts</h1>
+      </span>
+      <table>
+        <thead>
+          <tr>
+            <th>Shortcut</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <kbd>shift + →</kbd>
+            </td>
+            <td>Expand Nav</td>
+          </tr>
+          <tr>
+            <td>
+              <kbd>shift + ←</kbd>
+            </td>
+            <td>Collapse Nav</td>
+          </tr>
+          <tr>
+            <td>
+              <kbd>shift + n</kbd>
+            </td>
+            <td>Toggle Create Container Dialog</td>
+          </tr>
+          <tr>
+            <td>
+              <kbd>ctrl + shift + c</kbd>
+            </td>
+            <td>Containers page</td>
+          </tr>
+          <tr>
+            <td>
+              <kbd>ctrl + shift + f</kbd>
+            </td>
+            <td>File Manager</td>
+          </tr>
+        </tbody>
+      </table>
+    </el-card>
   </div>
 </template>
 
@@ -116,5 +164,8 @@ kbd {
   line-height: 10px;
   padding: 3px 5px;
   vertical-align: middle;
+}
+.el-card {
+  margin: 10px 0px;
 }
 </style>
