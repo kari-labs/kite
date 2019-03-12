@@ -12,7 +12,6 @@
     >
       <el-table-column
         type="selection"
-        @click="bulkEdit()"
       />
       <el-table-column
         fixed
@@ -209,27 +208,36 @@ export default {
     },
     //Called in warning.
     deleteUser(index, data) {
-      data[index].userid
-      apolloClient.mutate({
+      if(this.multipleSelection.length > 0){
+        this.multipleSelection.forEach(row => {
+          apolloClient.mutate({
+          mutation: gql`
+            mutation{
+            deleteUser(userid: "${row.userid}"){
+              userid
+              }
+           }`
+          })
+        })
+      }else{
+        apolloClient.mutate({
         mutation: gql`
         mutation{
           deleteUser(userid: "${data[index].userid}"){
             userid
             }
           }`
-      })
-      },
-    bulkEdit(){
-      
+        })
+      }
     },
     //Edit Button Function--------------------------------------------------------->
-    edit(index, data, form, currentIndex) {
+    edit(index, data, form) {
       this.dialogFormVisible = true;
       form.userid = data[index].userid;
       form.name = data[index].name;
       form.type = data[index].scope;
       this.currentIndex = index;
-      },
+    },
     //Called in edit.
     update(currentIndex, data, form, updatedUser) {
       updatedUser.name = form.name;
@@ -272,7 +280,7 @@ export default {
       return row[property] === value;
     },
     async fetchUsers() {
-      this.usersData = (await apolloClient.query({
+      this.usersData = (await this.$apollo.query({
         query: gql`
         query{
             users: getUsers{
@@ -315,7 +323,6 @@ export default {
       }
     };
     return {
-      selectedIndices: [],
       currentIndex: '',
         updatedUser: {
           name: '',
