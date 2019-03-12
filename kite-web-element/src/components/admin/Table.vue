@@ -261,7 +261,7 @@ export default {
       return row[property] === value;
     },
     async fetchUsers() {
-      this.usersData = (await this.$jraph`
+      let { data: { users } }  = await this.$jraph`
         query{
             users: getUsers{
                 userid,
@@ -272,8 +272,8 @@ export default {
                 },
             }
           }
-        `).data.users;
-      this.usersTable = this.dataManip(this.usersData);
+        `;
+      this.usersTable = this.dataManip(users);
       this.loading = false;
     }
   },
