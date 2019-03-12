@@ -26,7 +26,7 @@ export default {
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500');
+@import url('https://fonts.googleapis.com/css?family=Roboto:300,400,500,700');
 *{
   font-family:"Roboto", Arial, Helvetica, sans-serif;
 }

@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { UPDATE_USER_PASSWORD } from '@/store/modules/auth/auth.types';
+import { UPDATE_USER } from '@/store/modules/auth/auth.types';
 
 const MIN_PASSWORD_LENGTH = 6;
 
@@ -86,7 +86,7 @@ export default {
         if (valid) {
           const newUser = { password: this.passForm.pass, forceReset: false };
           this.$store.dispatch({
-            type: UPDATE_USER_PASSWORD,
+            type: UPDATE_USER,
             userid: this.$store.state.auth.user.userid,
             newUser: newUser
           });

@@ -21,7 +21,11 @@ async function createContainer(options) {
     if(mongoContainerNames.includes(options.nickname)) throw new Error("A container with that name already exists");
     await docker.pull(config.phpServerImage);
 
-    let dockerContainerName = options.userid+"_" + options.nickname.replace(/[\s]/g, "-");
+    // userFolderPath mounts on the host to userHostFolderPath so creating it here
+    // should create it on the host
+    fs.mkdirSync(path.join(config.userFolderPath, options.userid, options.nickname), {recursive: true});
+    
+    let dockerContainerName = "user-"+options.userid+"-name-" + options.nickname.replace(/[\s]/g, "-");
 
     let container = await docker.createContainer({
       name: dockerContainerName,
@@ -30,7 +34,7 @@ async function createContainer(options) {
         RestartPolicy: config.dockerConfig.RestartPolicy,
         NetworkMode: config.networkName,
         Binds: [
-          `${path.join(config.userFolderPath, options.userid, options.nickname)}:/app/htdocs/`
+          `${path.join(config.userHostFolderPath, options.userid, options.nickname)}:/app/htdocs/`
         ],
       },
     });

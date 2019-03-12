@@ -74,3 +74,26 @@ export const updateUser = async (userid, newUser) => {
     }
   });
 }
+
+export const getCurrentUser = async () => {
+  return await apolloClient.query({
+    query: gql`
+      query {
+        user: getCurrentUser{
+          _id
+          userid
+          logins
+          forceReset
+          name
+          containers {
+            nickname
+          }
+          preferences {
+            theme
+          }
+          scope
+        }
+      }
+    `
+  });
+}

@@ -8,7 +8,7 @@ import Admin from "@/views/Admin.vue";
 import K404 from "@/views/404.vue";
 import UpdatePassword from "@/views/UpdatePassword.vue";
 import store from '@/store/store';
-import { SIGN_OUT_USER } from '@/store/modules/auth/auth.types';
+import { SIGN_OUT_USER, GET_CURRENT_USER } from '@/store/modules/auth/auth.types';
 import { MessageBox } from 'element-ui';
 
 Vue.use(Router);
@@ -152,7 +152,7 @@ const router = new Router({
   ]
 });
 
-function checkAuth(to, from, next) {
+const checkAuth = (to, from, next) => {
   if(to.matched.some(record => record.meta.requiresAuth)) {
     const expiry = Date.parse(localStorage.getItem('expiry'));
     const current = Date.parse(new Date(Date.now()).toUTCString());
@@ -197,6 +197,13 @@ function checkAuth(to, from, next) {
 // (next) - lets user proceed to page
 router.beforeEach((to, from, next) => {
   checkAuth(to, from, next);
+});
+
+router.afterEach((to) => {
+  store.dispatch({
+    type: GET_CURRENT_USER,
+    to
+  });
 });
 
 export default router;

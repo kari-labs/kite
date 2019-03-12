@@ -7,12 +7,12 @@
           :key="c._id"
           :container="c"
           @openFiles="openFiles"
-          @deleted="triggerMyQuery"
-          @restored="triggerMyQuery"
+          @deleted="fetchContainers"
+          @restored="fetchContainers"
         />
         <k-create-container
           tabindex="0"
-          @created:container="triggerMyQuery"
+          @created:container="fetchContainers"
           data-v-step="1"
           ref="createContainer"
           @click="$tours['tutorial'].nextStep()"
@@ -29,7 +29,7 @@
       v-show="selectedContainer != ''"
       style="flex: 0.5;"
     >
-      <k-file-manager :root="user.userid + '/' + selectedContainer" />
+      <k-file-manager :root="selectedContainer" />
     </div>
   </div>
 </template>
@@ -95,7 +95,7 @@ export default {
     ...mapState({user: state => state.auth.user})
   },
   methods: {
-    triggerMyQuery () {
+    fetchContainers () {
       this.$apollo.queries.containers.refetch();
     },
     openFiles(containerName) {
@@ -137,6 +137,7 @@ export default {
     if(this.$store.state.auth.user.logins === 1) {
       this.$tours['tutorial'].start();
     }
+    this.fetchContainers();
   },
   components: {
     KGrid,
