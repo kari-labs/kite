@@ -10,7 +10,13 @@ const defaultOptions = {
   query: {
     // We use no-cache to resolve an issue where requests on the client-side don't update to reflect changes in the database
     fetchPolicy: 'no-cache'
-  }
+  },
+  mutate: {
+    fetchPolicy: 'no-cache'
+  },
+  watchQuery: {
+    fetchPolicy: 'no-cache'
+  },  
 }
 
 // HTTP connection to the API
