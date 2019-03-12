@@ -23,8 +23,7 @@
     </div>
     <div id="belt">
       <template
-        v-for="tool in tools"
-        v-if="tool.if"
+        v-for="tool in visibleTools"
       >
         <el-tooltip
           effect="dark"
@@ -244,6 +243,9 @@ export default {
         type the name of the container into the input field below, and click <b>Delete Permanently</b>`
       }
     },
+    visibleTools() {
+      return this.tools.filter(t => t.if);
+    }
   },
 };
 </script>
